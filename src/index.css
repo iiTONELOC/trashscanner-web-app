@@ -24,8 +24,7 @@
   --margin: 1rem;
   --padding: 1rem;
 
-  /* Default text color */
-  color: var(--light-gray-text);
+
 
   /* Scroll Bars */
   scrollbar-width: thin;
@@ -43,10 +42,10 @@
   background: rgb(32, 32, 31);
 }
 
+
 *::-webkit-scrollbar-thumb {
-  background-color: rgb(4, 4, 22);
-  border-radius: 20px;
-  border: 2px solid rgb(32, 32, 31);
+  background-color: rgb(5, 5, 21);
+  border-radius: 12px;
 }
 
 /* End Scroll Bars */
@@ -55,10 +54,12 @@
 html {
   /* Default background color (No white flash) */
   background: var(--primary-color);
+  color: var(--light-gray-text);
 }
 
 body {
   font-family: 'Inter', sans-serif;
+  /* Default text color */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -67,6 +68,7 @@ body {
 
 .Action-button {
   background: var(--primary-accent);
+  color: var(--light-gray-text);
   border: none;
   border-radius: 0.5rem;
   padding: 1.0rem 1.5rem;
@@ -83,6 +85,7 @@ body {
 
 .Button {
   background: var(--tertiary-color);
+  color: var(--light-gray-text);
   border: none;
   border-radius: 0.5rem;
   padding: 1.0rem 1.5rem;
