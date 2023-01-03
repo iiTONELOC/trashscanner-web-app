@@ -1,13 +1,102 @@
-body {
+/* Inter font */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+* {
+  /* Reset margin and padding */
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  padding: 0;
+  box-sizing: border-box;
+
+  /* Colors */
+  --primary-color: #15191f;
+  --secondary-color: #1b1e28;
+  --tertiary-color: #242732;
+  --quaternary-color: #232631;
+  --primary-accent: #0bbf35;
+  --alt-primary-accent: #209240;
+  --secondary-accent: #1bc2ff;
+  --gray-text: #4b4e56;
+  --light-gray-text: #d9e2e2;
+  --gray: #2d343f;
+
+  /* Theme Margins and Padding */
+
+  --margin: 1rem;
+  --padding: 1rem;
+
+  /* Default text color */
+  color: var(--light-gray-text);
+
+  /* Scroll Bars */
+  scrollbar-width: thin;
+  scrollbar-color: rgb(32, 32, 31) rgb(4, 4, 22);
+}
+
+/* Scroll Bars - Cont*/
+
+/* Works on Chrome, Edge, and Safari */
+*::-webkit-scrollbar {
+  width: 8px;
+}
+
+*::-webkit-scrollbar-track {
+  background: rgb(32, 32, 31);
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: rgb(4, 4, 22);
+  border-radius: 20px;
+  border: 2px solid rgb(32, 32, 31);
+}
+
+/* End Scroll Bars */
+
+/*  HTML and Body Globals */
+html {
+  /* Default background color (No white flash) */
+  background: var(--primary-color);
+}
+
+body {
+  font-family: 'Inter', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+/* Reusable Classes */
+
+.Action-button {
+  background: var(--primary-accent);
+  border: none;
+  border-radius: 0.5rem;
+  padding: 1.0rem 1.5rem;
+  font-size: 1.5rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: 0.2s ease-in-out;
+}
+
+.Action-button:hover {
+  background: var(--alt-primary-accent);
+  scale: 1.1;
+}
+
+.Button {
+  background: var(--tertiary-color);
+  border: none;
+  border-radius: 0.5rem;
+  padding: 1.0rem 1.5rem;
+  font-size: 1.5rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: 0.2s ease-in-out;
+}
+
+.Button:hover {
+  background: var(--gray);
+  scale: 1.1;
+}
+
+.Text-shadow {
+  text-shadow: 0 0 0.4rem rgba(0, 0, 0, 0.9);
 }

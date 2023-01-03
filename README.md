@@ -1,46 +1,54 @@
-# Getting Started with Create React App
+# Trash Scan&#8482;, the _App_
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+![TrashScan](./src/assets/images/logo.png)
 
-## Available Scripts
+## Coming Soon
 
-In the project directory, you can run:
+## Description
 
-### `npm start`
+**Trash Scan**&#8482;, the _Device_, provides users an inexpensive way to track the items they throw away so that they can be repurchased with ease. This was a request for a family member and the user story for the scanner is as follows:
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+```txt
+I want a device near my trash can
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+So that I can scan the bar codes of the grocery items I am discarding in the trash.
 
-### `npm test`
+I want to be able to access the list of discarded items on my phone or computer
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+So that I can view them later for purchasing.
+```
 
-### `npm run build`
+**Trash Scan**&#8482;, the _App_, provides the UI for the remaining user requirements. Ideally, **Trash Scan**&#8482;, the _App_, should be used with **Trash Scan**&#8482;, the _Device_. But the app has been expanded for general-purpose use and provides a bar code scanner via your device's camera as a back-up.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+In the preliminary stages, **Trash Scan**&#8482;, the _App_ has been implemented around the following user story and needs:
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+```txt
+When I sign in as an authenticated user, I am taken to my dashboard.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Where I can create, view, edit, and delete item-lists.
 
-### `npm run eject`
+I want to be able to name my lists and know when it was created or last updated.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+Scanned items from Trash Scan the device should automatically appear as an item in my default list, or a list I have designated as a default list.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+If a default list doesn't exist then one should be created automatically so that I do not lose track of any items.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+Barcode data should be translated automatically, and I should be able to add in the necessary information if it can't be found.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+I want to be able to indicate an item isn't needed without removing it from the list, like a check mark or something similar.
 
-## Learn More
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## How to Contribute
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+If you have ideas for improving **Trash Scan**&#8482;, the _App_, or you wish to contribute to the project please feel free to send me an email!
+
+## Contact
+
+If you have any questions please feel free to email me @ [anthonytropeano@protonmail.com](mailto:anthonytropeano@protonmail.com)
+
+## License
+
+This product is not licensed for reuse at this time.
+
+© 2023 Anthony Tropeano
