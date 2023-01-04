@@ -1,0 +1,13 @@
+.Basic-logo {
+    font-size: 68px;
+    font-weight: 500;
+    margin-left: 8px;
+    margin-bottom: -10px;
+    letter-spacing: -10px;
+}
+
+.Basic-logo span {
+    font-size: 34px;
+    font-weight: 700;
+    color: var(--primary-accent);
+}

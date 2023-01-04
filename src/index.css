@@ -24,8 +24,7 @@
   --margin: 1rem;
   --padding: 1rem;
 
-  /* Default text color */
-  color: var(--light-gray-text);
+
 
   /* Scroll Bars */
   scrollbar-width: thin;
@@ -43,10 +42,10 @@
   background: rgb(32, 32, 31);
 }
 
+
 *::-webkit-scrollbar-thumb {
-  background-color: rgb(4, 4, 22);
-  border-radius: 20px;
-  border: 2px solid rgb(32, 32, 31);
+  background-color: rgb(5, 5, 21);
+  border-radius: 12px;
 }
 
 /* End Scroll Bars */
@@ -54,11 +53,15 @@
 /*  HTML and Body Globals */
 html {
   /* Default background color (No white flash) */
-  background: var(--primary-color);
+
+  background-color: black;
+  color: var(--light-gray-text);
 }
 
 body {
+  background: var(--primary-color);
   font-family: 'Inter', sans-serif;
+  /* Default text color */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -67,6 +70,7 @@ body {
 
 .Action-button {
   background: var(--primary-accent);
+  color: var(--light-gray-text);
   border: none;
   border-radius: 0.5rem;
   padding: 1.0rem 1.5rem;
@@ -74,15 +78,18 @@ body {
   font-weight: 500;
   cursor: pointer;
   transition: 0.2s ease-in-out;
+  text-decoration: none;
 }
 
 .Action-button:hover {
   background: var(--alt-primary-accent);
   scale: 1.1;
+  text-decoration: none;
 }
 
 .Button {
   background: var(--tertiary-color);
+  color: var(--light-gray-text);
   border: none;
   border-radius: 0.5rem;
   padding: 1.0rem 1.5rem;
@@ -90,11 +97,25 @@ body {
   font-weight: 500;
   cursor: pointer;
   transition: 0.2s ease-in-out;
+  text-decoration: none;
+}
+
+.Disabled-button {
+  background: var(--tertiary-color);
+  color: var(--secondary-color);
+  border: 1px solid var(--primary-accent);
+  cursor: not-allowed;
+  border-radius: 0.5rem;
+  padding: 1.0rem 1.5rem;
+  font-size: 1.5rem;
+  font-weight: 500;
+  text-decoration: none;
 }
 
 .Button:hover {
   background: var(--gray);
   scale: 1.1;
+  text-decoration: none;
 }
 
 .Text-shadow {
