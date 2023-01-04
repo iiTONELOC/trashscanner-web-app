@@ -1,6 +1,7 @@
 .Navigation {
     display: flex;
     width: 100%;
+    max-height: 80px;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
@@ -28,11 +29,11 @@
     color: var(--light-gray-text);
 }
 
-.Navigation-item a:hover {
+.Navigation-item span:hover {
     color: var(--secondary-accent);
 }
 
-.Navigation-item-active a, a:hover {
+.Navigation-item-active span, span:hover {
     color: var(--primary-accent);
     text-decoration: underline;
     text-underline-offset: 8px;

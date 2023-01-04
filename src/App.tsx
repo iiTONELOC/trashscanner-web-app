@@ -1,15 +1,17 @@
-import { Home } from './pages';
-import { Layout, Footer, Navigation } from './components';
+import { RouterProvider } from './providers';
+import { Layout, Footer, Navigation, ViewRenderer } from './components';
 
 
+function App() {
 
-function App(): JSX.Element {
   return (
-    <Layout>
-      <Navigation />
-      <Home />
-      <Footer />
-    </Layout>
+    <RouterProvider>
+      <Layout>
+        <Navigation />
+        <ViewRenderer />
+        <Footer />
+      </Layout>
+    </RouterProvider>
   );
 }
 

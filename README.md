@@ -6,7 +6,7 @@
 
 ## Description
 
-**Trash Scan**&#8482;, the _Device_, provides users an inexpensive way to track the items they throw away so that they can be repurchased with ease. This was a request for a family member and the user story for the scanner is as follows:
+**Trash Scan**&#8482;, the _Device_, provides users an inexpensive way to track the items they throw away so that they can be repurchased with ease. This was a request from a family member and the user story for the scanner is as follows:
 
 ```txt
 I want a device near my trash can

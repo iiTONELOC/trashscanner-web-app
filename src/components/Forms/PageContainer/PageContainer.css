@@ -1,0 +1,28 @@
+.Form-page-container {
+    display: flex;
+    padding: var(--padding);
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+    height: auto;
+    width: 100%;
+    gap: 3rem;
+}
+
+.Form-page-title {
+    justify-self: flex-start;
+    font-size: 3rem;
+    font-weight: 500;
+}
+
+
+.Form-page-title span {
+    color: var(--primary-accent)
+}
+
+.Form-page-container h1:nth-child(2) {
+    font-size: 3rem;
+    font-weight: 500;
+    margin-top: -2rem;
+    color: var(--primary-accent)
+}

@@ -1,8 +1,11 @@
 import './Home.css';
+import { useRouterContext } from '../../providers';
 import logoImage from '../../assets/images/logo.png';
 
 
 export default function Home(): JSX.Element {
+    const { handleRouteChange } = useRouterContext();
+
     return (
         <section className='Home-container Text-shadow'>
             <header className='Home-header'>
@@ -20,8 +23,16 @@ export default function Home(): JSX.Element {
                     dolorum nemo nisi maxime?
                 </p>
                 <div className='Action-button-container'>
-                    <button className='Action-button Text-shadow'>SIGN UP</button>
-                    <button className='Button Text-shadow'>LOGIN</button>
+                    <button
+                        role={'navigation'}
+                        aria-label={'Sign Up'}
+                        onClick={() => handleRouteChange('/signup')}
+                        className='Action-button Text-shadow'>SIGN UP</button>
+                    <button
+                        role={'navigation'}
+                        aria-label={'Login'}
+                        onClick={() => handleRouteChange('/login')}
+                        className='Button Text-shadow'>LOGIN</button>
                 </div>
             </div>
 
