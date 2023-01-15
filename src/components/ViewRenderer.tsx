@@ -1,7 +1,7 @@
-import { navLinks } from '../components';
+import { WithAuth } from '../components';
 import { useState, useEffect } from 'react';
-import { Home, SignUp, Login } from '../pages';
-import { useRouterContext } from '../providers';
+import { Home, SignUp, Login, Lists } from '../pages';
+import { useNavLinkContext, useRouterContext } from '../providers';
 
 /**
  * This Component checks the current route and the current path and renders
@@ -10,10 +10,15 @@ import { useRouterContext } from '../providers';
 
 export default function ViewRenderer(): JSX.Element {
     const routerContext = useRouterContext();
+    const { navLinks } = useNavLinkContext();
+
     const { currentRoute, handleRouteChange } = routerContext;
     const [isMounted, setIsMounted] = useState(false);
 
     const currentPath = window.location.pathname;
+
+    const validLinks = navLinks.map(link => link.href);
+
 
     useEffect(() => {
         setIsMounted(true);
@@ -25,9 +30,9 @@ export default function ViewRenderer(): JSX.Element {
     useEffect(() => {
         if (isMounted && currentRoute !== currentPath) {
             // check if currentPath is a valid route
-            navLinks.find(link => link.href === currentPath) && handleRouteChange(currentPath);
+            validLinks.find(link => link === currentPath) && handleRouteChange(currentPath);
         }
-    }, [currentPath, isMounted, handleRouteChange, currentRoute]);
+    }, [currentPath, isMounted, handleRouteChange, currentRoute, validLinks]);
 
 
     // Renders the appropriate component based on the currentRoute state
@@ -35,6 +40,8 @@ export default function ViewRenderer(): JSX.Element {
         return <SignUp />;
     } else if (currentRoute === '/login') {
         return <Login />;
+    } else if (currentRoute === '/lists') {
+        return <WithAuth><Lists /></WithAuth>;
     } else {
         return <Home />;
     }

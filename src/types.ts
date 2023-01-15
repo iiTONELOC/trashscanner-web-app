@@ -19,3 +19,6 @@ export type {
 export interface INavLinks {
     navLinks: { name: string; href: string; }[];
 }
+
+//  AUTHENTICATION
+export type { IJwtPayload } from './utils/APIs';

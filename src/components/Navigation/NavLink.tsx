@@ -14,6 +14,8 @@ export default function NavLink(props: IProps) {
     const { name, href } = link;
 
     const action = () => {
+        href === '/logout' && localStorage.removeItem('trash-user');
+        href === '/logout' && window.location.replace('/');
         handleRouteChange(href);
         if (props.afterClick) {
             props.afterClick();

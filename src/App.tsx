@@ -1,17 +1,19 @@
-import { RouterProvider } from './providers';
+import { NavLinkProvider, RouterProvider } from './providers';
 import { Layout, Footer, Navigation, ViewRenderer } from './components';
 
 
 function App() {
 
   return (
-    <RouterProvider>
-      <Layout>
-        <Navigation />
-        <ViewRenderer />
-        <Footer />
-      </Layout>
-    </RouterProvider>
+    <Layout>
+      <NavLinkProvider>
+        <RouterProvider>
+          <Navigation />
+          <ViewRenderer />
+        </RouterProvider>
+      </NavLinkProvider>
+      <Footer />
+    </Layout>
   );
 }
 

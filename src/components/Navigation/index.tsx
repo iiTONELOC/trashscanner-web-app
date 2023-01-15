@@ -1,10 +1,11 @@
 import './Navigation.css';
-import navLinks from './data';
 import NavLink from './NavLink';
 import { useState } from 'react';
 import BasicLogo from '../BasicLogo';
 import { INavLinks } from '../../types';
 import { useIsMobile } from '../../hooks';
+
+import { useNavLinkContext } from '../../providers';
 import { CloseIcon, EllipsisMenu } from '../Icons';
 
 
@@ -20,7 +21,11 @@ export default function Navigation(/*props: INavProps*/): JSX.Element {
     const [showMobileMenu, setShowMobileMenu] = useState<boolean>(false);
     const isMobile: boolean = useIsMobile();
 
+    const { navLinks } = useNavLinkContext();
+
     const toggleMobileMenu = (): void => setShowMobileMenu(!showMobileMenu);
+
+
 
     return (
         <nav className='Navigation'>

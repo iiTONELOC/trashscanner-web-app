@@ -6,8 +6,16 @@
     letter-spacing: -10px;
 }
 
+.Basic-logo:hover {
+    cursor: pointer;
+}
+
 .Basic-logo span {
     font-size: 34px;
     font-weight: 700;
     color: var(--primary-accent);
+}
+
+.Basic-logo:hover span {
+    color: var(--secondary-accent);
 }

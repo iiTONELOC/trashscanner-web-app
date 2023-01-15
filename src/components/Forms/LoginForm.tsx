@@ -2,7 +2,8 @@ import './Forms.css';
 import FormInput from '../FormInput';
 import FormAction from './FormAction';
 import { useState, useEffect } from 'react';
-
+import { useUserContext } from '../../providers';
+import { Authentication } from '../../utils/APIs';
 
 interface FormState {
     username: string | null;
@@ -19,8 +20,6 @@ export function LoginForm() {// NOSONAR
     const [isMounted, setIsMounted] = useState<boolean | null>(false);
     const [formState, setFormState] = useState<FormState>(defaultFormState);
     const [isFormValid, setIsFormValid] = useState<boolean>(false);
-
-
 
     useEffect(() => {
         setIsMounted(true);
@@ -53,8 +52,6 @@ export function LoginForm() {// NOSONAR
         const name = e.target.getAttribute('id') || '';
         const { value } = e.target;
 
-        // update the form state
-        // seralize the value into html friendly string
         const safeString = value.replace(/</g, '&lt;').replace(/>/g, '&gt;');
         setFormState({ ...formState, [name]: safeString });
     };
@@ -63,14 +60,22 @@ export function LoginForm() {// NOSONAR
         e.preventDefault();
         e.stopPropagation();
 
+        const { username, password } = formState;
 
-        console.log('login');
-        console.log({
-            formState
+        Authentication.login(username || '', password || '').then(res => {
+            console.log(res);
+            if (res.status === 200) {
+                localStorage.setItem('trash-user', res.data);
+                // redirect to home page
+                window.location.replace('/lists');
+            } else {
+                window.alert('Login failed');
+                console.error(res);
+            }
+        }).catch((err) => {
+            console.log(err);
         });
     };
-
-
 
 
     return isMounted ? (

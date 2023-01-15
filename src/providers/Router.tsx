@@ -1,10 +1,5 @@
+import { useNavLinkContext } from './navLinks';
 import { useContext, createContext, useState } from 'react';
-
-const navLinks = [
-    { name: 'HOME', href: '/' },
-    { name: 'SIGN UP', href: '/signup' },
-    { name: 'LOGIN', href: '/login' }
-];
 
 interface RouterContextType {
     currentRoute: string;
@@ -16,6 +11,7 @@ const { Provider } = RouterContext;
 
 
 export default function RouterProvider(props: React.PropsWithChildren) { // NOSONAR
+    const { navLinks } = useNavLinkContext();
     const [currentRoute, setCurrentRoute] = useState(navLinks[0].href);
 
     const handleRouteChange = (route: string) => {

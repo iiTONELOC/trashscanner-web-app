@@ -31,12 +31,14 @@
 
 .Navigation-item span:hover {
     color: var(--secondary-accent);
+    cursor: pointer;
 }
 
 .Navigation-item-active span, span:hover {
     color: var(--primary-accent);
     text-decoration: underline;
     text-underline-offset: 8px;
+    cursor: pointer;
 }
 
 
