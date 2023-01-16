@@ -1,3 +1,2 @@
 export { default as Authentication } from './Authentication';
-
-export type { IJwtPayload } from './Authentication';
+export { default as UpcDb } from './UpcDb';

@@ -28,6 +28,14 @@ export const isExpired = (token: string | IJwtPayload): boolean => {
     }
 };
 
+export const decodeToken = (token: string): IJwtPayload | null => {
+    try {
+        return jwt_decode(token);
+    } catch (error) {
+        return null;
+    }
+};
+
 
 const UserContext = createContext<UserContextType>({} as UserContextType);
 const { Provider } = UserContext;

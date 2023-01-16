@@ -15,7 +15,7 @@ export default function MainTitle(props: IMainTitleProps): JSX.Element {
             {/* @ts-ignore */}
             <h1 className='Main-title'>
                 {mainTitle} {mainTitleSpan && <span>{mainTitleSpan}</span>}
-                {extendedTitle && <h1 className='Main-title-extended'>{extendedTitle}</h1>}
+                {extendedTitle && <p className='Main-title-extended'>{extendedTitle}</p>}
             </h1>
         </section>
     );

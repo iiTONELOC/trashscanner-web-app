@@ -1,15 +1,8 @@
-const API_URL = process.env.REACT_APP_AUTH_SERVER_API_URL;
+import { IApiResponse } from '../../types';
 
+const API_URL = process.env.REACT_APP_AUTH_SERVER_API_URL;
 const API_AUTH = process.env.REACT_APP_AUTH_SERVER_APP_KEY;
 
-export interface IJwtPayload {
-    unique_name: string;
-    email: string;
-    nameid: string;
-    nbf: number;
-    exp: number;
-    iat: number;
-}
 
 export default class Authentication {
 
@@ -17,7 +10,8 @@ export default class Authentication {
      * Utilizes the Authentication Server API to login a user
      */
 
-    static async login(username: string, password: string) {
+    static async login(username: string, password: string):
+        Promise<IApiResponse<string | null>> {
         try {
             if (!API_URL || !API_AUTH) {
                 throw new Error('API_URL or API_AUTH is not defined');
@@ -39,7 +33,11 @@ export default class Authentication {
             console.log(error);
 
             return {
-                error: 'Error while trying to login'
+                error: {
+                    message: 'An error occurred while attempting to login'
+                },
+                status: 500,
+                data: null
             };
         }
     }

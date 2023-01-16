@@ -2,7 +2,6 @@ import './Forms.css';
 import FormInput from '../FormInput';
 import FormAction from './FormAction';
 import { useState, useEffect } from 'react';
-import { useUserContext } from '../../providers';
 import { Authentication } from '../../utils/APIs';
 
 interface FormState {
@@ -65,7 +64,7 @@ export function LoginForm() {// NOSONAR
         Authentication.login(username || '', password || '').then(res => {
             console.log(res);
             if (res.status === 200) {
-                localStorage.setItem('trash-user', res.data);
+                res.data && localStorage.setItem('trash-user', res.data);
                 // redirect to home page
                 window.location.replace('/lists');
             } else {

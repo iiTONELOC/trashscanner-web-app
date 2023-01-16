@@ -1,36 +1,17 @@
-import { EllipsisMenu } from '../Icons';
 import './ListCard.css';
+import { IList } from '../../types';
+import { EllipsisMenu } from '../Icons';
 
-export interface IProduct {
-    _id: string;
-    barcode: string;
-    name: string;
-    source: {
-        _id: string;
-        name: string;
-        createdAt: Date;
-        updatedAt: Date;
-    },
-    url: string;
-    createdAt: Date;
-    updatedAt: Date;
+interface IProps extends IList {
+    key: string;
 }
 
-export interface IListCardProps {
-    _id: string;
-    key?: string;
-    name: string;
-    isDefault: boolean;
-    createdAt: Date;
-    updatedAt: Date;
-    products: IProduct[];
-}
 
 function displayMostRecentDate(createdAt: Date, updatedAt: Date): string {
     const date = updatedAt > createdAt ? updatedAt : createdAt;
     // dd Mon yy format
-    return date.toLocaleDateString('en-GB',
-        { day: 'numeric', month: 'short', year: '2-digit' });
+    return new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'short', year: '2-digit' })
+        .format(new Date(date));
 }
 
 function DefaultIcon(): JSX.Element {
@@ -40,8 +21,8 @@ function DefaultIcon(): JSX.Element {
     );
 }
 
-export default function ListCard(props: IListCardProps): JSX.Element {
-    const { name, isDefault, createdAt, updatedAt, products, key } = props;
+export default function ListCard(props: IProps): JSX.Element {
+    const { name, isDefault, createdAt, updatedAt, products } = props;
 
     const handleMenuClick = (): void => {
         console.log('Menu Clicked');
@@ -50,7 +31,7 @@ export default function ListCard(props: IListCardProps): JSX.Element {
     const numProducts = products?.length || 0;
 
     return (
-        <article className='List-card' key={key}>
+        <article className='List-card'>
             <header className='List-card-header'>
                 <span>
                     {isDefault && <DefaultIcon />}

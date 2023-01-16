@@ -1,5 +1,5 @@
-import { WithAuth } from '../components';
-import { useState, useEffect } from 'react';
+import { WithAuth, Loading } from '../components';
+import { useState, useEffect, Suspense } from 'react';
 import { Home, SignUp, Login, Lists } from '../pages';
 import { useNavLinkContext, useRouterContext } from '../providers';
 
@@ -41,7 +41,13 @@ export default function ViewRenderer(): JSX.Element {
     } else if (currentRoute === '/login') {
         return <Login />;
     } else if (currentRoute === '/lists') {
-        return <WithAuth><Lists /></WithAuth>;
+        return (
+            <WithAuth>
+                <Suspense fallback={<Loading />}>
+                    <Lists />
+                </Suspense>
+            </WithAuth>
+        );
     } else {
         return <Home />;
     }
