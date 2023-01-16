@@ -1,9 +1,11 @@
 import './BasicLogo.css';
+import { useRouterContext } from '../../providers';
 
 export default function BasicLogo() {
+    const { handleRouteChange } = useRouterContext();
     return (
         <div className='Basic-logo'
-            onClick={() => window.location.href = '/'}
+            onClick={() => handleRouteChange('/')}
         >
             <p>
                 T<span>S</span>

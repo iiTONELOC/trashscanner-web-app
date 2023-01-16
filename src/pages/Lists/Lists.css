@@ -13,7 +13,7 @@
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
-    align-items: end;
+    align-items: flex-end;
     margin: 1rem 0 3rem 1rem;
     width: 100%;
     height: auto;

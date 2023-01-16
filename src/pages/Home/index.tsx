@@ -1,10 +1,11 @@
 import './Home.css';
-import { useRouterContext } from '../../providers';
+import { useRouterContext, useUserContext } from '../../providers';
 import logoImage from '../../assets/images/logo.png';
 
 
 export default function Home(): JSX.Element {
     const { handleRouteChange } = useRouterContext();
+    const { isAuthenticated } = useUserContext();
 
     return (
         <section className='Home-container Text-shadow'>
@@ -22,7 +23,7 @@ export default function Home(): JSX.Element {
                     similique quod in quo libero ullam iste placeat! Sapiente
                     dolorum nemo nisi maxime?
                 </p>
-                <div className='Action-button-container'>
+                {!isAuthenticated && <div className='Action-button-container'>
                     <button
                         role={'navigation'}
                         aria-label={'Sign Up'}
@@ -33,7 +34,7 @@ export default function Home(): JSX.Element {
                         aria-label={'Login'}
                         onClick={() => handleRouteChange('/login')}
                         className='Button Text-shadow'>LOGIN</button>
-                </div>
+                </div>}
             </div>
 
             <div className='Home-hero'>

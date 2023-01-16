@@ -1,4 +1,4 @@
-import { NavLinkProvider, RouterProvider } from './providers';
+import { GlobalStoreProvider, NavLinkProvider, RouterProvider } from './providers';
 import { Layout, Footer, Navigation, ViewRenderer } from './components';
 
 
@@ -9,7 +9,9 @@ function App() {
       <NavLinkProvider>
         <RouterProvider>
           <Navigation />
-          <ViewRenderer />
+          <GlobalStoreProvider>
+            <ViewRenderer />
+          </GlobalStoreProvider>
         </RouterProvider>
       </NavLinkProvider>
       <Footer />

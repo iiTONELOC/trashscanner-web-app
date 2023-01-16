@@ -9,15 +9,12 @@ export class UpcDb {
         const token = localStorage.getItem('trash-user') || '';
         this.USER = token;
     }
+
     async getMyLists(): Promise<IApiResponse<IList[]>> {
         try {
             const response = await fetch(`${UpcDb.API_URL}/lists/user`, {
                 method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${UpcDb.API_KEY}`,
-                    'web-app-token': `Bearer ${this.USER}`
-                }
+                headers: this._getHeaders()
             });
 
             if (response.status === 200) {
@@ -26,7 +23,6 @@ export class UpcDb {
                 throw new Error('Error getting lists');
             }
         } catch (error) {
-            console.log(error);
             return {
                 error: {
                     message: 'An error occurred while attempting to get lists'
@@ -35,6 +31,38 @@ export class UpcDb {
                 data: null
             };
         }
+    }
+
+    async getList(id: string): Promise<IApiResponse<IList>> {
+        try {
+            const response = await fetch(`${UpcDb.API_URL}/lists/${id}`, {
+                method: 'GET',
+                headers: this._getHeaders()
+            });
+
+            if (response.status === 200) {
+                return response.json();
+            } else {
+                throw new Error('Error getting list');
+            }
+        } catch (error) {
+            return {
+                error: {
+                    message: 'An error occurred while attempting to get list'
+                },
+                status: 500,
+                data: null
+            };
+        }
+    }
+
+
+    private _getHeaders(): Headers {
+        const headers = new Headers();
+        headers.append('Content-Type', 'application/json');
+        headers.append('Authorization', `Bearer ${UpcDb.API_KEY}`);
+        headers.append('web-app-token', `Bearer ${this.USER}`);
+        return headers;
     }
 }
 

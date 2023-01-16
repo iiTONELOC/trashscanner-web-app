@@ -1,6 +1,7 @@
 import './ListCard.css';
 import { IList } from '../../types';
 import { EllipsisMenu } from '../Icons';
+import { useRouterContext } from '../../providers';
 
 interface IProps extends IList {
     key: string;
@@ -22,7 +23,8 @@ function DefaultIcon(): JSX.Element {
 }
 
 export default function ListCard(props: IProps): JSX.Element {
-    const { name, isDefault, createdAt, updatedAt, products } = props;
+    const { name, isDefault, createdAt, updatedAt, products, _id } = props;
+    const { handleRouteChange } = useRouterContext();
 
     const handleMenuClick = (): void => {
         console.log('Menu Clicked');
@@ -31,7 +33,11 @@ export default function ListCard(props: IProps): JSX.Element {
     const numProducts = products?.length || 0;
 
     return (
-        <article className='List-card'>
+        <article
+            className='List-card'
+            onClick={() => handleRouteChange(`/list/${_id}`)}
+        >
+
             <header className='List-card-header'>
                 <span>
                     {isDefault && <DefaultIcon />}
