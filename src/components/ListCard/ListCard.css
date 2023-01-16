@@ -1,0 +1,141 @@
+/* List item */
+.List-card {
+    background-color: var(--quaternary-color);
+    padding: 10px;
+    margin: 10px;
+    border-color: none;
+    border-radius: 5px;
+    /* create a drop shadow */
+    box-shadow: 0 0 10px 0 rgba(51, 51, 51, 0.2);
+    width: 225px;
+    height: 150px;
+    max-height: calc(100vh - 100px);
+    display: grid;
+}
+
+.List-card:hover {
+    scale: 1.05;
+    transition: 0.2s ease-in-out;
+    background: var(--tertiary-color);
+    filter: brightness(1.05) drop-shadow(0 0 1px rgba(234, 234, 234, 0.9));
+}
+
+.List-card-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    margin-top: -12px;
+    color: var(--gray-text);
+    width: 100%;
+}
+
+.List-card-header span {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: flex-end;
+    gap: 5px;
+}
+
+.List-card-header span:hover {
+    /* regular cursor */
+    cursor: default;
+    color: var(--gray-text);
+    text-decoration: none;
+}
+
+.List-card-info-span {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: flex-end;
+    color: var(--gray-text);
+}
+
+.List-card-info-span p {
+    margin-left: 5px;
+    color: var(--primary-accent)
+}
+
+.List-card-info-span:hover {
+    cursor: default;
+    color: var(--gray-text);
+    text-decoration: none;
+}
+
+.List-card-default-icon {
+    border-radius: 50%;
+    background-color: var(--light-gray-text);
+    /* center the icon */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* create a drop shadow */
+    box-shadow: 0 0 10px 0 rgba(51, 51, 51, 0.2);
+    width: 12px;
+    height: 12px;
+    margin: 0 auto;
+    margin-bottom: 4px;
+}
+
+.List-card-name {
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: var(--light-gray-text);
+    margin-bottom: 5px;
+    margin-top: -2rem;
+}
+
+.List-card-menu-icon {
+    /* regular cursor */
+    cursor: default;
+    color: var(--gray-text);
+    text-decoration: none;
+    width: 35px;
+    height: 35px;
+    margin-right: -10px;
+}
+
+.List-card-menu-icon:hover {
+    /* regular cursor */
+    cursor: pointer;
+    color: var(--primary-accent);
+    scale: 1.1;
+    transition: 0.2s ease-in-out;
+}
+
+/* on mobile */
+
+@media screen and (max-width: 780px) {
+    .List-card {
+        width: 200px;
+        margin: 10px 0;
+    }
+
+    .List-card-name {
+        font-size: 1.3rem;
+    }
+}
+
+@media screen and (max-width: 680px) {
+    .List-card {
+        width: 175px;
+        margin: 8px 0;
+    }
+
+    .List-card-header {
+        font-size: smaller;
+    }
+
+    .List-card-default-icon {
+        width: 10px;
+        height: 10px;
+    }
+
+    .List-card-menu-icon {
+        width: 30px;
+        height: 30px;
+    }
+}

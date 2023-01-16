@@ -1,10 +1,8 @@
 import './PageContainer.css';
+import { IMainTitleProps } from '../../../types';
+import MainTitle from '../../MainTitle';
 
-
-export interface IFormPageContainerProps {
-    mainTitle: string;
-    mainTitleSpan?: string;
-    extendedTitle?: string;
+export interface IFormPageContainerProps extends IMainTitleProps {
     children: JSX.Element | JSX.Element[];
 }
 
@@ -12,9 +10,11 @@ export default function FormPageContainer(props: IFormPageContainerProps): JSX.E
     const { mainTitle, mainTitleSpan, extendedTitle, children } = props;
     return (
         <section className='Form-page-container'>
-            <h1 className='Form-page-title'>
-                {mainTitle} {mainTitleSpan && <span>{mainTitleSpan}</span>}</h1>
-            {extendedTitle && <h1>{extendedTitle}</h1>}
+            <MainTitle
+                mainTitle={mainTitle}
+                mainTitleSpan={mainTitleSpan}
+                extendedTitle={extendedTitle}
+            />
 
             {/* FORM GOES HERE */}
             {children}

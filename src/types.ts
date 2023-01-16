@@ -1,6 +1,7 @@
 // COMPONENT TYPES
 export type {
     ILayoutProps,
+    IMainTitleProps,
     IFormInputProps
 } from './components';
 

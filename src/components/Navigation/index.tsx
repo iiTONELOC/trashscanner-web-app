@@ -47,7 +47,7 @@ export default function Navigation(/*props: INavProps*/): JSX.Element {
                     ) :
                     (// Mobile Navigation
                         <div className='Navigation-mobile'>
-                            <p>{CurrentLink(navLinks)}</p>
+                            {/* <p>{CurrentLink(navLinks)}</p> */}
 
                             <EllipsisMenu
                                 className='Navigation-menu-icon'

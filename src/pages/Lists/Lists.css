@@ -1,0 +1,86 @@
+/* Page Container */
+.My-lists {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    min-height: calc(100vh - 240px);
+    overflow: hidden
+}
+
+/* Header */
+.My-list-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: end;
+    margin: 1rem 0 3rem 1rem;
+    width: 100%;
+    height: auto;
+    color: var(--gray-text);
+}
+
+.My-list-header h1 {
+    font-size: 3rem;
+    font-weight: 500;
+}
+
+.My-list-header span {
+    color: var(--primary-accent);
+    font-size: 3rem;
+}
+
+.My-list-header p {
+    font-size: 1.5rem;
+    font-weight: 500;
+}
+
+/* List Container */
+.List-container {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    column-gap: 6rem;
+    row-gap: 2rem;
+    align-items: center;
+    overflow-y: auto;
+}
+
+
+
+/* Responsive */
+@media screen and (max-width: 1200px) {
+    .List-container {
+        width: 96%;
+        column-gap: 3rem;
+        row-gap: 2rem;
+    }
+}
+
+@media screen and (max-width: 900px) {
+    .List-container {
+        width: 96%;
+        column-gap: 1.5rem;
+        row-gap: 1rem;
+    }
+}
+
+@media screen and (max-width: 800px) {
+    .List-container {
+        width: 96%;
+        column-gap: .5rem;
+        row-gap: 0;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .My-list-header h1, .My-list-header span {
+        font-size: 2rem;
+    }
+
+    .My-list-header p {
+        font-size: 1.25rem;
+    }
+}

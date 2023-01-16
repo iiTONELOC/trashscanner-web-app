@@ -50,7 +50,7 @@
         width: 100vw;
         display: flex;
         flex-direction: row;
-        justify-content: space-between;
+        justify-content: flex-end;
         align-items: center;
         font-size: larger;
     }
