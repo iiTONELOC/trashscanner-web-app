@@ -1,45 +1,53 @@
 import './Lists.css';
-import { IList } from '../../types';
 import { suspender } from '../../utils';
 import { UpcDb } from '../../utils/APIs';
+import { IList, IUpcDb } from '../../types';
 import { ListCard } from '../../components';
 import { useEffect, useState } from 'react';
 import { useGlobalStoreContext, reducerActions } from '../../providers/globalStore';
 
-const upcDb = new UpcDb();
+const upcDb: IUpcDb = new UpcDb();
 
 const userListData = suspender(upcDb.getMyLists());
 
 export default function Lists(): JSX.Element {// NOSONAR
+    const [isMounted, setIsMounted] = useState<null | boolean>(null);
+
     const listData = userListData.read();
     const { data } = listData;
-    const numLists = data?.length || 0;
+
     const { globalState, dispatch } = useGlobalStoreContext();
-    const [isMounted, setIsMounted] = useState<null | boolean>(null);
+
+    const numLists = data?.length || 0;
 
     useEffect(() => {
         setIsMounted(true);
-        // Set the lists in the global store
-        dispatch({
-            type: reducerActions.SET_LISTS,
-            payload: {
-                lists: data || []
-            }
-        });
-        //TODO: IMPLEMENT IDB
-        return () => setIsMounted(false);
+        return () => setIsMounted(null);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
+    useEffect(() => {
+        if (isMounted) {
+            // Set the lists in the global store
+            dispatch({
+                type: reducerActions.SET_LISTS,
+                payload: {
+                    lists: data || []
+                }
+            });
+            //TODO: IMPLEMENT IDB
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [data, isMounted]);
 
     return isMounted ? (
         <section className='My-lists'>
-            <header className='My-list-header'>
+            <header className='My-lists-header'>
                 <h1>My <span>Lists</span></h1>
                 <p>({numLists})</p>
             </header>
 
-            <section className='List-container'>
+            <section className='Lists-container'>
                 {globalState.lists && [...Object.entries(globalState.lists)].map((
                     list: [string, IList], index: number) => {
 

@@ -9,7 +9,7 @@ export default function SignUp(): JSX.Element {
 
     return (
         <FormPageContainer
-            mainTitle='Welcome Back!'
+            FormTitle='Welcome Back!'
             extendedTitle='Login'
         >
 

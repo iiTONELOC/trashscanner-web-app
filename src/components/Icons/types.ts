@@ -1,4 +1,4 @@
 export interface IIconProps {
     className?: string;
-    onClick?: () => void;
+    onClick?: (e?: React.SyntheticEvent) => void;
 }

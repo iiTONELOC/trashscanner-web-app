@@ -1,7 +1,7 @@
 // COMPONENT TYPES
 export type {
     ILayoutProps,
-    IMainTitleProps,
+    IMainFormTitleProps,
     IFormInputProps
 } from './components';
 
@@ -68,3 +68,5 @@ export interface IList {
     updatedAt: Date;
 }
 
+// UPC DB API
+export type { IUpcDb } from './utils/APIs/UpcDb';

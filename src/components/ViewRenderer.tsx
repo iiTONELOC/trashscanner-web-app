@@ -26,7 +26,9 @@ function ComponentLoader(props:
     } else if (props.regex.test(props.currentPath)) {
         return (
             <WithAuth>
-                <List />
+                <Suspense fallback={<Loading />}>
+                    <List />
+                </Suspense>
             </WithAuth>
         );
     } else {
@@ -40,13 +42,12 @@ function ComponentLoader(props:
  */
 
 export default function ViewRenderer(): JSX.Element { // NOSONAR
+    const currentPath = window.location.pathname;
     const routerContext = useRouterContext();
     const { navLinks } = useNavLinkContext();
 
     const { currentRoute, handleRouteChange } = routerContext;
     const [isMounted, setIsMounted] = useState(false);
-
-    const currentPath = window.location.pathname;
 
     const validLinks = navLinks.map(link => link.href);
     const listRegex = /^\/list\/[a-z0-9]{24}$/;

@@ -9,7 +9,7 @@
 }
 
 /* Header */
-.My-list-header {
+.My-lists-header {
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
@@ -20,23 +20,28 @@
     color: var(--gray-text);
 }
 
-.My-list-header h1 {
+.My-lists-header h1 {
     font-size: 3rem;
     font-weight: 500;
 }
 
-.My-list-header span {
+.My-lists-header span {
     color: var(--primary-accent);
     font-size: 3rem;
 }
 
-.My-list-header p {
+.My-lists-header span:hover {
+    cursor: default;
+    text-decoration: none;
+}
+
+.My-lists-header p {
     font-size: 1.5rem;
     font-weight: 500;
 }
 
 /* List Container */
-.List-container {
+.Lists-container {
     display: flex;
     flex-direction: row;
     width: 100%;
@@ -52,7 +57,7 @@
 
 /* Responsive */
 @media screen and (max-width: 1200px) {
-    .List-container {
+    .Lists-container {
         width: 96%;
         column-gap: 3rem;
         row-gap: 2rem;
@@ -60,7 +65,7 @@
 }
 
 @media screen and (max-width: 900px) {
-    .List-container {
+    .Lists-container {
         width: 96%;
         column-gap: 1.5rem;
         row-gap: 1rem;
@@ -68,7 +73,7 @@
 }
 
 @media screen and (max-width: 800px) {
-    .List-container {
+    .Lists-container {
         width: 96%;
         column-gap: .5rem;
         row-gap: 0;
@@ -76,11 +81,11 @@
 }
 
 @media screen and (max-width: 768px) {
-    .My-list-header h1, .My-list-header span {
+    .My-lists-header h1, .My-lists-header span {
         font-size: 2rem;
     }
 
-    .My-list-header p {
+    .My-lists-header p {
         font-size: 1.25rem;
     }
 }

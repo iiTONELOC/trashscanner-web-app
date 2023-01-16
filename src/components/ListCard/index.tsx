@@ -26,8 +26,10 @@ export default function ListCard(props: IProps): JSX.Element {
     const { name, isDefault, createdAt, updatedAt, products, _id } = props;
     const { handleRouteChange } = useRouterContext();
 
-    const handleMenuClick = (): void => {
-        console.log('Menu Clicked');
+    const handleMenuClick = (e?: React.SyntheticEvent): void => {
+        e?.stopPropagation();
+        e?.preventDefault();
+        console.log('Card Menu clicked');
     };
 
     const numProducts = products?.length || 0;

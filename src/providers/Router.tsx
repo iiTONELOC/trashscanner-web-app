@@ -19,6 +19,11 @@ export default function RouterProvider(props: React.PropsWithChildren) { // NOSO
         setCurrentRoute(route);
     };
 
+    // listen for nav forward and back events
+    window.onpopstate = () => {
+        setCurrentRoute(window.location.pathname);
+    };
+
     return <Provider value={{ currentRoute, handleRouteChange }} {...props} />;
 };
 

@@ -1,5 +1,5 @@
-import { IList, IProduct } from '../../types';
 import reducerActions from './storeActions';
+import { IList, IProduct } from '../../types';
 import { useGlobalReducer } from './storeReducer';
 
 import { useContext, createContext, Dispatch } from 'react';

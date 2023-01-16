@@ -1,6 +1,16 @@
 import { IApiResponse, IList } from '../../types';
 
-export class UpcDb {
+
+
+export interface IUpcDb {
+    getMyLists(): Promise<IApiResponse<IList[]>>;
+    getList(id: string): Promise<IApiResponse<IList>>;
+}
+
+
+
+
+export class UpcDb implements IUpcDb {
     private static readonly API_KEY = process.env.REACT_APP_UPC_DB_API_KEY;
     private static readonly API_URL = process.env.REACT_APP_UPC_DB_URL;
     protected USER: string;

@@ -62,7 +62,6 @@ export function LoginForm() {// NOSONAR
         const { username, password } = formState;
 
         Authentication.login(username || '', password || '').then(res => {
-            console.log(res);
             if (res.status === 200) {
                 res.data && localStorage.setItem('trash-user', res.data);
                 // redirect to home page

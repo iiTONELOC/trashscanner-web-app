@@ -53,13 +53,12 @@
 /*  HTML and Body Globals */
 html {
   /* Default background color (No white flash) */
-
-  background-color: black;
+  background-color: var(--primary-color);
   color: var(--light-gray-text);
 }
 
 body {
-  background: var(--primary-color);
+  /* background: var(--primary-color); */
   font-family: 'Inter', sans-serif;
   /* Default text color */
   -webkit-font-smoothing: antialiased;
