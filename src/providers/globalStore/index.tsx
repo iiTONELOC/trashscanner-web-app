@@ -3,18 +3,18 @@ import { IList, IProduct } from '../../types';
 import { useGlobalReducer } from './storeReducer';
 
 import { useContext, createContext, Dispatch } from 'react';
-interface IAction<T> {
+export interface IAction<T> {
     type: string;
     payload: T;
 }
 
-interface IPayloads {
+export interface IPayloads {
     lists?: IList[];
     list?: IList;
     product?: IProduct;
 }
 
-interface GlobalStoreContextType {
+export interface GlobalStoreContextType {
     globalState: {
         lists: {
             [key: string]: IList;

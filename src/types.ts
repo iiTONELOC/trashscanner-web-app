@@ -1,3 +1,5 @@
+//  REDUCER and CONTEXT TYPES
+import type { IAction, IPayloads, GlobalStoreContextType } from './providers';
 // COMPONENT TYPES
 export type {
     ILayoutProps,
@@ -70,3 +72,12 @@ export interface IList {
 
 // UPC DB API
 export type { IUpcDb } from './utils/APIs/UpcDb';
+
+
+
+export interface IContext {
+    dispatch: React.Dispatch<IAction<IPayloads>>;
+    actions: { [key: string]: string };
+}
+
+export type { IAction, IPayloads, GlobalStoreContextType };

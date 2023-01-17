@@ -4,3 +4,7 @@ export { default as UserProvider, UserContext, useUserContext, isExpired, decode
 export {
     default as GlobalStoreProvider, useGlobalStoreContext, GlobalStoreContext, reducerActions
 } from './globalStore';
+
+export type {
+    IAction, IPayloads, GlobalStoreContextType
+} from './globalStore';

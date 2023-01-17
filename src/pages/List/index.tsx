@@ -66,30 +66,35 @@ export default function List(): JSX.Element {// NOSONAR
     // Sets the list data is the component's state
     useEffect(() => {
         if (listId && lists && isMounted) {
-            const _list = lists[listId];
+            // wait 500ms before checking if the list data exists in the global store
+            // the first request may still be in progress
+            setTimeout(() => {
 
-            if (_list) {
-                // if list data exists in global store, set it in the component's state
-                setList(_list);
-            } else {
-                // if list data does not exist in global store, fetch it from the API
-                // and set it in the global store
-                upcDb.getList(listId).then(res => {
-                    const { data } = res;
-                    if (data) {
-                        setList(data);
-                        dispatch({
-                            type: reducerActions.SET_LISTS,
-                            payload: {
-                                list: data
-                            }
-                        });
-                    }
-                });
-            }
+                const _list = lists[listId];
+
+                if (_list) {
+                    // if list data exists in global store, set it in the component's state
+                    setList(_list);
+                } else {
+                    // if list data does not exist in global store, fetch it from the API
+                    // and set it in the global store
+                    upcDb.getList(listId).then(res => {
+                        const { data } = res;
+                        if (data) {
+                            setList(data);
+                            dispatch({
+                                type: reducerActions.SET_LISTS,
+                                payload: {
+                                    list: data
+                                }
+                            });
+                        }
+                    });
+                }
+            }, 500);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isMounted, listId, lists]);
+    }, [isMounted, listId, lists, globalState.lists]);
 
 
     return isMounted && list ? (
@@ -100,7 +105,9 @@ export default function List(): JSX.Element {// NOSONAR
             </header>
 
             <ul className='List-product-section'>
-                <RenderListItems products={list?.products || []} />
+                <RenderListItems
+                    products={list?.products || []}
+                />
             </ul>
         </div>
 

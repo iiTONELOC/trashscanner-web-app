@@ -32,6 +32,8 @@ export const decodeToken = (token: string): IJwtPayload | null => {
     try {
         return jwt_decode(token);
     } catch (error) {
+        console.log('error decoding token')
+        console.error(error);
         return null;
     }
 };

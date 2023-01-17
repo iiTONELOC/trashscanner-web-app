@@ -83,6 +83,40 @@
     text-decoration: none;
 }
 
+.List-count {
+    width: 90%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.List-count-button {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    border: 1px solid var(--secondary-accent);
+    background-color: var(--secondary-color);
+    color: var(--secondary-accent);
+    font-size: 1.25rem;
+    font-weight: 600;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.List-add-remove-btn-container {
+    margin-left: 20px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width: 60%;
+    height: 100%;
+    gap: 15px;
+}
+
 /* Re-class the menu icon for the list item */
 .List-item-menu-icon {
     cursor: default;

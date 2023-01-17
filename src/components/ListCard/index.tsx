@@ -3,9 +3,6 @@ import { IList } from '../../types';
 import { EllipsisMenu } from '../Icons';
 import { useRouterContext } from '../../providers';
 
-interface IProps extends IList {
-    key: string;
-}
 
 
 function displayMostRecentDate(createdAt: Date, updatedAt: Date): string {
@@ -22,7 +19,7 @@ function DefaultIcon(): JSX.Element {
     );
 }
 
-export default function ListCard(props: IProps): JSX.Element {
+export default function ListCard(props: IList): JSX.Element {
     const { name, isDefault, createdAt, updatedAt, products, _id } = props;
     const { handleRouteChange } = useRouterContext();
 

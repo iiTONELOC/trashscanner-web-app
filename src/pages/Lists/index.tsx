@@ -51,11 +51,10 @@ export default function Lists(): JSX.Element {// NOSONAR
                 {globalState.lists && [...Object.entries(globalState.lists)].map((
                     list: [string, IList], index: number) => {
 
-                    const key = `${index}`;
-                    const props = { ...list[1], key };
                     return (
                         <ListCard
-                            {...props}
+                            key={`${index}`} // NOSONAR
+                            {...list[1]}
                         />
                     );
                 })}
