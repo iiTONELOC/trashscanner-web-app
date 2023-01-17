@@ -11,31 +11,21 @@ const upcDb: IUpcDb = new UpcDb();
 function RenderListItems(props: { products: IProduct[] }): JSX.Element {
     const { products } = props;
 
-    let previousId = '';
-    let duplicateCount = 0;
-
     const countedProducts: { product: IProduct, duplicateCount: number }[] = [];
+    const countedIds = new Set();
 
-    // loop over the products and count the duplicates
     for (const product of products) {
-        if (product._id === previousId) {
-            duplicateCount++;
-            // look and see if the product is already in the countedProducts array
+        if (countedIds.has(product._id)) {
+            // if the product is already in the array, update the duplicate count
             const foundProduct = countedProducts
                 .find(countedProduct => countedProduct.product._id === product._id);
-
             if (foundProduct) {
-                // if the product is already in the array, update the duplicate count
-                foundProduct.duplicateCount = duplicateCount;
-            } else {
-                // if the product is not in the array, add it
-                countedProducts.push({ product, duplicateCount });
+                foundProduct.duplicateCount++;
             }
         } else {
-            previousId = product._id;
-            duplicateCount = 0;
-            // add the product to the array
-            countedProducts.push({ product, duplicateCount });
+            // if the product is not in the array, add it
+            countedIds.add(product._id);
+            countedProducts.push({ product, duplicateCount: 0 });
         }
     }
 

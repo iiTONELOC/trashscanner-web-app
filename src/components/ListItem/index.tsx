@@ -20,6 +20,14 @@ function ListStatus(): JSX.Element {
     );
 }
 
+
+function RenderCount(props: { count: number }): JSX.Element {
+    const showQuantity = props.count > 1;
+    return (
+        <p>{showQuantity ? `x ${props.count}` : ' '}</p>
+    );
+}
+
 export default function ListItem(props: { product: IProduct, duplicateCount?: number }) {
     const { _id, barcode, name } = props.product;
 
@@ -31,7 +39,7 @@ export default function ListItem(props: { product: IProduct, duplicateCount?: nu
             </span>
 
             <span className='List-product-span-controls'>
-                <p>x {props.duplicateCount}</p>
+                <RenderCount count={props.duplicateCount || 1} />
                 <DoubleEllipsisMenu
                     className='List-item-menu-icon'
                 />
