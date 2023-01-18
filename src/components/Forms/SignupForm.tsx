@@ -1,8 +1,9 @@
 import './Forms.css';
 import FormInput from '../FormInput';
+import FormAction from './FormAction';
 import { useState, useEffect } from 'react';
 import { useInputValidation } from '../../hooks';
-import FormAction from './FormAction';
+import { useUserContext } from '../../providers';
 
 interface FormState {
     username: string | null;
@@ -18,12 +19,13 @@ const defaultFormState: FormState = {
 
 
 export function SignupForm() {// NOSONAR
-    const [isMounted, setIsMounted] = useState<boolean | null>(false);
     const [formState, setFormState] = useState<FormState>(defaultFormState);
-    const [emailErrors, setEmailErrors] = useState<string[]>([]);
+    const [isFormValid, setIsFormValid] = useState<boolean | null>(null);
+    const [isMounted, setIsMounted] = useState<boolean | null>(false);
     const [passwordErrors, setPasswordErrors] = useState<string[]>([]);
     const [usernameErrors, setUsernameErrors] = useState<string[]>([]);
-    const [isFormValid, setIsFormValid] = useState<boolean | null>(null);
+    const [emailErrors, setEmailErrors] = useState<string[]>([]);
+    const { isAuthenticated } = useUserContext();
 
 
 
@@ -81,11 +83,12 @@ export function SignupForm() {// NOSONAR
 
     useEffect(() => {
         setIsMounted(true);
-        // holds any validation errors
+        isAuthenticated && window.location.replace('/lists');
         return () => {
             setIsMounted(false);
             setFormState(defaultFormState);
         };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     // validate the form when the form state changes

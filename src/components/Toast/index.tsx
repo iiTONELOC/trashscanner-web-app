@@ -66,7 +66,7 @@ export default function Toast(props: { // NOSONAR
         if (props.onClose) {
             setTimeout(() => {
                 props.onClose && props.onClose();
-            }, 750);
+            }, 350);
         }
     };
 

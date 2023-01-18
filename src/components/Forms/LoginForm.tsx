@@ -1,8 +1,10 @@
 import './Forms.css';
+import { ToastTypes } from '../Toast';
 import FormInput from '../FormInput';
 import FormAction from './FormAction';
 import { useState, useEffect } from 'react';
 import { Authentication } from '../../utils/APIs';
+import { useUserContext, useToastMessageContext } from '../../providers';
 
 interface FormState {
     username: string | null;
@@ -19,14 +21,17 @@ export function LoginForm() {// NOSONAR
     const [isMounted, setIsMounted] = useState<boolean | null>(false);
     const [formState, setFormState] = useState<FormState>(defaultFormState);
     const [isFormValid, setIsFormValid] = useState<boolean>(false);
+    const { isAuthenticated } = useUserContext();
+    const Toaster = useToastMessageContext();
 
     useEffect(() => {
         setIsMounted(true);
-        // holds any validation errors
+        isAuthenticated && window.location.replace('/lists');
         return () => {
             setIsMounted(false);
             setFormState(defaultFormState);
         };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
@@ -64,10 +69,22 @@ export function LoginForm() {// NOSONAR
         Authentication.login(username || '', password || '').then(res => {
             if (res.status === 200) {
                 res.data && localStorage.setItem('trash-user', res.data);
-                // redirect to home page
-                window.location.replace('/lists');
+
+                // IF a user's token doesn't exist they may be redirected to the login page
+                // component, even thought the URL is not /login.
+                // IF this is the case a successful login should redirect the user to the
+                // requested resource
+                window.location.pathname !== '/login' ?
+                    window.location.replace(window.location.pathname) :
+                    window.location.replace('/lists');
+
             } else {
-                window.alert('Login failed');
+                Toaster.makeToast({
+                    type: ToastTypes.Error,
+                    message: 'Server Error',
+                    title: 'Login Failed',
+                    timeOut: 7800
+                });
                 console.error(res);
             }
         }).catch((err) => {

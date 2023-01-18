@@ -2,6 +2,7 @@ import './Spinner.css';
 
 export interface ISpinnerProps {
     textColor?: string;
+    label?: string;
 }
 
 
@@ -13,7 +14,7 @@ export default function Spinner(props: ISpinnerProps): JSX.Element {
         <div className='Spinner-container'>
             <div className={spinnerStyles}>
             </div>
-            <span className="Spinner-text">Loading...</span>
-        </div >
+            <span className="Spinner-text">{props.label || 'Loading...'}</span>
+        </div>
     );
 }

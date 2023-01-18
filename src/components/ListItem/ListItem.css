@@ -95,7 +95,7 @@
     width: 25px;
     height: 25px;
     border-radius: 50%;
-    border: 1px solid var(--secondary-accent);
+    border: 1px solid gray;
     background-color: var(--secondary-color);
     color: var(--secondary-accent);
     font-size: 1.25rem;
@@ -104,6 +104,20 @@
     flex-direction: row;
     align-items: center;
     justify-content: center;
+}
+
+.List-count-button:hover {
+    cursor: pointer;
+    color: var(--secondary-color);
+}
+
+.List-count-button:nth-child(1):hover {
+    background-color: var(--primary-accent);
+}
+
+.List-count-button:nth-child(2):hover {
+    background-color: var(--error);
+    border-color: var(--secondary-color);
 }
 
 .List-add-remove-btn-container {

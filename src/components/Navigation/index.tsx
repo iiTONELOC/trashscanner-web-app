@@ -16,7 +16,6 @@ export default function Navigation(/*props: INavProps*/): JSX.Element {
 
     const toggleMobileMenu = (): void => setShowMobileMenu(!showMobileMenu);
 
-
     return (
         <nav className='Navigation'>
             {

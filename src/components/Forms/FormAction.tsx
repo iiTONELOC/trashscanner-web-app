@@ -1,5 +1,8 @@
 import './Forms.css';
+import { useState } from 'react';
+import Loading from '../Loading';
 import { useRouterContext } from '../../providers';
+
 interface IProps {
     type: string;
     isValid: boolean;
@@ -8,6 +11,7 @@ interface IProps {
 }
 
 export default function FormAction(props: IProps): JSX.Element {
+    const [isClicked, setIsClicked] = useState<boolean>(false);
     const { handleRouteChange } = useRouterContext();
 
     const label = props.type === 'signup' ? 'Log in' : 'Sign up';
@@ -16,14 +20,26 @@ export default function FormAction(props: IProps): JSX.Element {
         handleRouteChange(props.type === 'signup' ? '/login' : '/signup');
     };
 
-    const buttonClass = props.isValid ? 'Action-button Text-shadow' : 'Text-shadow Disabled-button';
+    const actionWrapper = (event: React.MouseEvent<HTMLButtonElement>) => {
+        event.preventDefault();
+        event.stopPropagation();
+
+        if (props.onAction) {
+            setIsClicked(true);
+            props.onAction(event);
+        }
+    };
+
+    const isValid = props.isValid && !isClicked;
+    const buttonClass = isValid ? 'Action-button Text-shadow' : 'Text-shadow Disabled-button';
+
     return (
         <div className='Form-action-container'>
             <button
-                onClick={props.onAction}
+                onClick={actionWrapper}
                 disabled={!props.isValid}
                 className={buttonClass}>
-                {props.label || 'Submit'}
+                {isClicked ? <Loading label='Processing...' /> : props.label || 'Submit'}
             </button>
 
             <p className='Text-shadow'>

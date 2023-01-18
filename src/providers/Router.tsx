@@ -17,6 +17,7 @@ export default function RouterProvider(props: React.PropsWithChildren) { // NOSO
     const handleRouteChange = (route: string) => {
         window.history.pushState({}, '', route);
         setCurrentRoute(route);
+        window.dispatchEvent(new Event('popstate'));
     };
 
     // listen for nav forward and back events

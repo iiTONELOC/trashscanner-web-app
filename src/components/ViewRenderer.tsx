@@ -1,7 +1,7 @@
 import { WithAuth, Loading } from '../components';
 import { useState, useEffect, Suspense } from 'react';
 import { Home, SignUp, Login, List, Lists } from '../pages';
-import { useNavLinkContext, useRouterContext } from '../providers';
+import { useNavLinkContext, useRouterContext, useUserContext } from '../providers';
 
 
 function ComponentLoader(props:
@@ -11,26 +11,31 @@ function ComponentLoader(props:
         regex: RegExp
     }
 ): JSX.Element {
+    const { isAuthenticated } = useUserContext();
     if (props.currentRoute === '/signup') {
         return <SignUp />;
     } else if (props.currentRoute === '/login') {
         return <Login />;
     } else if (props.currentRoute === '/lists') {
-        return (
+
+        return isAuthenticated ? (
             <WithAuth>
                 <Suspense fallback={<Loading />}>
                     <Lists />
                 </Suspense>
             </WithAuth>
-        );
+        ) : <Login />;
+
+        // HANDLES PATH - /list/:id
     } else if (props.regex.test(props.currentPath)) {
-        return (
+        return isAuthenticated ? (
             <WithAuth>
                 <Suspense fallback={<Loading />}>
                     <List />
                 </Suspense>
             </WithAuth>
-        );
+        ) : <Login />;
+        // VALID PATH WASN'T FOUND SO RENDER HOME PAGE
     } else {
         return <Home />;
     }
@@ -69,10 +74,10 @@ export default function ViewRenderer(): JSX.Element { // NOSONAR
     }, [currentPath, isMounted, handleRouteChange, currentRoute, validLinks]);
 
 
-    return (
+    return isMounted ? (
         <ComponentLoader
             currentRoute={currentRoute}
             currentPath={currentPath}
             regex={listRegex} />
-    );
+    ) : <></>;
 }

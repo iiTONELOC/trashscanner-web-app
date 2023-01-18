@@ -77,7 +77,7 @@ export type { IUpcDb } from './utils/APIs/UpcDb';
 // PROVIDERS
 
 // USER
-export type { UserContextType } from './providers';
+export type { IUserContextType } from './providers';
 
 // GLOBAL STORE
 export interface IContext {

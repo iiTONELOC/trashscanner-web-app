@@ -9,7 +9,8 @@ const SpinnerStyles = {
 };
 
 
-export default function Loading(): JSX.Element {
+export default function
+    Loading(props: { label?: string }): JSX.Element {
     const [spinnerColor, setSpinnerColor] = useState<string>(SpinnerStyles.greenText);
 
     const threeSecTimeout = () => setTimeout(() => {
@@ -42,6 +43,6 @@ export default function Loading(): JSX.Element {
     }, []);
 
     return (
-        <Spinner textColor={spinnerColor} />
+        <Spinner textColor={spinnerColor} label={props.label} />
     );
 }
