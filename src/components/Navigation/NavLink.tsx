@@ -1,4 +1,4 @@
-import { useRouterContext } from '../../providers';
+import { useRouterContext, useUserContext } from '../../providers';
 
 const isActive = (link: string) => window.location.pathname === link;
 const navItemClassName = (link: string) => `Navigation-item${isActive(link) ? '-active' : ''}`;
@@ -11,11 +11,13 @@ interface IProps {
 export default function NavLink(props: IProps) {
     const { link } = props;
     const { handleRouteChange } = useRouterContext();
+    const { handleUserChange } = useUserContext();
     const { name, href } = link;
 
     const action = () => {
+        handleUserChange();
         href === '/logout' && localStorage.removeItem('trash-user');
-        href === '/logout' && window.location.reload();
+        href === '/logout' && window.location.replace('/');
         handleRouteChange(href);
         if (props.afterClick) {
             props.afterClick();

@@ -2,10 +2,12 @@
 import type { IAction, IPayloads, GlobalStoreContextType } from './providers';
 // COMPONENT TYPES
 export type {
+    IToastProps,
     ILayoutProps,
-    IMainFormTitleProps,
-    IFormInputProps
+    IFormInputProps,
+    IMainFormTitleProps
 } from './components';
+
 
 //  HOOK TYPES
 export type {
@@ -24,7 +26,6 @@ export interface INavLinks {
 }
 
 //  AUTHENTICATION
-
 export interface IJwtPayload {
     unique_name: string;
     email: string;
@@ -42,7 +43,6 @@ export interface IApiResponse<T> {
 };
 
 // UPC DB Data
-
 export interface ISource {
     _id: string;
     name: string;
@@ -74,10 +74,18 @@ export interface IList {
 export type { IUpcDb } from './utils/APIs/UpcDb';
 
 
+// PROVIDERS
 
+// USER
+export type { UserContextType } from './providers';
+
+// GLOBAL STORE
 export interface IContext {
     dispatch: React.Dispatch<IAction<IPayloads>>;
     actions: { [key: string]: string };
 }
 
 export type { IAction, IPayloads, GlobalStoreContextType };
+
+// TOAST MESSAGING
+export type { IToastMessageContextType } from './providers/toastMessage';

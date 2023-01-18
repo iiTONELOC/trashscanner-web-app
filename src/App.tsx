@@ -1,9 +1,7 @@
+import { Layout, Footer, Navigation, ViewRenderer, Toaster } from './components';
 import { GlobalStoreProvider, NavLinkProvider, RouterProvider } from './providers';
-import { Layout, Footer, Navigation, ViewRenderer } from './components';
 
-
-function App() {
-
+function App(): JSX.Element { //  NOSONAR
   return (
     <Layout>
       <NavLinkProvider>
@@ -11,6 +9,7 @@ function App() {
           <Navigation />
           <GlobalStoreProvider>
             <ViewRenderer />
+            <Toaster />
           </GlobalStoreProvider>
         </RouterProvider>
       </NavLinkProvider>

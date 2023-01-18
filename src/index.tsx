@@ -2,7 +2,7 @@ import './index.css';
 import App from './App';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { UserProvider } from './providers';
+import { UserProvider, ToastProvider } from './providers';
 
 
 const root = ReactDOM.createRoot(
@@ -10,8 +10,10 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <React.StrictMode>
-    <UserProvider>
-      <App />
-    </UserProvider>
+    <ToastProvider>
+      <UserProvider>
+        <App />
+      </UserProvider>
+    </ToastProvider>
   </React.StrictMode >
 );
