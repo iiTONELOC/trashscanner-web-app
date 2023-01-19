@@ -1,4 +1,9 @@
-export function headingNormalizer(text: string) {
+export function headingNormalizer(text = '') {
+
+    if (!text) {
+        return '';
+    }
+
     return text.toLowerCase()
         .split(' ')
         .map((word: string) => word[0].toUpperCase() + word.slice(1))

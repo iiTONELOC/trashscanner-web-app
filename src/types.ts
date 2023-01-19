@@ -52,10 +52,17 @@ export interface ISource {
 
 export interface IProduct {
     _id: string;
-    barcode: string[];
-    name: string;
-    source: ISource;
-    url?: string;
+    listId?: string;
+    userId?: string;
+    alias: string | null;
+    product: {
+        barcode: string[];
+        name: string;
+        source: ISource;
+        url?: string;
+        createdAt?: Date;
+        updatedAt?: Date;
+    }
     createdAt: Date;
     updatedAt: Date;
 }

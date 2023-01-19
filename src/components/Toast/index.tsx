@@ -47,6 +47,7 @@ const formatDateTime = (date: Date): string => {
 export default function Toast(props: { // NOSONAR
     message: string,
     type: ToastTypes,
+    title?: string,
     onClose?: () => void,
 }): JSX.Element {
     const [isMounted, setIsMounted] = useState<boolean>(false);
@@ -70,6 +71,8 @@ export default function Toast(props: { // NOSONAR
         }
     };
 
+    const title = props.title !== '' ? props.title : props.type;
+
     return isMounted ? (
         <article className={`Toast ${toastClassNames[props.type]}`}>
             <section className='Toast-body'>
@@ -81,7 +84,7 @@ export default function Toast(props: { // NOSONAR
                 <div className='Toast-text-container'>
                     <h2 className='Toast-heading'>
                         <strong>
-                            {formatter.headingNormalizer(String(props.type))} !
+                            {formatter.headingNormalizer(String(title))} !
                         </strong>
                     </h2>
                     <p className='Toast-message'>

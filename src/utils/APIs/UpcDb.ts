@@ -191,20 +191,26 @@ export class UpcDb implements IUpcDb {
         }
     }
 
-    async editProduct(productId: string, name: string): Promise<IApiResponse<IProduct>> {
+    // USERS CAN'T EDIT PRODUCTS AT ALL. THEY HAVE ACCESS TO THEIR INDIVIDUAL WRAPPERS
+    async editProduct(productId: string, name: string | null): Promise<IApiResponse<IProduct>> {
+        console.log('editProduct', productId, name);
         try {
-            const response: Response = await fetch(`${UpcDb.API_URL}/products/${productId}`, {
+            const response: Response = await fetch(
+                `${UpcDb.API_URL}/lists/user/${this.USER_ID}/product/${productId}`, {
                 method: 'PUT',
                 headers: this._getHeaders(),
-                body: JSON.stringify({ productData: { name } })
+                body: JSON.stringify({ alias: name })
             });
 
             if (response.status === 200) {
                 return response.json();
             } else {
+                console.log('editProduct error', response);
+
                 throw new Error('Error editing product');
             }
         } catch (error) {
+            console.log('editProduct error', error);
             return {
                 error: {
                     message: 'An error occurred while attempting to edit product'
@@ -216,7 +222,7 @@ export class UpcDb implements IUpcDb {
     }
 
 
-    private _getHeaders(): Headers {
+    protected _getHeaders(): Headers {
         const headers = new Headers();
         headers.append('Content-Type', 'application/json');
         headers.append('Authorization', `Bearer ${UpcDb.API_KEY}`);
@@ -224,7 +230,7 @@ export class UpcDb implements IUpcDb {
         return headers;
     }
 
-    private _getUserId(): string | null {
+    protected _getUserId(): string | null {
         try {
             const decodedToken: IJwtPayload = jwt_decode(this.USER);
             return decodedToken?.nameid;

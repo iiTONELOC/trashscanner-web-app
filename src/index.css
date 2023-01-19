@@ -271,9 +271,17 @@ body {
 }
 
 .Editable-content:hover {
-  scale: 1.1;
+  scale: 1.05;
   color: var(--secondary-accent);
   text-decoration: none;
+}
+
+/* Target the text area input element so we can adjust the default focus colors */
+input[type='textarea']:focus {
+  outline: none;
+  border: 1px solid var(--warning);
+  border-radius: 0.5rem;
+  padding: 0.5rem;
 }
 
 /* media queries */

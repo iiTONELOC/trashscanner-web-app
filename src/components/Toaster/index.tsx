@@ -9,7 +9,7 @@ export default function Toaster(): JSX.Element {//  NOSONAR
     const [isMounted, setIsMounted] = useState<boolean>(false);
     const [showToast, setShowToast] = useState<boolean>(false);
 
-    const { message, type }: IToastMessageContextType = useToastMessageContext();
+    const { message, type, title }: IToastMessageContextType = useToastMessageContext();
 
     useEffect(() => {
         setIsMounted(true);
@@ -32,6 +32,7 @@ export default function Toaster(): JSX.Element {//  NOSONAR
             <Toast
                 message={message || 'This is a notification message'}
                 type={type || ToastTypes.Info}
+                title={title || ''}
                 onClose={() => setShowToast(false)}
             />
         </Portal>
