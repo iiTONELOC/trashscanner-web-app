@@ -2,6 +2,7 @@ import { PlusCircle } from '../Icons';
 import { handleIncreaseQuantity } from './helpers';
 import { useGlobalStoreContext, reducerActions } from '../../providers';
 
+
 export default function IncreaseQuantityButton(props: {
     listId: string,
     barcode: string,

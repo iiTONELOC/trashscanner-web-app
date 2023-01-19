@@ -92,9 +92,9 @@
 }
 
 .List-count-button {
-    width: 25px;
-    height: 25px;
-    border-radius: 50%;
+    width: 25px !important;
+    height: 25px !important;
+    border-radius: 50% !important;
     border: 1px solid gray;
     background-color: var(--secondary-color);
     color: var(--secondary-accent);
@@ -109,6 +109,7 @@
 .List-count-button:hover {
     cursor: pointer;
     color: var(--secondary-color);
+    border-color: var(--secondary-color);
 }
 
 .List-count-button:nth-child(1):hover {
@@ -117,7 +118,6 @@
 
 .List-count-button:nth-child(2):hover {
     background-color: var(--error);
-    border-color: var(--secondary-color);
 }
 
 .List-add-remove-btn-container {
@@ -149,9 +149,83 @@
     margin-right: -7px;
 }
 
+.Double-ellipsis-menu {
+    /* make it absolutely position towards the right of its parent */
+
+    position: absolute;
+    right: 0;
+
+    margin-right: 20px;
+}
+
 /* on mobile */
 @media screen and (max-width: 768px) {
     .List-name-barcode {
         font-size: 1rem;
+    }
+}
+
+@media screen and (max-width: 500px) {
+    .List-name-barcode {
+        font-size: .8rem;
+        text-overflow: clip;
+    }
+}
+
+
+@media screen and (max-width: 450px) {
+    .List-name-barcode {
+        font-size: .7rem;
+    }
+
+    .List-item-status {
+        scale: .8 !important;
+        margin-left: -5px;
+    }
+}
+
+@media screen and (max-width: 400px) {
+    .List-count p {
+        font-size: .8rem;
+    }
+}
+
+@media screen and (max-width: 365px) {
+    .List-count p {
+        font-size: .7rem;
+    }
+
+    .List-product-span-controls {
+        width: 100%;
+        margin-right: 15px;
+    }
+}
+
+@media screen and (max-width: 300px) {
+
+    .List-item-status {
+        scale: .7 !important;
+        margin-left: -5px;
+    }
+
+    .List-name-barcode {
+        font-size: .6rem;
+        margin-left: -5px;
+    }
+
+    .List-count {
+        width: fit-content;
+    }
+
+    .List-count p {
+        font-size: .6rem;
+    }
+}
+
+@media screen and (max-width: 285px) {
+
+    .List-product-span-controls {
+        width: 100%;
+        margin-right: 20px;
     }
 }

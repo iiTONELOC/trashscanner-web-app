@@ -12,6 +12,7 @@
 .My-lists-header {
     display: flex;
     flex-direction: row;
+    flex-wrap: wrap;
     justify-content: flex-start;
     align-items: flex-end;
     margin: 1rem 0 3rem 1rem;

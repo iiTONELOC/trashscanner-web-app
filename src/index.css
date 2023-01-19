@@ -256,12 +256,24 @@ body {
 
 .Button:hover {
   background: var(--gray);
-  scale: 1.1;
+  scale: 1.0025;
   text-decoration: none;
 }
 
 .Text-shadow {
   text-shadow: 0 0 0.4rem rgba(0, 0, 0, 0.9);
+}
+
+.Editable-content {
+  cursor: pointer;
+  transition: 0.2s ease-in-out;
+  text-decoration: none;
+}
+
+.Editable-content:hover {
+  scale: 1.1;
+  color: var(--secondary-accent);
+  text-decoration: none;
 }
 
 /* media queries */

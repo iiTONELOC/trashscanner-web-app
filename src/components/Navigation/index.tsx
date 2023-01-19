@@ -5,7 +5,7 @@ import BasicLogo from '../BasicLogo';
 import { useIsMobile } from '../../hooks';
 
 import { useNavLinkContext } from '../../providers';
-import { CloseIcon, EllipsisMenu } from '../Icons';
+import { ArrowLeft, CloseIcon, EllipsisMenu } from '../Icons';
 
 
 export default function Navigation(/*props: INavProps*/): JSX.Element {
@@ -16,13 +16,23 @@ export default function Navigation(/*props: INavProps*/): JSX.Element {
 
     const toggleMobileMenu = (): void => setShowMobileMenu(!showMobileMenu);
 
+    // handle the back button on mobile, it should navigate back to the previous state
+    // if it is in the history
+
+    const onMobileBack = (): void => {
+        // set the location to the previous state
+        window.history.back();
+    };
+
     return (
         <nav className='Navigation'>
             {
                 !isMobile ?
                     (// Desktop Navigation
                         <>
-                            <BasicLogo />
+                            <BasicLogo
+
+                            />
                             <ul className='Navigation-list'>
                                 {
                                     navLinks.map(link =>
@@ -36,6 +46,11 @@ export default function Navigation(/*props: INavProps*/): JSX.Element {
                     ) :
                     (// Mobile Navigation
                         <div className='Navigation-mobile'>
+                            <ArrowLeft
+                                className='Navigation-back-arrow'
+                                onClick={onMobileBack}
+                            />
+
                             <EllipsisMenu
                                 className='Navigation-menu-icon'
                                 onClick={toggleMobileMenu}

@@ -41,6 +41,20 @@
     cursor: pointer;
 }
 
+.Navigation-back-arrow {
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+    color: var(--light-gray-text);
+    margin-left: 1rem;
+}
+
+.Navigation-back-arrow:hover {
+    cursor: pointer;
+    color: var(--primary-accent);
+    scale: 1.10;
+}
+
 
 /*  MOBILE STYLES */
 
@@ -50,7 +64,7 @@
         width: 100vw;
         display: flex;
         flex-direction: row;
-        justify-content: flex-end;
+        justify-content: space-between;
         align-items: center;
         font-size: larger;
     }
