@@ -143,8 +143,7 @@ export class UpcDb implements IUpcDb {
         }
     }
 
-    async editList(id: string, name: string, isDefault: boolean | null = null): Promise<IApiResponse<IList>> {
-        console.warn('edit list', id, name, isDefault);
+    async editList(id: string, name?: string, isDefault: boolean | null = null): Promise<IApiResponse<IList>> {
         try {
             this.USER_ID = this._getUserId() || undefined;
             const response: Response = await fetch(`${UpcDb.API_URL}/lists/${id}`, {

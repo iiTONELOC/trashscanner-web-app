@@ -1,11 +1,11 @@
 import './ListCard.css';
 import { IList } from '../../types';
 import { EllipsisMenu } from '../Icons';
+import ListCardDropMenu from './CardMenu';
+import { formatter, ui } from '../../utils';
 import React, { useEffect, useState } from 'react';
 import { useRouterContext } from '../../providers';
 import EditableContent, { EditableContentTypes } from '../EditableContent';
-import { formatter, ui } from '../../utils';
-
 
 function displayMostRecentDate(createdAt: Date, updatedAt: Date): string {
     const date = updatedAt > createdAt ? updatedAt : createdAt;
@@ -34,7 +34,7 @@ function preventDefaults(e: React.SyntheticEvent): void {
 
 export default function ListCard(props: IList): JSX.Element { //NOSONAR
     const { name, isDefault, createdAt, updatedAt, products, _id } = props;
-
+    const [showDropMenu, setShowDropMenu] = useState<boolean>(false);
     const [showEditor, setShowEditor] = useState<boolean>(false);
     const [isMounted, setIsMounted] = useState<boolean>(false);
 
@@ -51,7 +51,7 @@ export default function ListCard(props: IList): JSX.Element { //NOSONAR
     /**Button/Action handlers  Click Events only*/
     const handleMenuClick = (e?: React.SyntheticEvent): void => {
         preventDefaults(e as React.SyntheticEvent);
-        console.log('Card Menu clicked');
+        setShowDropMenu(!showDropMenu);
     };
 
     // Ensures routing only occurs if the card element itself is double clicked
@@ -59,10 +59,12 @@ export default function ListCard(props: IList): JSX.Element { //NOSONAR
         preventDefaults(e);
         const target = e.target as HTMLElement;
 
-        if (!target.hasAttribute('id')
+        if (!target.hasAttribute('id')//NOSONAR
             && !target.classList.contains('Editable-content')
             && !target.classList.contains('Editable-content-container')
             && !target.classList.contains('List-card-info-span')
+            && !target.classList.contains('button-text')
+            && !target.classList.contains('List-card-drop-button')
         ) {
             handleRouteChange(`/list/${_id}`);
         }
@@ -101,7 +103,7 @@ export default function ListCard(props: IList): JSX.Element { //NOSONAR
 
         ui.registerDoubleTap(e as React.TouchEvent, () => handlers(e));
         ui.registerSingleTap(e as React.TouchEvent, () => handleCloseEditor);
-    }
+    };
 
     return isMounted ? (
         <article
@@ -116,7 +118,15 @@ export default function ListCard(props: IList): JSX.Element { //NOSONAR
                     {isDefault && <DefaultIcon />}
                     <p>{displayMostRecentDate(createdAt, updatedAt)}</p>
                 </span>
+
                 <EllipsisMenu className='List-card-menu-icon' onClick={handleMenuClick} />
+
+                {showDropMenu && (
+                    <ListCardDropMenu
+                        listId={_id}
+                        setShowMenu={setShowDropMenu}
+                    />
+                )}
             </header>
 
             <span className='List-card-info-span'>

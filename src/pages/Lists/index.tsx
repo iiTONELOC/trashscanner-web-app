@@ -18,7 +18,8 @@ export default function Lists(): JSX.Element {// NOSONAR
 
     const { globalState, dispatch } = useGlobalStoreContext();
 
-    const numLists = data?.length || 0;
+    const { lists } = globalState;
+    const numLists = lists ? Object.keys(lists).length : 0;
 
     useEffect(() => {
         setIsMounted(true);
@@ -44,11 +45,11 @@ export default function Lists(): JSX.Element {// NOSONAR
         <section className='My-lists'>
             <header className='My-lists-header'>
                 <h1>My <span>Lists</span></h1>
-                <p>({numLists})</p>
+                <p>{numLists}</p>
             </header>
 
             <section className='Lists-container'>
-                {globalState.lists && [...Object.entries(globalState.lists)].map((
+                {lists && [...Object.entries(lists)].map((
                     list: [string, IList], index: number) => {
 
                     return (

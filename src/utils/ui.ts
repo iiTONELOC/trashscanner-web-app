@@ -25,9 +25,10 @@ const registerSingleTap = (e: React.TouchEvent,
 };
 
 
+
 const UI = {
     registerDoubleTap,
-    registerSingleTap
+    registerSingleTap,
 };
 
 export default UI;

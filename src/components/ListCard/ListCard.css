@@ -15,10 +15,11 @@
 }
 
 .List-card:hover {
-    scale: 1.05;
-    transition: 0.2s ease-in-out;
     background: var(--tertiary-color);
     filter: brightness(1.05) drop-shadow(0 0 1px rgba(234, 234, 234, 0.9));
+    width: calc(225px + 22px);
+    height: calc(150px + 15px);
+    transition: .2s ease-in-out;
 }
 
 .List-card-header {
@@ -104,8 +105,60 @@
     /* regular cursor */
     cursor: pointer;
     color: var(--primary-accent);
-    scale: 1.1;
-    transition: 0.2s ease-in-out;
+}
+
+
+.List-card-drop-menu {
+    box-shadow: 0 0 10px 0 rgba(51, 51, 51, 0.2);
+    width: 85px;
+    height: 75px;
+    border: solid 1px var(--quaternary-color);
+    border-radius: 5px;
+    /* transition: 0.75s ease-in-out; */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    position: relative;
+    top: 0;
+    left: 0;
+}
+
+.List-card-drop-button {
+    /* regular cursor */
+    cursor: default;
+    color: var(--gray-text);
+    background-color: var(--secondary-color);
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: semi-bold;
+    font-size: 1rem;
+    width: 100px;
+    height: 35px;
+}
+
+.List-card-drop-button:hover {
+    /* regular cursor */
+    color: var(--error);
+    text-decoration: none;
+    width: calc(100px + 8.5px);
+    height: calc(35px + 3.5px);
+    transition: .2s ease-in-out;
+    font-size: 1.2rem;
+    z-index: 100;
+}
+
+.List-delete-button:hover {
+    color: var(--error);
+}
+
+.List-set-default-button {
+    font-size: .8rem;
+}
+
+.List-set-default-button:hover {
+    color: var(--warning);
+    font-size: 1rem;
 }
 
 /* on mobile */
