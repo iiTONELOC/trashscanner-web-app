@@ -4,13 +4,12 @@ import jwt_decode from 'jwt-decode';
 export interface IUpcDb {
     getMyLists(): Promise<IApiResponse<IList[]>>;
     getList(id: string): Promise<IApiResponse<IList>>;
+    deleteList(id: string): Promise<IApiResponse<IList>>;
+    createList(name: string, isDefault: boolean): Promise<IApiResponse<IList>>;
     addProductToList(id: string, barcode: string): Promise<IApiResponse<IList>>;
     removeProductFromList(id: string, productId: string): Promise<IApiResponse<IList>>;
-    createList(name: string, isDefault: boolean): Promise<IApiResponse<IList>>;
-    editList(id: string, name: string, isDefault: boolean): Promise<IApiResponse<IList>>;
-    editList(id: string, name: string, isDefault: boolean): Promise<IApiResponse<IList>>;
-    deleteList(id: string): Promise<IApiResponse<IList>>;
-    editProduct(id: string, name: string, barcode: string): Promise<IApiResponse<IProduct>>;
+    editList(id: string, name?: string, isDefault?: boolean): Promise<IApiResponse<IList>>;
+    editProduct(id: string, name: string, barcode?: string): Promise<IApiResponse<IProduct>>;
 }
 
 

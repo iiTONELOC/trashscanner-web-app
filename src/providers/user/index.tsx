@@ -1,9 +1,6 @@
-import UserSessionManager, { isExpired, decodeToken, getToken } from './userSessionManager';
-import { useContext, createContext, useState } from 'react';
 import { IJwtPayload } from '../../types';
-
-const UserContext = createContext<IUserContextType>({} as IUserContextType);
-const { Provider } = UserContext;
+import { useContext, createContext, useState } from 'react';
+import UserSessionManager, { isExpired, decodeToken, getToken } from './userSessionManager';
 
 export interface IUserContextType {
     user: IJwtPayload | null;
@@ -11,6 +8,13 @@ export interface IUserContextType {
     setIsAuthenticated: (isAuthenticated: boolean) => void;
     checkIfAuthenticated: () => boolean;
 }
+
+const UserContext: React.Context<IUserContextType> = createContext<IUserContextType>({} as IUserContextType);
+const { Provider }: React.Context<IUserContextType> = UserContext;
+
+/**
+ * Provides user context and session management
+ */
 
 export default function UserProvider(props: React.PropsWithChildren) { // NOSONAR
     const [user, setUser] = useState<IJwtPayload | null>(getToken() ? decodeToken(getToken() || '') : null);
@@ -45,6 +49,6 @@ export default function UserProvider(props: React.PropsWithChildren) { // NOSONA
     );
 }
 
-const useUserContext = () => useContext(UserContext);
+const useUserContext = (): IUserContextType => useContext<IUserContextType>(UserContext);
 
 export { UserContext, useUserContext, isExpired, decodeToken };

@@ -43,11 +43,21 @@ export interface IValidationError {
     [key: string]: string;
 }
 
-export default function useValidators(props: IValidatorProps) {
+export interface IUseValidators {
+    validated: boolean;
+    error: IValidationError[];
+    validate: () => void;
+}
+
+export default function useValidators(props: IValidatorProps): {
+    validated: boolean;
+    error: IValidationError[];
+    validate: () => void;
+} {
     const [validated, setValidated] = useState(false);
     const [error, setError] = useState<IValidationError[]>([]);
 
-    const validate = () => {
+    const validate = (): void => {
         const rules = validationRules[props.property];
         let _errors: IValidationError[] = [];
         for (const { rule, message } of rules) {

@@ -5,7 +5,7 @@ export interface ILayoutProps {
 }
 
 export default function Layout(props: ILayoutProps): JSX.Element {
-    const { children } = props;
+    const { children }: ILayoutProps = props;
 
     return (
         <div className='Layout'>

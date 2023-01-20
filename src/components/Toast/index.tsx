@@ -60,7 +60,9 @@ export default function Toast(props: { // NOSONAR
     const onClose = (e?: React.SyntheticEvent): void => {
         e?.stopPropagation();
         e?.preventDefault();
-        const toastEl = document.querySelector('.Toast');
+
+        const toastEl: HTMLElement | null = document.querySelector('.Toast');
+
         // add the fadeout class to the toast
         toastEl?.classList.add('Toast-fadeout');
 
@@ -71,7 +73,7 @@ export default function Toast(props: { // NOSONAR
         }
     };
 
-    const title = props.title !== '' ? props.title : props.type;
+    const title: string | undefined = props.title !== '' ? props.title : props.type;
 
     return isMounted ? (
         <article className={`Toast ${toastClassNames[props.type]}`}>

@@ -1,24 +1,22 @@
-import { useRouterContext, /*useUserContext*/ } from '../../providers';
+import { useRouterContext } from '../../providers';
 
-const isActive = (link: string) => window.location.pathname === link;
-const navItemClassName = (link: string) => `Navigation-item${isActive(link) ? '-active' : ''}`;
+const isActive = (link: string): boolean => window.location.pathname === link;
+const navItemClassName = (link: string): string => `Navigation-item${isActive(link) ? '-active' : ''}`;
 
 interface IProps {
     link: { name: string; href: string };
     afterClick?: () => void;
 }
 
-export default function NavLink(props: IProps) {
-    const { link } = props;
+export default function NavLink(props: IProps): JSX.Element {
     const { handleRouteChange } = useRouterContext();
-    // const { handleUserChange } = useUserContext();
+    const { link }: IProps = props;
     const { name, href } = link;
 
     /**
      * Function that is fired when a user clicks on a navigation link
      */
     const action = () => {
-        // handleUserChange();
         href === '/logout' && localStorage.removeItem('trash-user');
         href === '/logout' && window.location.replace('/');
         handleRouteChange(href);

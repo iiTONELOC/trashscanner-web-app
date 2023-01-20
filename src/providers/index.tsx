@@ -5,5 +5,7 @@ export { default as UserProvider, UserContext, useUserContext, isExpired, decode
 export { default as GlobalStoreProvider, useGlobalStoreContext, GlobalStoreContext, reducerActions } from './globalStore';
 
 export type { IUserContextType } from './user';
+export type { ILinkContextType } from './navLinks';
+export type { IRouterContextType } from './Router';
 export type { IToastMessageContextType } from './toastMessage';
 export type { IAction, IPayloads, GlobalStoreContextType } from './globalStore';

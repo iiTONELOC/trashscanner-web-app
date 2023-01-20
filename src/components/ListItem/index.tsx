@@ -10,8 +10,7 @@ import EditableContent, { EditableContentTypes } from '../EditableContent';
 function RenderListStatus(): JSX.Element {
     const [isCompleted, setIsCompleted] = useState<boolean>(false);
 
-    const handleClick = () => {
-        // TODO: Update the product status in the database
+    const handleClick = (): void => {
         setIsCompleted(!isCompleted);
     };
 
@@ -23,7 +22,7 @@ function RenderListStatus(): JSX.Element {
 }
 
 function RenderCount(props: { count: number, onTouchEnd?: (e: React.TouchEvent) => void }): JSX.Element {
-    const showQuantity = props.count > 1;
+    const showQuantity: boolean = props.count > 1;
     return (
         <p onTouchEnd={props.onTouchEnd}>{showQuantity ? `x ${props.count}` : ' '}</p>
     );
@@ -34,9 +33,8 @@ export default function ListItem(props: { product: IProduct, duplicateCount?: nu
     const [showEditor, setShowEditor] = useState<boolean>(false);
     const [isMounted, setIsMounted] = useState<boolean>(false);
     const [listId, setListId] = useState<string | null>(null);
-    const { _id, product, alias } = props.product;
-
-    const { barcode, name } = product;
+    const { _id, product, alias }: IProduct = props.product;
+    const { barcode, name }: IProduct['product'] = product;
 
     const productNameToDisplay = (_name: string): string => alias && alias !== ' ' ? alias : _name;
 
@@ -46,31 +44,31 @@ export default function ListItem(props: { product: IProduct, duplicateCount?: nu
         return () => setIsMounted(false);
     }, []);
 
-    const handleDoubleClick = (e: React.SyntheticEvent) => {
+    const handleDoubleClick = (e: React.SyntheticEvent): void => {
         e.preventDefault();
         e.stopPropagation();
 
-        const target = e.target as HTMLElement;
+        const target: HTMLElement = e.target as HTMLElement;
         target
             .classList
             .contains('Editable-content') && setShowEditor(true);
     };
 
-    const handleCloseEditor = (e: React.SyntheticEvent) => {
+    const handleCloseEditor = (e: React.SyntheticEvent): void => {
         e.preventDefault();
         e.stopPropagation();
 
         if (showEditor) {
-            const target = e.target as HTMLElement;
+            const target: HTMLElement = e.target as HTMLElement;
             if (!target.hasAttribute('id') && target.getAttribute('id') !== 'list-name') {
                 setTimeout(() => setShowEditor(false), 500);
             }
         }
     };
 
-    const handleEditFormMobile = (e: React.TouchEvent) => ui
+    const handleEditFormMobile = (e: React.TouchEvent): void => ui
         .registerDoubleTap(e, () => handleDoubleClick(e as unknown as React.SyntheticEvent));
-    const handleCountMobile = (e: React.TouchEvent) => ui
+    const handleCountMobile = (e: React.TouchEvent): void => ui
         .registerDoubleTap(e, () => setIsQuantityHovered(!isQuantityHovered));
 
     return isMounted ? (

@@ -1,7 +1,7 @@
 import './Forms.css';
 import { useState } from 'react';
 import Loading from '../Loading';
-import { useRouterContext } from '../../providers';
+import { IRouterContextType, useRouterContext } from '../../providers';
 
 interface IProps {
     type: string;
@@ -12,15 +12,18 @@ interface IProps {
 
 export default function FormAction(props: IProps): JSX.Element {
     const [isClicked, setIsClicked] = useState<boolean>(false);
-    const { handleRouteChange } = useRouterContext();
+    const { handleRouteChange }: IRouterContextType = useRouterContext();
 
-    const label = props.type === 'signup' ? 'Log in' : 'Sign up';
-    const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    const isValid: boolean = props.isValid && !isClicked;
+    const label: string = props.type === 'signup' ? 'Log in' : 'Sign up';
+    const buttonClass: string = isValid ? 'Action-button Text-shadow' : 'Text-shadow Disabled-button';
+
+    const handleClick = (event: React.MouseEvent<HTMLButtonElement>): void => {
         event.preventDefault();
         handleRouteChange(props.type === 'signup' ? '/login' : '/signup');
     };
 
-    const actionWrapper = (event: React.MouseEvent<HTMLButtonElement>) => {
+    const actionWrapper = (event: React.MouseEvent<HTMLButtonElement>): void => {
         event.preventDefault();
         event.stopPropagation();
 
@@ -29,9 +32,6 @@ export default function FormAction(props: IProps): JSX.Element {
             props.onAction(event);
         }
     };
-
-    const isValid = props.isValid && !isClicked;
-    const buttonClass = isValid ? 'Action-button Text-shadow' : 'Text-shadow Disabled-button';
 
     return (
         <div className='Form-action-container'>

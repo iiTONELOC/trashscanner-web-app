@@ -8,27 +8,27 @@ const SpinnerStyles = {
     redText: 'Spinner-red-text'
 };
 
+const THREE_SECONDS = 3000;
 
 export default function
     Loading(props: { label?: string }): JSX.Element {
     const [spinnerColor, setSpinnerColor] = useState<string>(SpinnerStyles.greenText);
 
-    const threeSecTimeout = () => setTimeout(() => {
+    const threeSecTimeout = (): NodeJS.Timeout => setTimeout(() => {
         setSpinnerColor(SpinnerStyles.yellowText);
         sixSecTimeout();
-    }, 3000);
+    }, THREE_SECONDS);
 
-    const sixSecTimeout = () => setTimeout(() => {
+    const sixSecTimeout = (): NodeJS.Timeout => setTimeout(() => {
         setSpinnerColor(SpinnerStyles.orangeText);
         nineSecTimeout();
-    }, 3000);
+    }, THREE_SECONDS);
 
-    const nineSecTimeout = () => setTimeout(() => {
+    const nineSecTimeout = (): NodeJS.Timeout => setTimeout(() => {
         setSpinnerColor(SpinnerStyles.redText);
-    }, 3000);
+    }, THREE_SECONDS);
 
     const updateLoader = (): NodeJS.Timeout => threeSecTimeout();
-
 
     const clearTimeouts = (): void => {
         clearTimeout(threeSecTimeout());

@@ -2,8 +2,8 @@ import './Navigation.css';
 import NavLink from './NavLink';
 import { useState } from 'react';
 import BasicLogo from '../BasicLogo';
+import { INavLinks } from '../../types';
 import { useIsMobile } from '../../hooks';
-
 import { useNavLinkContext } from '../../providers';
 import { ArrowLeft, CloseIcon, EllipsisMenu } from '../Icons';
 
@@ -12,12 +12,9 @@ export default function Navigation(/*props: INavProps*/): JSX.Element {
     const [showMobileMenu, setShowMobileMenu] = useState<boolean>(false);
     const isMobile: boolean = useIsMobile();
 
-    const { navLinks } = useNavLinkContext();
+    const { navLinks }: INavLinks = useNavLinkContext();
 
     const toggleMobileMenu = (): void => setShowMobileMenu(!showMobileMenu);
-
-    // handle the back button on mobile, it should navigate back to the previous state
-    // if it is in the history
 
     const onMobileBack = (): void => {
         // set the location to the previous state

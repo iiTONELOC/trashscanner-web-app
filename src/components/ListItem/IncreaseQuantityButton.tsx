@@ -1,13 +1,13 @@
 import { PlusCircle } from '../Icons';
 import { handleIncreaseQuantity } from './helpers';
-import { useGlobalStoreContext, reducerActions } from '../../providers';
+import { useGlobalStoreContext, reducerActions, GlobalStoreContextType } from '../../providers';
 
 
 export default function IncreaseQuantityButton(props: {
     listId: string,
     barcode: string,
 }): JSX.Element {
-    const { dispatch } = useGlobalStoreContext();
+    const { dispatch }: GlobalStoreContextType = useGlobalStoreContext();
 
     const increaseQuantity = async (): Promise<void> => await handleIncreaseQuantity({
         listId: props.listId,

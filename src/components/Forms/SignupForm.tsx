@@ -2,8 +2,8 @@ import './Forms.css';
 import FormInput from '../FormInput';
 import FormAction from './FormAction';
 import { useState, useEffect } from 'react';
-import { useInputValidation } from '../../hooks';
-import { useUserContext } from '../../providers';
+import { useInputValidation, IUseValidators } from '../../hooks';
+import { IUserContextType, useUserContext } from '../../providers';
 
 interface FormState {
     username: string | null;
@@ -25,22 +25,22 @@ export function SignupForm() {// NOSONAR
     const [passwordErrors, setPasswordErrors] = useState<string[]>([]);
     const [usernameErrors, setUsernameErrors] = useState<string[]>([]);
     const [emailErrors, setEmailErrors] = useState<string[]>([]);
-    const { isAuthenticated } = useUserContext();
+    const { isAuthenticated }: IUserContextType = useUserContext();
 
 
 
     //  Use the useInputValidation hook to validate the inputs
-    const validatedPassword = useInputValidation({
+    const validatedPassword: IUseValidators = useInputValidation({
         value: formState.password,
         property: 'password'
     });
 
-    const validatedUsername = useInputValidation({
+    const validatedUsername: IUseValidators = useInputValidation({
         value: formState.username,
         property: 'username'
     });
 
-    const validatedEmail = useInputValidation({
+    const validatedEmail: IUseValidators = useInputValidation({
         value: formState.email,
         property: 'email'
     });
@@ -73,7 +73,7 @@ export function SignupForm() {// NOSONAR
 
 
     // manage form state
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
         const name = e.target.getAttribute('id') || '';
         const { value } = e.target;
 
@@ -99,9 +99,9 @@ export function SignupForm() {// NOSONAR
             validatedPassword.validate();
             validatedUsername.validate();
 
-            const isPasswordValid = validatedPassword.validated;
-            const isUsernameValid = validatedUsername.validated;
-            const isEmailValid = validatedEmail.validated;
+            const isPasswordValid: boolean = validatedPassword.validated;
+            const isUsernameValid: boolean = validatedUsername.validated;
+            const isEmailValid: boolean = validatedEmail.validated;
 
             if (isPasswordValid && isUsernameValid && isEmailValid) {
                 setIsFormValid(true);
@@ -114,7 +114,7 @@ export function SignupForm() {// NOSONAR
 
 
 
-    const handleSignup = (e: React.SyntheticEvent) => {
+    const handleSignup = (e: React.SyntheticEvent): void => {
         e.preventDefault();
         e.stopPropagation();
 
@@ -129,7 +129,6 @@ export function SignupForm() {// NOSONAR
     return isMounted ? (
         <>
             <form className='Form-base'>
-
                 <FormInput
                     label="username"
                     type="text"
@@ -172,9 +171,7 @@ export function SignupForm() {// NOSONAR
                     isValid={isFormValid || false}
                     onAction={handleSignup}
                 />
-
             </form>
-
         </>
     ) : <></>;
 }

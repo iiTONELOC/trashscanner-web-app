@@ -30,8 +30,6 @@ export default class Authentication {
             });
             return response.json();
         } catch (error) {
-            console.log(error);
-
             return {
                 error: {
                     message: 'An error occurred while attempting to login'

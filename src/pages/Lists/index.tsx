@@ -12,7 +12,6 @@ const userListData = suspender(upcDb.getMyLists());
 
 export default function Lists(): JSX.Element {// NOSONAR
     const [isMounted, setIsMounted] = useState<null | boolean>(null);
-
     const listData = userListData.read();
     const { data } = listData;
 
@@ -23,23 +22,19 @@ export default function Lists(): JSX.Element {// NOSONAR
 
     useEffect(() => {
         setIsMounted(true);
-        return () => setIsMounted(null);
+        dispatch({
+            type: reducerActions.SET_LISTS,
+            payload: {
+                lists: data || []
+            }
+        });
+        return () => {
+            setIsMounted(false);
+        };
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    useEffect(() => {
-        if (isMounted) {
-            // Set the lists in the global store
-            dispatch({
-                type: reducerActions.SET_LISTS,
-                payload: {
-                    lists: data || []
-                }
-            });
-            //TODO: IMPLEMENT IDB
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [data, isMounted]);
+
 
     return isMounted ? (
         <section className='My-lists'>

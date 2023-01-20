@@ -1,18 +1,22 @@
+import { useUserContext } from './user';
+import type { IUserContextType } from './user';
 import { useContext, createContext, useState, useEffect } from 'react';
 import { navLinks as _navLinks, loggedInNavLinks } from '../components';
-import { useUserContext } from './user';
 
-
-interface LinkContextType {
+export interface ILinkContextType {
     navLinks: { name: string; href: string; }[];
 }
 
-const LinkContext = createContext<LinkContextType>({} as LinkContextType);
-const { Provider } = LinkContext;
+const LinkContext: React.Context<ILinkContextType> = createContext<ILinkContextType>({} as ILinkContextType);
+const { Provider }: React.Context<ILinkContextType> = LinkContext;
 
-export default function LinkProvider(props: React.PropsWithChildren) { // NOSONAR
-    const { isAuthenticated } = useUserContext();
-    const [navLinks, setNavLinks] = useState(isAuthenticated ? loggedInNavLinks : _navLinks);
+/**
+ * Generates the appropriate navigation links based on the user's authentication status
+ */
+export default function LinkProvider(props: React.PropsWithChildren): JSX.Element { // NOSONAR
+    const { isAuthenticated }: IUserContextType = useUserContext();
+    const [navLinks, setNavLinks] = useState<ILinkContextType['navLinks']>(
+        isAuthenticated ? loggedInNavLinks : _navLinks);
 
     useEffect(() => {
         setNavLinks(isAuthenticated ? loggedInNavLinks : _navLinks);
@@ -21,6 +25,6 @@ export default function LinkProvider(props: React.PropsWithChildren) { // NOSONA
     return <Provider value={{ navLinks }} {...props} />;
 }
 
-const useNavLinkContext = () => useContext(LinkContext);
+const useNavLinkContext = (): ILinkContextType => useContext<ILinkContextType>(LinkContext);
 
 export { LinkContext, useNavLinkContext };

@@ -12,6 +12,7 @@ export type {
 //  HOOK TYPES
 export type {
     IValidationRules,
+    IUseValidators,
     IValidationError
 } from './hooks';
 
@@ -85,6 +86,9 @@ export type { IUpcDb } from './utils/APIs/UpcDb';
 
 // USER
 export type { IUserContextType } from './providers';
+
+// Router
+export type { IRouterContextType } from './providers';
 
 // GLOBAL STORE
 export interface IContext {

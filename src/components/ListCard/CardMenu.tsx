@@ -1,22 +1,24 @@
-import { IList } from '../../types';
+import { IList, IUpcDb } from '../../types';
 import { ToastTypes } from '../Toast';
 import { UpcDb } from '../../utils/APIs';
 import React, { useEffect, useState } from 'react';
 import {
     useToastMessageContext, useGlobalStoreContext,
-    reducerActions
+    reducerActions,
+    GlobalStoreContextType,
+    IToastMessageContextType
 } from '../../providers';
 import { ui } from '../../utils';
 
-const db = new UpcDb();
+const db: IUpcDb = new UpcDb();
 
 export default function CardDropMenu(props: { //NOSONAR
     listId: string,
     setShowMenu: React.Dispatch<React.SetStateAction<boolean>>
 }): JSX.Element { //NOSONAR
     const [isMounted, setIsMounted] = useState<boolean>(false);
-    const { dispatch, globalState } = useGlobalStoreContext();
-    const Toaster = useToastMessageContext();
+    const Toaster: IToastMessageContextType = useToastMessageContext();
+    const { dispatch, globalState }: GlobalStoreContextType = useGlobalStoreContext();
 
     useEffect(() => {
         setIsMounted(true);

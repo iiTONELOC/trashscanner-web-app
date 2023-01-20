@@ -1,8 +1,8 @@
 import './BasicLogo.css';
-import { useRouterContext } from '../../providers';
+import { IRouterContextType, useRouterContext } from '../../providers';
 
 export default function BasicLogo() {
-    const { handleRouteChange } = useRouterContext();
+    const { handleRouteChange }: IRouterContextType = useRouterContext();
     return (
         <div className='Basic-logo'
             onClick={() => handleRouteChange('/')}

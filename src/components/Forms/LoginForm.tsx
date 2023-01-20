@@ -1,10 +1,10 @@
 import './Forms.css';
-import { ToastTypes } from '../Toast';
 import FormInput from '../FormInput';
 import FormAction from './FormAction';
+import { ToastTypes } from '../Toast';
 import { useState, useEffect } from 'react';
 import { Authentication } from '../../utils/APIs';
-import { useUserContext, useToastMessageContext } from '../../providers';
+import { useUserContext, useToastMessageContext, IUserContextType, IToastMessageContextType } from '../../providers';
 
 interface FormState {
     username: string | null;
@@ -17,12 +17,13 @@ const defaultFormState: FormState = {
 };
 
 
-export function LoginForm() {// NOSONAR
+export function LoginForm(): JSX.Element {// NOSONAR
+    const [isFormValid, setIsFormValid] = useState<boolean>(false);
     const [isMounted, setIsMounted] = useState<boolean | null>(false);
     const [formState, setFormState] = useState<FormState>(defaultFormState);
-    const [isFormValid, setIsFormValid] = useState<boolean>(false);
-    const { isAuthenticated } = useUserContext();
-    const Toaster = useToastMessageContext();
+
+    const Toaster: IToastMessageContextType = useToastMessageContext();
+    const { isAuthenticated }: IUserContextType = useUserContext();
 
     useEffect(() => {
         setIsMounted(true);
@@ -36,10 +37,10 @@ export function LoginForm() {// NOSONAR
 
     useEffect(() => {
         if (isMounted) {
-            const { username, password } = formState;
+            const { username, password }: FormState = formState;
 
-            const isUsernameValid = username && username.length > 0;
-            const isPasswordValid = password && password.length > 0;
+            const isUsernameValid: boolean = !!username && username.length > 0;
+            const isPasswordValid: boolean = !!password && password.length > 0;
 
             if (isUsernameValid && isPasswordValid) {
                 setIsFormValid(true);
@@ -52,7 +53,7 @@ export function LoginForm() {// NOSONAR
 
 
 
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
         const name = e.target.getAttribute('id') || '';
         const { value } = e.target;
 
@@ -60,11 +61,11 @@ export function LoginForm() {// NOSONAR
         setFormState({ ...formState, [name]: safeString });
     };
 
-    const handleLogin = (e: React.SyntheticEvent) => {
+    const handleLogin = (e: React.SyntheticEvent): void => {
         e.preventDefault();
         e.stopPropagation();
 
-        const { username, password } = formState;
+        const { username, password }: FormState = formState;
 
         Authentication.login(username || '', password || '').then(res => {
             if (res.status === 200) {
@@ -79,16 +80,16 @@ export function LoginForm() {// NOSONAR
                     window.location.replace('/lists');
 
             } else {
-                Toaster.makeToast({
-                    type: ToastTypes.Error,
-                    message: 'Server Error',
-                    title: 'Login Failed',
-                    timeOut: 7800
-                });
-                console.error(res);
+                throw new Error('Login Failed');
             }
-        }).catch((err) => {
+        }).catch(err => {
             console.log(err);
+            Toaster.makeToast({
+                type: ToastTypes.Error,
+                message: 'Server Error',
+                title: 'Login Failed',
+                timeOut: 7800
+            });
         });
     };
 
@@ -96,7 +97,6 @@ export function LoginForm() {// NOSONAR
     return isMounted ? (
         <>
             <form className='Form-base'>
-
                 <FormInput
                     label="username"
                     type="text"
@@ -123,9 +123,7 @@ export function LoginForm() {// NOSONAR
                     isValid={isFormValid}
                     onAction={handleLogin}
                 />
-
             </form>
-
         </>
     ) : <></>;
 }

@@ -1,8 +1,7 @@
 import { WithAuth, Loading } from '../components';
 import { useState, useEffect, Suspense } from 'react';
 import { Home, SignUp, Login, List, Lists } from '../pages';
-import { useNavLinkContext, useRouterContext, useUserContext } from '../providers';
-
+import { IRouterContextType, useRouterContext, useUserContext } from '../providers';
 
 function ComponentLoader(props:
     {
@@ -42,19 +41,14 @@ function ComponentLoader(props:
 }
 
 /**
- * This Component checks the current route and the current path and renders
- * the appropriate component based on the current path
+ * This component verifies the current route and renders the appropriate component
  */
 
 export default function ViewRenderer(): JSX.Element { // NOSONAR
-    const currentPath = window.location.pathname;
-    const routerContext = useRouterContext();
-    const { navLinks } = useNavLinkContext();
-
-    const { currentRoute, handleRouteChange } = routerContext;
-    const [isMounted, setIsMounted] = useState(false);
-
-    const validLinks = navLinks.map(link => link.href);
+    const [isMounted, setIsMounted] = useState<boolean>(false);
+    const routerContext: IRouterContextType = useRouterContext();
+    const { currentRoute }: IRouterContextType = routerContext;
+    const currentPath: string = window.location.pathname;
     const listRegex = /^\/list\/[a-z0-9]{24}$/;
 
     useEffect(() => {
@@ -62,22 +56,10 @@ export default function ViewRenderer(): JSX.Element { // NOSONAR
         return () => setIsMounted(false);
     }, []);
 
-    // When the current path changes, check if it is a valid route
-    // If the route is valid then the currentRoute state is updated
-    useEffect(() => {
-        if (isMounted && currentRoute !== currentPath) {
-            // check if currentPath is a valid route
-            validLinks.find(link => link === currentPath
-                || listRegex.test(currentPath)) && handleRouteChange(currentPath);
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [currentPath, isMounted, handleRouteChange, currentRoute, validLinks]);
-
-
     return isMounted ? (
         <ComponentLoader
             currentRoute={currentRoute}
             currentPath={currentPath}
             regex={listRegex} />
-    ) : <></>;
+    ) : <Loading />;
 }

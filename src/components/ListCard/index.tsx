@@ -4,11 +4,11 @@ import { EllipsisMenu } from '../Icons';
 import ListCardDropMenu from './CardMenu';
 import { formatter, ui } from '../../utils';
 import React, { useEffect, useState } from 'react';
-import { useRouterContext } from '../../providers';
+import { IRouterContextType, useRouterContext } from '../../providers';
 import EditableContent, { EditableContentTypes } from '../EditableContent';
 
 function displayMostRecentDate(createdAt: Date, updatedAt: Date): string {
-    const date = updatedAt > createdAt ? updatedAt : createdAt;
+    const date: Date = updatedAt > createdAt ? updatedAt : createdAt;
     // dd Mon yy format
     return new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'short', year: '2-digit' })
         .format(new Date(date));
@@ -33,14 +33,13 @@ function preventDefaults(e: React.SyntheticEvent): void {
 }
 
 export default function ListCard(props: IList): JSX.Element { //NOSONAR
-    const { name, isDefault, createdAt, updatedAt, products, _id } = props;
+    const { name, isDefault, createdAt, updatedAt, products, _id }: IList = props;
     const [showDropMenu, setShowDropMenu] = useState<boolean>(false);
     const [showEditor, setShowEditor] = useState<boolean>(false);
     const [isMounted, setIsMounted] = useState<boolean>(false);
 
-    const { handleRouteChange } = useRouterContext();
-
-    const numProducts = products?.length || 0;
+    const { handleRouteChange }: IRouterContextType = useRouterContext();
+    const numProducts: number = products?.length || 0;
 
     useEffect(() => {
         setIsMounted(true);
@@ -57,7 +56,7 @@ export default function ListCard(props: IList): JSX.Element { //NOSONAR
     // Ensures routing only occurs if the card element itself is double clicked
     const handleRouteClick = (e: React.SyntheticEvent): void => {
         preventDefaults(e);
-        const target = e.target as HTMLElement;
+        const target: HTMLElement = e.target as HTMLElement;
 
         if (!target.hasAttribute('id')//NOSONAR
             && !target.classList.contains('Editable-content')
@@ -74,7 +73,7 @@ export default function ListCard(props: IList): JSX.Element { //NOSONAR
     const handleShowEditorClick = (e: React.SyntheticEvent): void => {
         preventDefaults(e);
 
-        const target = e.target as HTMLElement;
+        const target: HTMLElement = e.target as HTMLElement;
         target
             .classList
             .contains('Editable-content') && setShowEditor(true);
@@ -86,7 +85,7 @@ export default function ListCard(props: IList): JSX.Element { //NOSONAR
         preventDefaults(e);
 
         if (showEditor) {
-            const target = e.target as HTMLElement;
+            const target: HTMLElement = e.target as HTMLElement;
             if (!target.hasAttribute('id') && target.getAttribute('id') !== 'list-name') {
                 setShowEditor(false);
             }

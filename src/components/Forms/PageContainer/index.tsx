@@ -7,7 +7,7 @@ export interface IFormPageContainerProps extends IMainFormTitleProps {
 }
 
 export default function FormPageContainer(props: IFormPageContainerProps): JSX.Element {
-    const { FormTitle, FormTitleSpan, extendedTitle, children } = props;
+    const { FormTitle, FormTitleSpan, extendedTitle, children }: IFormPageContainerProps = props;
     return (
         <section className='Form-page-container'>
             <MainFormTitle

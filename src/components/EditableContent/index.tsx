@@ -1,12 +1,14 @@
 import './EditableContent.css';
 import FormInput from '../FormInput';
 import { ToastTypes } from '../Toast';
-import { IProduct } from '../../types';
+import { IProduct, IUpcDb } from '../../types';
 import { UpcDb } from '../../utils/APIs';
 import { useState, useEffect } from 'react';
 import {
     useToastMessageContext, useGlobalStoreContext,
-    reducerActions
+    reducerActions,
+    GlobalStoreContextType,
+    IToastMessageContextType
 } from '../../providers';
 
 
@@ -20,12 +22,20 @@ interface FormState {
     [EditableContentTypes.ListName]: string | null;
 }
 
-const db = new UpcDb();
+const db: IUpcDb = new UpcDb();
 
 const defaultFormState: FormState = {
     [EditableContentTypes.ProductName]: '',
     [EditableContentTypes.ListName]: ''
 };
+
+interface IEditableContentProps {
+    setShowEditor: (showEdit: boolean) => void;
+    contentType: EditableContentTypes;
+    defaultContent: string;
+    productId?: string;
+    listId?: string;
+}
 
 export default function EditableContent(props: { // NOSONAR
     setShowEditor: (showEdit: boolean) => void;
@@ -36,14 +46,15 @@ export default function EditableContent(props: { // NOSONAR
 }): JSX.Element {
     const [formState, setFormState] = useState<FormState>(defaultFormState);
     const [isMounted, setIsMounted] = useState<boolean | null>(false);
-    const { contentType, defaultContent, productId, listId } = props;
-    const { globalState, dispatch } = useGlobalStoreContext();
-    const Toaster = useToastMessageContext();
+
+    const { contentType, defaultContent, productId, listId }: IEditableContentProps = props;
+    const { globalState, dispatch }: GlobalStoreContextType = useGlobalStoreContext();
+    const Toaster: IToastMessageContextType = useToastMessageContext();
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
         const { value } = e.target;
         // replace it with a server safe string escape all bad characters
-        const safeString = value.replace(/[^a-zA-Z0-9 ]/g, '');
+        const safeString: string = value.replace(/[^a-zA-Z0-9 ]/g, '');
         setFormState({ ...formState, [contentType]: safeString });
     };
 
