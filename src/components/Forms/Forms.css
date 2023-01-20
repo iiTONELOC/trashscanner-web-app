@@ -27,6 +27,10 @@ input {
     color: var(--light-gray-text)
 }
 
+input:focus {
+    border: none
+}
+
 /* Form label container - holds the errors as well */
 .Form-label-container {
     display: flex;

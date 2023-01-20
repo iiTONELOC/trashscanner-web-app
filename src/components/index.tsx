@@ -10,7 +10,6 @@ export { default as WithAuth } from './WithAuth';
 export { default as FormInput } from './FormInput';
 export { default as Navigation } from './Navigation';
 export { default as Toast, ToastTypes } from './Toast';
-export { default as ActionButton } from './ActionButton';
 export { default as ViewRenderer } from './ViewRenderer';
 export { default as MainFormTitle } from './MainFormTitle';
 export { SignupForm, LoginForm, FormPageContainer, AddListForm } from './Forms';

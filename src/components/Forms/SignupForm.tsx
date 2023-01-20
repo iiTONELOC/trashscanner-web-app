@@ -1,9 +1,14 @@
 import './Forms.css';
 import FormInput from '../FormInput';
+import { ToastTypes } from '../Toast';
 import FormAction from './FormAction';
+import { IApiResponse } from '../../types';
 import { useState, useEffect } from 'react';
+import { Authentication } from '../../utils/APIs';
 import { useInputValidation, IUseValidators } from '../../hooks';
-import { IUserContextType, useUserContext } from '../../providers';
+import { IToastMessageContextType, useToastMessageContext, IUserContextType, useUserContext }
+    from '../../providers';
+
 
 interface FormState {
     username: string | null;
@@ -27,7 +32,7 @@ export function SignupForm() {// NOSONAR
     const [emailErrors, setEmailErrors] = useState<string[]>([]);
     const { isAuthenticated }: IUserContextType = useUserContext();
 
-
+    const Toaster: IToastMessageContextType = useToastMessageContext();
 
     //  Use the useInputValidation hook to validate the inputs
     const validatedPassword: IUseValidators = useInputValidation({
@@ -117,11 +122,45 @@ export function SignupForm() {// NOSONAR
     const handleSignup = (e: React.SyntheticEvent): void => {
         e.preventDefault();
         e.stopPropagation();
+        const { username, password, email }: FormState = formState;
 
+        Authentication.register(username || '', email || '', password || '').then(
+            (response: IApiResponse<string | null>) => {
+                // Success
+                if (response && response.status === 201) {
+                    localStorage.setItem('trash-user', response.data as string);
+                    window.location.replace('/lists');
+                    // USER OR EMAIL ALREADY EXISTS
+                } else if (response && response.status === 400) {
+                    //@ts-ignore
+                    const errorMessages = response?.error?.map(
+                        (error: {
+                            property: string,
+                            is_valid: boolean,
+                            error_messages: { error_code: number, error_message: string }[]
+                        }) => error.error_messages.map((
+                            messages: {
+                                error_code: number,
+                                error_message: string
+                            }) => error.property + ': ' + messages.error_message));
 
-        console.log('signup');
-        console.log({
-            formState
+                    Toaster.makeToast({
+                        type: ToastTypes.Error,
+                        message: errorMessages.join('\n'),
+                        title: 'Error',
+                        timeOut: 12000
+                    });
+                    // ELSE
+                } else {
+                    throw new Error();
+                }
+            }
+        ).catch((error: Error) => {
+            Toaster.makeToast({
+                type: ToastTypes.Error,
+                message: 'There was an error signing up. Please try again.',
+                title: 'Error'
+            });
         });
     };
 

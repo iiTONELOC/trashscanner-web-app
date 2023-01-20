@@ -118,6 +118,7 @@ export class UpcDb implements IUpcDb {
     }
 
     async createList(name: string, isDefault: boolean | null = null): Promise<IApiResponse<IList>> {
+        console.log('createList', name, isDefault);
         try {
             this.USER_ID = this._getUserId() || undefined;
             const response: Response = await fetch(`${UpcDb.API_URL}/lists`, {

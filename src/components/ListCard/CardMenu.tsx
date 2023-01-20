@@ -89,6 +89,8 @@ export default function CardDropMenu(props: { //NOSONAR
 
             response && (() => {
                 // get existing default list
+
+                // THIS CAN BE REUSED ______
                 const existingDefaultList: IList | undefined = Object
                     .values(globalState.lists).find(list => list.isDefault);
 
@@ -101,7 +103,10 @@ export default function CardDropMenu(props: { //NOSONAR
                     type: reducerActions.UPDATE_LIST,
                     payload: { list: { ...updatedExistingDefaultList as IList } }
                 });
+                // ________
 
+
+                // THIS CAN BE MADE REUSABLE
                 const listToSetAsDefault = globalState.lists[listId];
                 const updatedListToSetAsDefault = {
                     ...listToSetAsDefault,

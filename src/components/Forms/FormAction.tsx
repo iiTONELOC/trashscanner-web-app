@@ -30,6 +30,7 @@ export default function FormAction(props: IProps): JSX.Element {
         if (props.onAction) {
             setIsClicked(true);
             props.onAction(event);
+            setIsClicked(false);
         }
     };
 

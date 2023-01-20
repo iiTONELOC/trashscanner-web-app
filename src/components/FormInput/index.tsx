@@ -27,7 +27,7 @@ export default function FormInput(props: IFormInputProps<HTMLInputElement>): JSX
                 </span>
             </div>
 
-            <input {...props} />
+            <input tabIndex={0} {...props} />
         </>
     );
 }

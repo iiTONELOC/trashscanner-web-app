@@ -39,4 +39,35 @@ export default class Authentication {
             };
         }
     }
+
+    static async register(username: string, email: string, password: string):
+        Promise<IApiResponse<string | null>> {
+        try {
+            if (!API_URL || !API_AUTH) {
+                throw new Error('API_URL or API_AUTH is not defined');
+            }
+
+            const response: Response = await fetch(`${API_URL}/users`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'WebApp_Authorization': `Bearer ${API_AUTH}`
+                },
+                body: JSON.stringify({
+                    username,
+                    email,
+                    password
+                })
+            });
+            return response.json();
+        } catch (error) {
+            return {
+                error: {
+                    message: 'An error occurred while attempting to register'
+                },
+                status: 500,
+                data: null
+            };
+        }
+    }
 }

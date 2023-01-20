@@ -3,7 +3,7 @@ import { validators } from '../../utils';
 import { UpcDb, IUpcDb } from '../../utils/APIs';
 import React, { useState, useEffect } from 'react';
 import { IApiResponse, IList } from '../../types';
-import { ToastTypes } from '../../components'
+import { ToastTypes } from '../../components';
 import {
     useGlobalStoreContext,
     reducerActions, useToastMessageContext,
@@ -54,13 +54,13 @@ export default function AddListForm(props: IAddListFormProps): JSX.Element { // 
     const [formState, setFormState] = useState<IFormState>(defaultFormState);
 
     const Toaster: IToastMessageContextType = useToastMessageContext();
-    const { dispatch }: GlobalStoreContextType = useGlobalStoreContext();
+    const { dispatch, globalState }: GlobalStoreContextType = useGlobalStoreContext();
 
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
-        const { id, value } = event.target;
+        const { id, value, checked } = event.target;
         if (id === 'isDefault') {
-            setFormState({ ...formState, [id]: Boolean(value) });
+            setFormState({ ...formState, [id]: checked });
         } else {
             setFormState({ ...formState, [id]: value });
             handleFormValidation(value);
@@ -80,15 +80,38 @@ export default function AddListForm(props: IAddListFormProps): JSX.Element { // 
 
     const handleCreateNewList = (): void => {
         const { listName, isDefault }: IFormState = formState;
-
         db.createList(listName, isDefault).then((response: IApiResponse<IList>) => {
-            if (response.status === 200 || response) {
-                const data = response?.data || response;
+            if (response.status === 200 || response !== null) {
+                // @ts-ignore
+                const data: IList = response?.data || response as IList;
 
-                dispatch({
-                    type: reducerActions.ADD_NEW_LIST,
-                    payload: { list: data as IList }
-                });
+                if (!isDefault) {
+                    dispatch({
+                        type: reducerActions.ADD_NEW_LIST,
+                        payload: { list: data }
+                    });
+                } else {
+                    // A new default list was created, we need to update the global state
+                    const existingDefaultList: IList | undefined = Object
+                        .values(globalState.lists).find(list => list.isDefault);
+
+                    const updatedExistingDefaultList = {
+                        ...existingDefaultList,
+                        isDefault: false
+                    };
+                    // set this list to not default in global state by dispatching an action
+                    dispatch({
+                        type: reducerActions.UPDATE_LIST,
+                        payload: { list: { ...updatedExistingDefaultList as IList } }
+                    });
+
+                    // add the new list to global state
+                    dispatch({
+                        type: reducerActions.ADD_NEW_LIST,
+                        payload: { list: data }
+                    });
+                }
+
                 Toaster.makeToast({
                     message: 'List created successfully',
                     type: ToastTypes.Success,
@@ -140,7 +163,6 @@ export default function AddListForm(props: IAddListFormProps): JSX.Element { // 
                         label='Set as Default'
                         value={formState.isDefault as unknown as string}
                         onChange={handleInputChange}
-                        onBlur={handleInputChange}
                         type='checkbox'
                         required={false}
                     />
