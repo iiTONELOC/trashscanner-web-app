@@ -1,11 +1,12 @@
 import './Home.css';
-import { useRouterContext, useUserContext } from '../../providers';
 import logoImage from '../../assets/images/logo.png';
+import { IRouterContextType, IUserContextType, useRouterContext, useUserContext }
+    from '../../providers';
 
 
 export default function Home(): JSX.Element {
-    const { handleRouteChange } = useRouterContext();
-    const { isAuthenticated } = useUserContext();
+    const { handleRouteChange }: IRouterContextType = useRouterContext();
+    const { isAuthenticated }: IUserContextType = useUserContext();
 
     return (
         <section className='Home-container Text-shadow'>
@@ -25,12 +26,10 @@ export default function Home(): JSX.Element {
                 </p>
                 {!isAuthenticated && <div className='Action-button-container'>
                     <button
-                        role={'navigation'}
                         aria-label={'Sign Up'}
                         onClick={() => handleRouteChange('/signup')}
                         className='Action-button Text-shadow'>SIGN UP</button>
                     <button
-                        role={'navigation'}
                         aria-label={'Login'}
                         onClick={() => handleRouteChange('/login')}
                         className='Button Text-shadow'>LOGIN</button>

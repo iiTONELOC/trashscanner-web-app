@@ -91,17 +91,20 @@ export default function ListCard(props: IList): JSX.Element { //NOSONAR
             }
         }
     };
-
+    function singleHandlers(e: React.SyntheticEvent): void {
+        setShowDropMenu(false);
+        handleCloseEditor(e);
+    }
     const handleMobileTouch = (e: React.SyntheticEvent): void => {
 
-        function handlers(e: React.SyntheticEvent): void {
+        function doubleHandlers(e: React.SyntheticEvent): void {
             handleRouteClick(e);
             handleShowEditorClick(e);
             handleCloseEditor(e);
         }
 
-        ui.registerDoubleTap(e as React.TouchEvent, () => handlers(e));
-        ui.registerSingleTap(e as React.TouchEvent, () => handleCloseEditor);
+        ui.registerDoubleTap(e as React.TouchEvent, () => doubleHandlers(e));
+        ui.registerSingleTap(e as React.TouchEvent, () => singleHandlers(e));
     };
 
     return isMounted ? (
@@ -110,6 +113,7 @@ export default function ListCard(props: IList): JSX.Element { //NOSONAR
             onClick={handleCloseEditor}
             onDoubleClick={handleRouteClick}
             onTouchStart={handleMobileTouch}
+            onMouseLeave={singleHandlers}
         >
 
             <header className='List-card-header'>

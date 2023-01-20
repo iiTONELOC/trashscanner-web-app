@@ -5,6 +5,9 @@ export default function BasicLogo() {
     const { handleRouteChange }: IRouterContextType = useRouterContext();
     return (
         <div className='Basic-logo'
+            tabIndex={0}
+            role={'link'}
+            aria-label={'link - home'}
             onClick={() => handleRouteChange('/')}
         >
             <p>

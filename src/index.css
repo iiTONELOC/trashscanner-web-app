@@ -268,12 +268,9 @@ body {
   cursor: pointer;
   transition: 0.2s ease-in-out;
   text-decoration: none;
-  z-index: 9996;
+
 }
 
-.Editable-content-container {
-  z-index: 9998;
-}
 
 .Editable-content:hover {
   scale: 1.05;
@@ -282,7 +279,7 @@ body {
 }
 
 /* Target the text area input element so we can adjust the default focus colors */
-input[type='textarea']:focus {
+input:focus {
   outline: none;
   border: 1px solid var(--warning);
   border-radius: 0.5rem;

@@ -2,7 +2,7 @@ import { useReducer } from 'react';
 import { IList, IProduct } from '../../types';
 import {
     SET_LISTS, ADD_TO_LIST, UPDATE_LIST,
-    DELETE_LIST, REMOVE_FROM_LIST
+    DELETE_LIST, REMOVE_FROM_LIST, ADD_NEW_LIST
 } from './storeActions';
 
 export interface IDefaultGlobalState {
@@ -23,6 +23,7 @@ interface IPayloads {
 }
 
 export const reducer = (state: IDefaultGlobalState, action: IAction<IPayloads>) => {
+    const listId = action?.payload?.list?._id;
     switch (action.type) {
         case SET_LISTS:
             return {
@@ -42,8 +43,9 @@ export const reducer = (state: IDefaultGlobalState, action: IAction<IPayloads>) 
                     [id]: action.payload.list
                 }
             };
+
+        case ADD_NEW_LIST:
         case UPDATE_LIST:
-            const listId = action?.payload?.list?._id;
             if (!listId) {
                 return state;
             }

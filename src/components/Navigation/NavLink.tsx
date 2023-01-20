@@ -32,7 +32,8 @@ export default function NavLink(props: IProps): JSX.Element {
             className={navItemClassName(href)} key={name}>
             <span
                 role={'link'}
-                aria-label={'link'}
+                tabIndex={0}
+                aria-label={'link - ' + name}
                 aria-describedby={href}
                 onClick={action}>{name}
             </span>

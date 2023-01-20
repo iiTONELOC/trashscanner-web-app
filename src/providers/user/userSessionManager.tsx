@@ -71,28 +71,11 @@ export default function UserSessionManager(props: IUserContextType) { // NOSONAR
     const Toaster: IToastMessageContextType = useToastMessageContext();
     const [isMounted, setIsMounted] = useState<boolean>(false);
 
-
-    useEffect(() => {
-        setIsMounted(true);
-        return () => {
-            setIsMounted(false);
-        };
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-
-    // We reauthenticate the user on every page request
-    useEffect(() => {
-        if (isMounted) {
-            reauthenticate();
-            window.addEventListener('popstate', () => {
-                reauthenticate();
-            });
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isMounted]);
+    // events that will reset the token expiration
+    const tokenResetEvents: string[] = ['keypress', 'touchstart', 'scroll', 'click', 'popstate'];
 
     // Tokens expire in 60 mins, we log the user out in 10 mins of inactivity
-    const autoRemoveToken = (): void => {
+    const resetTokenExpiration = (): void => {
         // clear any existing timeouts
         clearTokenTimeout(tokenCollectorId);
         const token = getToken();
@@ -130,7 +113,7 @@ export default function UserSessionManager(props: IUserContextType) { // NOSONAR
                         title: 'Session Expired',
                         timeOut: 8500
                     });
-                }, timeToLogOut);
+                }, timeToLogOut);;
             }
         }
     };
@@ -142,11 +125,44 @@ export default function UserSessionManager(props: IUserContextType) { // NOSONAR
             if (!isAuthenticated && user) {
                 throw new Error('UserSessionManager: reauthenticate: user is not authenticated');
             } else {
-                autoRemoveToken();
+                resetTokenExpiration();
             }
         } catch (error) {
             removeToken();
             clearTokenTimeout(tokenCollectorId);
         }
     };
+
+    // create an event listener to listen for mouse, tap, and keyboard tokenResetEvents
+    // on these tokenResetEvents we will reset the token timeout
+    const createListeners = (): void => {
+        tokenResetEvents.forEach(event => {
+            window.addEventListener(event, reauthenticate);
+        });
+    };
+
+    const removeListeners = (): void => {
+        tokenResetEvents.forEach(event => {
+            window.removeEventListener(event, reauthenticate);
+        });
+    };
+
+    useEffect(() => {
+        setIsMounted(true);
+
+        return () => {
+            setIsMounted(false);
+            removeListeners();
+        };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    // We reauthenticate the user on every page request
+    useEffect(() => {
+        if (isMounted) {
+            reauthenticate();
+            createListeners();
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isMounted]);
 }

@@ -3,6 +3,7 @@ import type { IAction, IPayloads, GlobalStoreContextType } from './providers';
 // COMPONENT TYPES
 export type {
     IToastProps,
+    ToastTypes,
     ILayoutProps,
     IFormInputProps,
     IMainFormTitleProps
@@ -13,7 +14,8 @@ export type {
 export type {
     IValidationRules,
     IUseValidators,
-    IValidationError
+    IValidationError,
+    IApiHookCall
 } from './hooks';
 
 //  UTIL TYPES
