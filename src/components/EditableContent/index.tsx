@@ -47,28 +47,69 @@ export default function EditableContent(props: { // NOSONAR
         setFormState({ ...formState, [contentType]: safeString });
     };
 
-    const sendUpdate = async (): Promise<void> => {
-        try {
-            const { [contentType]: content } = formState;
+    // To: Create Hooks for CRUD Ops that can be used in any component
 
+    async function updateProducts(content: string) {
+        try {
             if (content && content !== defaultContent && productId && listId) {
-                const { data } = contentType === 'product-name' ?
-                    await db.editProduct(productId, content) :
-                    await db.editList(listId, content);
+                const { data } = await db.editProduct(productId, content);
 
                 data && ((() => {
-                    const currentListState = globalState.lists[listId];
-                    const filteredProducts: IProduct[] = currentListState.products
+                    const currentListState = globalState?.lists[listId];
+                    const filteredProducts: IProduct[] = currentListState?.products
                         .filter((product: IProduct) => product._id !== productId);
 
                     const updatedProducts = [...filteredProducts, data];
 
                     const updatedList = {
                         ...currentListState,
-                        products: updatedProducts as IProduct[]
+                        products: updatedProducts
                     };
 
-                    updatedProducts && (
+                    updatedProducts && ((() => {
+                        dispatch({
+                            type: reducerActions.UPDATE_LIST,
+                            payload: {
+                                list: updatedList
+                            }
+                        });
+
+                        Toaster.makeToast({
+                            type: ToastTypes.Success,
+                            message: 'Your product was updated successfully.',
+                            title: 'Product updated',
+                            timeOut: 4000
+                        });
+                    })());
+
+                    !updatedProducts && (
+                        (() => { throw new Error(); })());
+                })());
+                !data && ((
+                    () => { throw new Error(); })());
+            }
+        } catch (error) {
+            Toaster.makeToast({
+                type: ToastTypes.Error,
+                message: 'There was an error updating your product.',
+                title: '',
+                timeOut: 8000
+            });
+        }
+    }
+
+    async function updateListName(listName: string) {
+        try {
+            if (listName && listName !== defaultContent && listId) {
+                const { data } = await db.editList(listId, listName);
+                data && ((() => {
+                    const currentListState = globalState?.lists[listId];
+                    const updatedList = {
+                        ...currentListState,
+                        name: listName
+                    };
+
+                    updatedList && (
                         (() => {
                             dispatch({
                                 type: reducerActions.UPDATE_LIST,
@@ -79,14 +120,14 @@ export default function EditableContent(props: { // NOSONAR
 
                             Toaster.makeToast({
                                 type: ToastTypes.Success,
-                                message: 'Your product was updated successfully.',
-                                title: 'Product updated',
+                                message: 'Your list was updated successfully.',
+                                title: 'List updated',
                                 timeOut: 4000
                             });
                         })()
                     );
 
-                    !updatedProducts && (
+                    !updatedList && (
                         (() => { throw new Error(); })()
                     );
                 })());
@@ -97,11 +138,24 @@ export default function EditableContent(props: { // NOSONAR
         } catch (error) {
             Toaster.makeToast({
                 type: ToastTypes.Error,
-                message: 'There was an error updating your product.',
+                message: 'There was an error updating your list.',
                 title: '',
                 timeOut: 8000
             });
         }
+    }
+
+    const sendUpdate = async (): Promise<void> => {
+        const { [contentType]: content } = formState;
+
+        if (contentType === 'product-name') {
+            await updateProducts(content || defaultContent);
+        }
+
+        if (contentType === 'list-name') {
+            await updateListName(content || defaultContent);
+        }
+
         props.setShowEditor(false);
     };
 

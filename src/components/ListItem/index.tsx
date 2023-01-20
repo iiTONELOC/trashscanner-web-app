@@ -42,22 +42,43 @@ export default function ListItem(props: { product: IProduct, duplicateCount?: nu
 
     useEffect(() => {
         setIsMounted(true);
-        setListId(window.location.pathname.split('/')[2]);
+        setListId(window.location.pathname.split('/')[2]?.trim());
         return () => setIsMounted(false);
     }, []);
 
-    const handleDoubleClick = (e: React.MouseEvent) => {
+    const handleDoubleClick = (e: React.SyntheticEvent) => {
         e.preventDefault();
         e.stopPropagation();
-        setShowEditor(true);
+
+        const target = e.target as HTMLElement;
+        target
+            .classList
+            .contains('Editable-content') && setShowEditor(true);
     };
 
-    const handleEditFormMobile = (e: React.TouchEvent) => ui.registerDoubleTap(e, () => handleDoubleClick(e as unknown as React.MouseEvent));
-    const handleCountMobile = (e: React.TouchEvent) => ui.registerDoubleTap(e, () => setIsQuantityHovered(!isQuantityHovered));
+    const handleCloseEditor = (e: React.SyntheticEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        if (showEditor) {
+            const target = e.target as HTMLElement;
+            if (!target.hasAttribute('id') && target.getAttribute('id') !== 'list-name') {
+                setTimeout(() => setShowEditor(false), 500);
+            }
+        }
+    };
+
+    const handleEditFormMobile = (e: React.TouchEvent) => ui
+        .registerDoubleTap(e, () => handleDoubleClick(e as unknown as React.SyntheticEvent));
+    const handleCountMobile = (e: React.TouchEvent) => ui
+        .registerDoubleTap(e, () => setIsQuantityHovered(!isQuantityHovered));
 
     return isMounted ? (
-        <li className="List-item-product">
+        <li className="List-item-product"
+            onClick={handleCloseEditor}
+        >
             <span className='List-product-span'
+
                 onDoubleClick={() => showEditor && setShowEditor(false)}
             >
                 <RenderListStatus />

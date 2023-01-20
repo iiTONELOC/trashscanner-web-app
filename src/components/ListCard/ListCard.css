@@ -11,6 +11,7 @@
     height: 150px;
     max-height: calc(100vh - 100px);
     display: grid;
+    z-index: 100;
 }
 
 .List-card:hover {
@@ -52,6 +53,7 @@
     justify-content: flex-start;
     align-items: flex-end;
     color: var(--gray-text);
+    z-index: 100;
 }
 
 .List-card-info-span p {
