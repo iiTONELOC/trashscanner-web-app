@@ -1,5 +1,7 @@
 import { useUserContext } from './user';
+
 import type { IUserContextType } from './user';
+import { useLocation } from 'react-router-dom';
 import { useContext, createContext, useState, useEffect } from 'react';
 import { navLinks as _navLinks, loggedInNavLinks } from '../components';
 
@@ -18,9 +20,11 @@ export default function LinkProvider(props: React.PropsWithChildren): JSX.Elemen
     const [navLinks, setNavLinks] = useState<ILinkContextType['navLinks']>(
         isAuthenticated ? loggedInNavLinks : _navLinks);
 
+    const currentLocation = useLocation();
+
     useEffect(() => {
         setNavLinks(isAuthenticated ? loggedInNavLinks : _navLinks);
-    }, [isAuthenticated]);
+    }, [isAuthenticated, currentLocation.pathname]);
 
     return <Provider value={{ navLinks }} {...props} />;
 }

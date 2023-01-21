@@ -1,10 +1,10 @@
 import './Home.css';
+import { Link } from 'react-router-dom';
 import logoImage from '../../assets/images/logo.png';
 import { IUserContextType, useUserContext } from '../../providers';
 
-
 export default function Home(): JSX.Element {
-    // const { handleRouteChange }: IRouterContextType = useRouterContext();
+
     const { isAuthenticated }: IUserContextType = useUserContext();
 
     return (
@@ -41,14 +41,16 @@ export default function Home(): JSX.Element {
                     using your device's camera in the near future!
                 </p>
                 {!isAuthenticated && <div className='Action-button-container'>
-                    <button
+                    <Link
+                        to={'/signup'}
                         aria-label={'Sign Up'}
-                        onClick={() => window.location.assign('/signup')}
-                        className='Action-button Text-shadow'>SIGN UP</button>
-                    <button
+                        className='Action-button Text-shadow'>SIGN UP
+                    </Link>
+                    <Link
+                        to={'/login'}
                         aria-label={'Login'}
-                        onClick={() => window.location.assign('/login')}
-                        className='Button Text-shadow'>LOGIN</button>
+                        className='Button Text-shadow'>LOGIN
+                    </Link>
                 </div>}
             </div>
 

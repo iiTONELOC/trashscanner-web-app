@@ -1,9 +1,11 @@
 import './List.css';
 import { UpcDb } from '../../utils/APIs';
 import { useEffect, useState } from 'react';
-import { IList, IProduct, IUpcDb } from '../../types';
+import { useLocation } from 'react-router-dom';
 import { ListItem, Loading } from '../../components';
+import { IList, IProduct, IUpcDb } from '../../types';
 import { useGlobalStoreContext, reducerActions } from '../../providers';
+
 
 const upcDb: IUpcDb = new UpcDb();
 
@@ -50,9 +52,11 @@ export default function List(): JSX.Element {// NOSONAR
     const [list, setList] = useState<IList | null>(null);
     const [isMounted, setIsMounted] = useState<null | boolean>(null);
 
-    const listId: string | null = window.location.pathname.split('/')[2] || null;
     const { globalState, dispatch } = useGlobalStoreContext();
     const { lists } = globalState;
+
+    const location = useLocation();
+    const listId = location.pathname.split('/')[2];
 
     useEffect(() => {
         setIsMounted(true);

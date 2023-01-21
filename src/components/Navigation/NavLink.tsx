@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 
 
@@ -10,10 +10,11 @@ interface IProps {
 
 export default function NavLink(props: IProps): JSX.Element {
     const currentLocation = useLocation();
+
     const [currentPath, setCurrentPath] = React.useState<string>(currentLocation.pathname);
     const { link }: IProps = props;
     const { name, href } = link;
-
+    const navigate = useNavigate();
 
 
     const isActive = (link: string): boolean => currentPath === link;
@@ -24,7 +25,7 @@ export default function NavLink(props: IProps): JSX.Element {
         e.preventDefault();
         e.stopPropagation();
         localStorage.removeItem('trash-user');
-        window.location.replace('/');
+        navigate('/', { replace: true });
     };
 
 

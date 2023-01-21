@@ -1,12 +1,13 @@
 import { useState, useEffect, Suspense } from 'react';
 import { Home, SignUp, Login, List, Lists } from './pages';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { HashRouter, Route, Routes } from 'react-router-dom';
 import { Layout, Footer, Navigation, Toaster, WithAuth, Loading } from './components';
 import { GlobalStoreProvider, UserProvider, ToastProvider, NavLinkProvider } from './providers';
 
 
 function App(): JSX.Element { //  NOSONAR
   const [isMounted, setIsMounted] = useState(false);
+
 
   useEffect(() => {
     setIsMounted(true);
@@ -17,9 +18,8 @@ function App(): JSX.Element { //  NOSONAR
   return isMounted ? (
     <ToastProvider>
       <UserProvider>
-        <NavLinkProvider>
-          {/* <RouterProvider> */}
-          <BrowserRouter>
+        <HashRouter>
+          <NavLinkProvider>
             <Layout>
               <Navigation />
               <GlobalStoreProvider>
@@ -44,16 +44,12 @@ function App(): JSX.Element { //  NOSONAR
                     </WithAuth>}
                   />
                 </Routes>
-
-                {/* <ViewRenderer /> */}
               </GlobalStoreProvider>
               <Toaster />
               <Footer />
             </Layout>
-          </BrowserRouter>
-
-          {/* </RouterProvider> */}
-        </NavLinkProvider>
+          </NavLinkProvider>
+        </HashRouter>
       </UserProvider>
     </ToastProvider>
   ) : <></>;

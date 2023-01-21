@@ -35,8 +35,6 @@ export default function UserProvider(props: React.PropsWithChildren) { // NOSONA
 
     useEffect(() => {
         checkIfAuthenticated();
-        console.log('UserProvider mounted');
-        console.log(isAuthenticated)
     }, []);
 
     // Manages the user's session and validates a user on every requested page

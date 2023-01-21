@@ -3,8 +3,8 @@ import FormInput from '../FormInput';
 import FormAction from './FormAction';
 import { ToastTypes } from '../Toast';
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Authentication } from '../../utils/APIs';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useUserContext, useToastMessageContext, IUserContextType, IToastMessageContextType } from '../../providers';
 
 
@@ -28,6 +28,7 @@ export function LoginForm(): JSX.Element {// NOSONAR
     const { isAuthenticated, setIsAuthenticated, checkIfAuthenticated }: IUserContextType = useUserContext();
 
     const nav = useNavigate();
+    const loc = useLocation();
 
     useEffect(() => {
         setIsMounted(true);
@@ -41,7 +42,7 @@ export function LoginForm(): JSX.Element {// NOSONAR
 
     useEffect(() => {
         if (isMounted) {
-            isAuthenticated && nav('/lists', { replace: true });
+            isAuthenticated && nav('/lists');
             checkIfAuthenticated();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -92,9 +93,9 @@ export function LoginForm(): JSX.Element {// NOSONAR
                 // component, even thought the URL is not /login.
                 // IF this is the case a successful login should redirect the user to the
                 // requested resource
-                window.location.pathname !== '/login' ?
-                    window.location.replace(window.location.pathname) :
-                    window.location.replace('/lists');
+                loc.pathname !== '/login' ?
+                    nav(loc.pathname, { replace: true }) :
+                    nav('/lists');
 
             } else {
                 throw new Error('Login Failed');
