@@ -6,6 +6,7 @@ import { formatter, ui } from '../../utils';
 import React, { useEffect, useState } from 'react';
 import { IRouterContextType, useRouterContext } from '../../providers';
 import EditableContent, { EditableContentTypes } from '../EditableContent';
+import { useNavigate } from 'react-router-dom';
 
 function displayMostRecentDate(createdAt: Date, updatedAt: Date): string {
     const date: Date = updatedAt > createdAt ? updatedAt : createdAt;
@@ -38,7 +39,8 @@ export default function ListCard(props: IList): JSX.Element { //NOSONAR
     const [showEditor, setShowEditor] = useState<boolean>(false);
     const [isMounted, setIsMounted] = useState<boolean>(false);
 
-    const { handleRouteChange }: IRouterContextType = useRouterContext();
+    const handleRouteChange = useNavigate();
+
     const numProducts: number = products?.length || 0;
 
     useEffect(() => {

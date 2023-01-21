@@ -77,6 +77,14 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+.Green-text {
+  color: var(--success);
+}
+
+.Blue-text {
+  color: var(--info);
+}
+
 
 .Portal {
   position: fixed;

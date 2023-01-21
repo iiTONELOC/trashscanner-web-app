@@ -4,6 +4,7 @@ import { ToastTypes } from '../Toast';
 import FormAction from './FormAction';
 import { IApiResponse } from '../../types';
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Authentication } from '../../utils/APIs';
 import { useInputValidation, IUseValidators } from '../../hooks';
 import { IToastMessageContextType, useToastMessageContext, IUserContextType, useUserContext }
@@ -30,8 +31,9 @@ export function SignupForm() {// NOSONAR
     const [passwordErrors, setPasswordErrors] = useState<string[]>([]);
     const [usernameErrors, setUsernameErrors] = useState<string[]>([]);
     const [emailErrors, setEmailErrors] = useState<string[]>([]);
-    const { isAuthenticated }: IUserContextType = useUserContext();
+    const { isAuthenticated, checkIfAuthenticated }: IUserContextType = useUserContext();
 
+    const nav = useNavigate();
     const Toaster: IToastMessageContextType = useToastMessageContext();
 
     //  Use the useInputValidation hook to validate the inputs
@@ -88,13 +90,21 @@ export function SignupForm() {// NOSONAR
 
     useEffect(() => {
         setIsMounted(true);
-        isAuthenticated && window.location.replace('/lists');
+        checkIfAuthenticated();
         return () => {
             setIsMounted(false);
             setFormState(defaultFormState);
         };
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
+    useEffect(() => {
+        if (isMounted) {
+            isAuthenticated && nav('/lists', { replace: true });
+            checkIfAuthenticated();
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isMounted]);
 
     // validate the form when the form state changes
     useEffect(() => {

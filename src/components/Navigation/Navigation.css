@@ -24,22 +24,31 @@
 
 
 .Navigation-item a {
-    /* remove link styles */
+    /* remove item styles */
     text-decoration: none;
     color: var(--light-gray-text);
 }
 
-.Navigation-item span:hover {
-    color: var(--secondary-accent);
-    cursor: pointer;
+.Navigation-item, .Navigation-item:hover {
+    color: var(--light-gray-text);
+    text-decoration: none;
 }
 
-.Navigation-item-active span, span:hover {
+
+.Navigation-item:hover {
     color: var(--primary-accent);
     text-decoration: underline;
     text-underline-offset: 8px;
     cursor: pointer;
 }
+
+.Navigation-item-active {
+    color: var(--secondary-accent);
+    cursor: pointer;
+    text-decoration: underline;
+    text-underline-offset: 8px;
+}
+
 
 .Navigation-back-arrow {
     width: 32px;

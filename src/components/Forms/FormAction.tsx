@@ -1,7 +1,7 @@
 import './Forms.css';
 import { useState } from 'react';
 import Loading from '../Loading';
-import { IRouterContextType, useRouterContext } from '../../providers';
+import { useNavigate } from 'react-router-dom';
 
 interface IProps {
     type: string;
@@ -12,7 +12,7 @@ interface IProps {
 
 export default function FormAction(props: IProps): JSX.Element {
     const [isClicked, setIsClicked] = useState<boolean>(false);
-    const { handleRouteChange }: IRouterContextType = useRouterContext();
+    const handleRouteChange = useNavigate();
 
     const isValid: boolean = props.isValid && !isClicked;
     const label: string = props.type === 'signup' ? 'Log in' : 'Sign up';

@@ -2,8 +2,8 @@ import './List.css';
 import { UpcDb } from '../../utils/APIs';
 import { useEffect, useState } from 'react';
 import { IList, IProduct, IUpcDb } from '../../types';
-import { ListItem, Loading, ToastTypes } from '../../components';
-import { useGlobalStoreContext, reducerActions, useToastMessageContext } from '../../providers';
+import { ListItem, Loading } from '../../components';
+import { useGlobalStoreContext, reducerActions } from '../../providers';
 
 const upcDb: IUpcDb = new UpcDb();
 

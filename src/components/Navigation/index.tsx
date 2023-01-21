@@ -8,7 +8,7 @@ import { useNavLinkContext } from '../../providers';
 import { ArrowLeft, CloseIcon, EllipsisMenu } from '../Icons';
 
 
-export default function Navigation(/*props: INavProps*/): JSX.Element {
+export default function Navigation(): JSX.Element {
     const [showMobileMenu, setShowMobileMenu] = useState<boolean>(false);
     const isMobile: boolean = useIsMobile();
 
@@ -27,9 +27,7 @@ export default function Navigation(/*props: INavProps*/): JSX.Element {
                 !isMobile ?
                     (// Desktop Navigation
                         <>
-                            <BasicLogo
-
-                            />
+                            <BasicLogo />
                             <ul className='Navigation-list'>
                                 {
                                     navLinks.map(link =>

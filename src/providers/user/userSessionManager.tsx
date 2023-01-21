@@ -72,7 +72,7 @@ export default function UserSessionManager(props: IUserContextType) { // NOSONAR
     const [isMounted, setIsMounted] = useState<boolean>(false);
 
     // events that will reset the token expiration
-    const tokenResetEvents: string[] = ['keypress', 'touchstart', 'scroll', 'click', 'popstate'];
+    const tokenResetEvents: string[] = ['keypress', 'touchstart', 'scroll', 'click'];
 
     // Tokens expire in 60 mins, we log the user out in 10 mins of inactivity
     const resetTokenExpiration = (): void => {

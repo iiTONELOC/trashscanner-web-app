@@ -1,7 +1,9 @@
-import { useState, useEffect } from 'react';
-import { Layout, Footer, Navigation, ViewRenderer, Toaster } from './components';
-import { GlobalStoreProvider, UserProvider, ToastProvider, NavLinkProvider, RouterProvider }
-  from './providers';
+import { useState, useEffect, Suspense } from 'react';
+import { Home, SignUp, Login, List, Lists } from './pages';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { Layout, Footer, Navigation, Toaster, WithAuth, Loading } from './components';
+import { GlobalStoreProvider, UserProvider, ToastProvider, NavLinkProvider } from './providers';
+
 
 function App(): JSX.Element { //  NOSONAR
   const [isMounted, setIsMounted] = useState(false);
@@ -16,16 +18,41 @@ function App(): JSX.Element { //  NOSONAR
     <ToastProvider>
       <UserProvider>
         <NavLinkProvider>
-          <RouterProvider>
+          {/* <RouterProvider> */}
+          <BrowserRouter>
             <Layout>
               <Navigation />
               <GlobalStoreProvider>
-                <ViewRenderer />
+                <Routes>
+                  <Route path="/" element={<Home />} />
+                  <Route path="/signup" element={<SignUp />} />
+                  <Route path="/login" element={<Login />} />
+
+                  <Route path="/lists" element={
+                    <WithAuth>
+                      <Suspense fallback={<Loading />}>
+                        <Lists />
+                      </Suspense>
+                    </WithAuth>}
+                  />
+
+                  <Route path="/list/:id" element={
+                    <WithAuth>
+                      <Suspense fallback={<Loading />}>
+                        <List />
+                      </Suspense>
+                    </WithAuth>}
+                  />
+                </Routes>
+
+                {/* <ViewRenderer /> */}
               </GlobalStoreProvider>
               <Toaster />
               <Footer />
             </Layout>
-          </RouterProvider>
+          </BrowserRouter>
+
+          {/* </RouterProvider> */}
         </NavLinkProvider>
       </UserProvider>
     </ToastProvider>

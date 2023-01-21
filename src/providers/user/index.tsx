@@ -1,5 +1,5 @@
 import { IJwtPayload } from '../../types';
-import { useContext, createContext, useState } from 'react';
+import { useContext, createContext, useState, useEffect } from 'react';
 import UserSessionManager, { isExpired, decodeToken, getToken } from './userSessionManager';
 
 export interface IUserContextType {
@@ -32,6 +32,12 @@ export default function UserProvider(props: React.PropsWithChildren) { // NOSONA
         setIsAuthenticated(!_isExpired);
         return !_isExpired;
     };
+
+    useEffect(() => {
+        checkIfAuthenticated();
+        console.log('UserProvider mounted');
+        console.log(isAuthenticated)
+    }, []);
 
     // Manages the user's session and validates a user on every requested page
     UserSessionManager({ user, isAuthenticated, setIsAuthenticated, checkIfAuthenticated });

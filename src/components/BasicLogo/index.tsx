@@ -1,8 +1,9 @@
 import './BasicLogo.css';
-import { IRouterContextType, useRouterContext } from '../../providers';
+
+import { useNavigate } from 'react-router-dom';
 
 export default function BasicLogo() {
-    const { handleRouteChange }: IRouterContextType = useRouterContext();
+    const handleRouteChange = useNavigate();
     return (
         <div className='Basic-logo'
             tabIndex={0}

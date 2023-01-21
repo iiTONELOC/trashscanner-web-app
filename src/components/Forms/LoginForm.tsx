@@ -3,8 +3,10 @@ import FormInput from '../FormInput';
 import FormAction from './FormAction';
 import { ToastTypes } from '../Toast';
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Authentication } from '../../utils/APIs';
 import { useUserContext, useToastMessageContext, IUserContextType, IToastMessageContextType } from '../../providers';
+
 
 interface FormState {
     username: string | null;
@@ -23,17 +25,27 @@ export function LoginForm(): JSX.Element {// NOSONAR
     const [formState, setFormState] = useState<FormState>(defaultFormState);
 
     const Toaster: IToastMessageContextType = useToastMessageContext();
-    const { isAuthenticated }: IUserContextType = useUserContext();
+    const { isAuthenticated, setIsAuthenticated, checkIfAuthenticated }: IUserContextType = useUserContext();
+
+    const nav = useNavigate();
 
     useEffect(() => {
         setIsMounted(true);
-        isAuthenticated && window.location.replace('/lists');
+        checkIfAuthenticated();
         return () => {
             setIsMounted(false);
             setFormState(defaultFormState);
         };
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
+    useEffect(() => {
+        if (isMounted) {
+            isAuthenticated && nav('/lists', { replace: true });
+            checkIfAuthenticated();
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isMounted]);
 
     useEffect(() => {
         if (isMounted) {
@@ -69,7 +81,12 @@ export function LoginForm(): JSX.Element {// NOSONAR
 
         Authentication.login(username || '', password || '').then(res => {
             if (res.status === 200) {
-                res.data && localStorage.setItem('trash-user', res.data);
+                res.data && (
+                    () => {
+                        localStorage.setItem('trash-user', res.data);
+                        setIsAuthenticated(true);
+                    }
+                )();
 
                 // IF a user's token doesn't exist they may be redirected to the login page
                 // component, even thought the URL is not /login.

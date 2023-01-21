@@ -3,6 +3,9 @@ import { useState, useEffect, Suspense } from 'react';
 import { Home, SignUp, Login, List, Lists } from '../pages';
 import { IRouterContextType, useRouterContext, useUserContext } from '../providers';
 
+const BASE_URL = !window.location.href.includes('localhost') ? process.env.REACT_APP_AU || '' : '';
+
+
 function ComponentLoader(props:
     {
         currentRoute: string,
@@ -11,11 +14,11 @@ function ComponentLoader(props:
     }
 ): JSX.Element {
     const { isAuthenticated } = useUserContext();
-    if (props.currentRoute === '/signup') {
+    if (props.currentRoute === BASE_URL + '/signup') {
         return <SignUp />;
-    } else if (props.currentRoute === '/login') {
+    } else if (props.currentRoute === BASE_URL + '/login') {
         return <Login />;
-    } else if (props.currentRoute === '/lists') {
+    } else if (props.currentRoute === BASE_URL + '/lists') {
 
         return isAuthenticated ? (
             <WithAuth>
@@ -36,6 +39,7 @@ function ComponentLoader(props:
         ) : <Login />;
         // VALID PATH WASN'T FOUND SO RENDER HOME PAGE
     } else {
+
         return <Home />;
     }
 }
