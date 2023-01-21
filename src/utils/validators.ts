@@ -19,7 +19,7 @@ export const validators = {
         return re.test(value);
     },
     isAlphaNumeric: (value: string) => {
-        const re = /^[a-zA-Z0-9]*$/;
+        const re = /^[a-zA-Z0-9 ]*$/g;
         return re.test(value);
     },
     hasUpperCase: (value: string) => {

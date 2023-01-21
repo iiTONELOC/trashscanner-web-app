@@ -1,36 +1,64 @@
-import { useRouterContext } from '../../providers';
+import React, { useEffect } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
-const isActive = (link: string) => window.location.pathname === link;
-const navItemClassName = (link: string) => `Navigation-item${isActive(link) ? '-active' : ''}`;
+
 
 interface IProps {
     link: { name: string; href: string };
     afterClick?: () => void;
 }
 
-export default function NavLink(props: IProps) {
-    const { link } = props;
-    const { handleRouteChange } = useRouterContext();
-    const { name, href } = link;
+export default function NavLink(props: IProps): JSX.Element {
+    const currentLocation = useLocation();
 
-    const action = () => {
-        handleRouteChange(href);
-        if (props.afterClick) {
-            props.afterClick();
-        }
+    const [currentPath, setCurrentPath] = React.useState<string>(currentLocation.pathname);
+    const { link }: IProps = props;
+    const { name, href } = link;
+    const navigate = useNavigate();
+
+
+    const isActive = (link: string): boolean => currentPath === link;
+    const navItemClassName = (link: string): string => `Navigation-item${isActive(link) ? '-active' : ''}`;
+
+
+    const logout = (e: React.SyntheticEvent): void => {
+        e.preventDefault();
+        e.stopPropagation();
+        localStorage.removeItem('trash-user');
+        navigate('/', { replace: true });
     };
+
+
+    useEffect(() => {
+        setCurrentPath(currentLocation.pathname);
+    }, [currentLocation.pathname]);
 
     return (
         <li
             role={'navigation'}
             aria-label={'navigation'}
-            className={navItemClassName(href)} key={name}>
-            <span
-                role={'link'}
-                aria-label={'link'}
-                aria-describedby={href}
-                onClick={action}>{name}
-            </span>
+            key={name}
+        // onClick={() => setCurrentPath(href)}
+        >
+
+            {href !== '/logout' ? (
+                <Link
+                    className={navItemClassName(href)}
+                    to={href}
+                    tabIndex={0}
+                >
+                    {name}
+                </Link>
+            ) : (
+                <a
+                    className={navItemClassName(href)}
+                    href='/'
+                    tabIndex={0}
+                    onClick={logout}
+                >
+                    {name}
+                </a>
+            )}
         </li>
-    );
+    )
 }

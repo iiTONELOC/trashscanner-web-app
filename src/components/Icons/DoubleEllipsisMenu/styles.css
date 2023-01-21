@@ -1,0 +1,15 @@
+.Double-ellipsis-menu {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    width: min-content;
+    color: var(--light-gray-text);
+}
+
+
+.Double-ellipsis-menu:hover {
+    cursor: pointer;
+    color: var(--primary-accent);
+    text-decoration: none;
+}

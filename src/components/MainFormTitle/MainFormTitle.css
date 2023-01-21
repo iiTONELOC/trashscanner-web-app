@@ -1,0 +1,27 @@
+.Main-title-container {
+    display: flex;
+    padding: var(--padding);
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+    height: auto;
+    width: 100%;
+    gap: 3rem;
+}
+
+.Main-title {
+    justify-self: flex-start;
+    font-size: 3rem;
+    font-weight: 500;
+}
+
+
+.Main-title span {
+    color: var(--primary-accent)
+}
+
+.Main-title-extended {
+    font-size: 3rem;
+    font-weight: 500;
+    color: var(--primary-accent)
+}

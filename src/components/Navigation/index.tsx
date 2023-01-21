@@ -1,26 +1,25 @@
 import './Navigation.css';
-import navLinks from './data';
 import NavLink from './NavLink';
 import { useState } from 'react';
 import BasicLogo from '../BasicLogo';
 import { INavLinks } from '../../types';
 import { useIsMobile } from '../../hooks';
-import { CloseIcon, EllipsisMenu } from '../Icons';
+import { useNavLinkContext } from '../../providers';
+import { ArrowLeft, CloseIcon, EllipsisMenu } from '../Icons';
 
 
-// Used on Mobile to show the current page
-const CurrentLink = (navLinks: INavLinks['navLinks']): string => { // NOSONAR
-    const currentPath = window.location.pathname;
-    const currentLink = navLinks.find(link => link.href === currentPath);
-    return currentLink ? currentLink.name : 'HOME';
-};
-
-
-export default function Navigation(/*props: INavProps*/): JSX.Element {
+export default function Navigation(): JSX.Element {
     const [showMobileMenu, setShowMobileMenu] = useState<boolean>(false);
     const isMobile: boolean = useIsMobile();
 
+    const { navLinks }: INavLinks = useNavLinkContext();
+
     const toggleMobileMenu = (): void => setShowMobileMenu(!showMobileMenu);
+
+    const onMobileBack = (): void => {
+        // set the location to the previous state
+        window.history.back();
+    };
 
     return (
         <nav className='Navigation'>
@@ -42,7 +41,10 @@ export default function Navigation(/*props: INavProps*/): JSX.Element {
                     ) :
                     (// Mobile Navigation
                         <div className='Navigation-mobile'>
-                            <p>{CurrentLink(navLinks)}</p>
+                            <ArrowLeft
+                                className='Navigation-back-arrow'
+                                onClick={onMobileBack}
+                            />
 
                             <EllipsisMenu
                                 className='Navigation-menu-icon'

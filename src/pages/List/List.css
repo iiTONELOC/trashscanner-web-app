@@ -1,0 +1,21 @@
+.List-page-container {
+    width: 100%;
+    min-height: calc(100vh - 240px);
+    max-height: fit-content;
+}
+
+.My-lists-header-p {
+    color: var(--primary-accent);
+    margin-left: 1rem;
+}
+
+.List-product-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    padding: 1rem 1rem 8rem;
+    list-style: none;
+    row-gap: 1rem;
+}
