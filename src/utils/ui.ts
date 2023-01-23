@@ -1,34 +1,42 @@
 import React from 'react';
 
+const getCountAndReset = (e: React.TouchEvent): number => {
+    // get the current tap count on the element
+    const tapCount = (e.currentTarget as any).tapCount || 0;
+    // set the tap count to 1 if it's 0
+    (e.currentTarget as any).tapCount = tapCount + 1;
+    // set the tap count to 0 after 300ms
+    setTimeout(() => {
+        (e.currentTarget as any).tapCount = 0;
+    }, 300);
+
+    return tapCount;
+};
+
 const registerDoubleTap = (e: React.TouchEvent,
     callback: (e: React.Touch | React.MouseEvent) => void) => {
-    const time = new Date().getTime();
-    const delta = time - (e.currentTarget as any).lastTouch || 0;
-    const delay = 300;
-    if (delta < delay && delta > 1) {
+
+    // get the current tap count on the element
+    getCountAndReset(e);
+
+    if ((e.currentTarget as any).tapCount === 2) {
         callback(e as any);
     }
-    (e.currentTarget as any).lastTouch = time;
 };
 
 const registerSingleTap = (e: React.TouchEvent,
-    callback: (e: React.Touch | React.MouseEvent) => void) => {
+    callback: (e: React.Touch | React.MouseEvent | React.SyntheticEvent) => void) => {
 
-    const time = new Date().getTime();
-    const delta = time - (e.currentTarget as any).lastTouch || 0;
-    const delay = 300;
-    if (delta > delay || delta === 0) {
+    getCountAndReset(e);
+    // if the tap count is 1, call the callback
+    if ((e.currentTarget as any).tapCount === 1) {
         callback(e as any);
     }
-
-    (e.currentTarget as any).lastTouch = time;
 };
-
-
 
 const UI = {
     registerDoubleTap,
-    registerSingleTap,
+    registerSingleTap
 };
 
 export default UI;

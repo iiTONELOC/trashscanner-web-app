@@ -1,5 +1,6 @@
 import { useToastMessageContext, IToastMessageContextType } from '../toastMessage';
 import { useState, useEffect, useRef, MutableRefObject } from 'react';
+import { useLocation, Location } from 'react-router-dom';
 import { ToastTypes } from '../../components';
 import { IJwtPayload } from '../../types';
 import jwt_decode from 'jwt-decode';
@@ -74,6 +75,8 @@ export default function UserSessionManager(props: IUserContextType) { // NOSONAR
     // events that will reset the token expiration
     const tokenResetEvents: string[] = ['keypress', 'touchstart', 'scroll', 'click'];
 
+    const loc: Location = useLocation();
+
     // Tokens expire in 60 mins, we log the user out in 10 mins of inactivity
     const resetTokenExpiration = (): void => {
         // clear any existing timeouts
@@ -133,8 +136,6 @@ export default function UserSessionManager(props: IUserContextType) { // NOSONAR
         }
     };
 
-    // create an event listener to listen for mouse, tap, and keyboard tokenResetEvents
-    // on these tokenResetEvents we will reset the token timeout
     const createListeners = (): void => {
         tokenResetEvents.forEach(event => {
             window.addEventListener(event, reauthenticate);
@@ -164,5 +165,5 @@ export default function UserSessionManager(props: IUserContextType) { // NOSONAR
             createListeners();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isMounted]);
+    }, [isMounted, loc.pathname]);
 }

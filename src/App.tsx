@@ -17,12 +17,14 @@ function App(): JSX.Element { //  NOSONAR
 
   return isMounted ? (
     <ToastProvider>
-      <UserProvider>
-        <HashRouter>
+      <HashRouter>
+        <UserProvider>
+          {/* TODO: Refactor the NavLink Provider to a hook */}
           <NavLinkProvider>
             <Layout>
               <Navigation />
               <GlobalStoreProvider>
+                {/* TODO: Clean this up*/}
                 <Routes>
                   <Route path="/" element={<Home />} />
                   <Route path="/signup" element={<SignUp />} />
@@ -43,15 +45,17 @@ function App(): JSX.Element { //  NOSONAR
                       </Suspense>
                     </WithAuth>}
                   />
+
+                  <Route path="*" element={<Home />} />
                 </Routes>
               </GlobalStoreProvider>
               <Toaster />
               <Footer />
             </Layout>
           </NavLinkProvider>
-        </HashRouter>
-      </UserProvider>
-    </ToastProvider>
+        </UserProvider>
+      </HashRouter>
+    </ToastProvider >
   ) : <></>;
 }
 

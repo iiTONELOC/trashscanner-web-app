@@ -85,6 +85,9 @@ body {
   color: var(--info);
 }
 
+.Yellow-text {
+  color: var(--warning);
+}
 
 .Portal {
   position: fixed;
@@ -293,8 +296,6 @@ body {
   color: var(--secondary-accent);
   text-decoration: none;
 }
-
-
 
 
 input[type="checkbox"]:active {

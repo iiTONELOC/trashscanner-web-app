@@ -12,7 +12,7 @@ import {
 export default function Lists(): JSX.Element {// NOSONAR
     const [showAddForm, setShowAddForm] = useState<boolean>(false);
     const [isMounted, setIsMounted] = useState<null | boolean>(null);
-    const { loading, data, error }: IApiHookCall<IList[]> = useMyLists();
+    const { error, loading, data }: IApiHookCall<IList[]> = useMyLists();
 
     const Toaster: IToastMessageContextType = useToastMessageContext();
     const { globalState, dispatch } = useGlobalStoreContext();
@@ -24,6 +24,7 @@ export default function Lists(): JSX.Element {// NOSONAR
         setIsMounted(true);
         return () => {
             setIsMounted(false);
+
         };
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);

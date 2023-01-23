@@ -1,3 +1,4 @@
+import './ListItem.css';
 import { PlusCircle } from '../Icons';
 import { handleIncreaseQuantity } from './helpers';
 import { useGlobalStoreContext, reducerActions, GlobalStoreContextType } from '../../providers';

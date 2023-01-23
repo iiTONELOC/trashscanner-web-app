@@ -2,9 +2,10 @@ import './List.css';
 import { UpcDb } from '../../utils/APIs';
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { ListItem, Loading } from '../../components';
 import { IList, IProduct, IUpcDb } from '../../types';
+import { ListItem, Loading, LiveUpdateToggler } from '../../components';
 import { useGlobalStoreContext, reducerActions } from '../../providers';
+
 
 
 const upcDb: IUpcDb = new UpcDb();
@@ -58,6 +59,8 @@ export default function List(): JSX.Element {// NOSONAR
     const location = useLocation();
     const listId = location.pathname.split('/')[2];
 
+
+
     useEffect(() => {
         setIsMounted(true);
         return () => {
@@ -88,8 +91,6 @@ export default function List(): JSX.Element {// NOSONAR
                                 list: data
                             }
                         });
-                    } else {
-
                     }
                 });
             }
@@ -101,8 +102,15 @@ export default function List(): JSX.Element {// NOSONAR
     return isMounted && list ? (
         <div className="List-page-container">
             <header className='My-lists-header'>
-                <h1>{list?.name}</h1>
-                <p className='My-lists-header-p'>({list?.products?.length || 0})</p>
+                <div className='My-lists-header-title-container'>
+                    <h1>{list?.name}</h1>
+                    <p className='My-lists-header-p'>({list?.products?.length || 0})</p>
+                </div>
+                <LiveUpdateToggler
+                    listId={listId}
+                    db={upcDb}
+                    listSetter={setList}
+                />
             </header>
 
             <ul className='List-product-section'>

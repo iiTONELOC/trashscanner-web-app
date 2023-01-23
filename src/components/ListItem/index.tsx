@@ -3,6 +3,7 @@ import { IProduct } from '../../types';
 import { formatter, ui } from '../../utils';
 import { DoubleEllipsisMenu } from '../Icons';
 import React, { useEffect, useState } from 'react';
+import { useLocation, Location } from 'react-router';
 import IncreaseQuantityButton from './IncreaseQuantityButton';
 import DecreaseQuantityButton from './DecreaseQuantityButton';
 import EditableContent, { EditableContentTypes } from '../EditableContent';
@@ -36,12 +37,18 @@ export default function ListItem(props: { product: IProduct, duplicateCount?: nu
     const { _id, product, alias }: IProduct = props.product;
     const { barcode, name }: IProduct['product'] = product;
 
+    const loc: Location = useLocation();
+
     const productNameToDisplay = (_name: string): string => alias && alias !== ' ' ? alias : _name;
+    const nameNotFound = !alias && name
+        .toLowerCase()
+        .includes('not found');
 
     useEffect(() => {
         setIsMounted(true);
-        setListId(window.location.pathname.split('/')[2]?.trim());
+        setListId(loc.pathname.split('/')[2]?.trim());
         return () => setIsMounted(false);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const handleDoubleClick = (e: React.SyntheticEvent): void => {
@@ -71,9 +78,11 @@ export default function ListItem(props: { product: IProduct, duplicateCount?: nu
     const handleCountMobile = (e: React.TouchEvent): void => ui
         .registerDoubleTap(e, () => setIsQuantityHovered(!isQuantityHovered));
 
+    const pClass = `List-name-barcode Editable-content ${nameNotFound ? 'Yellow-text' : ''}`;
     return isMounted ? (
         <li className="List-item-product"
             onClick={handleCloseEditor}
+            tabIndex={0}                    //NOSONAR           
         >
             <span className='List-product-span'
 
@@ -85,7 +94,7 @@ export default function ListItem(props: { product: IProduct, duplicateCount?: nu
                     <p
                         onDoubleClick={handleDoubleClick}
                         onTouchEnd={handleEditFormMobile}
-                        className='List-name-barcode Editable-content'>
+                        className={pClass}>
                         {formatter.headingNormalizer(productNameToDisplay(name))} - {barcode[0]}
                     </p>
                 ) : (

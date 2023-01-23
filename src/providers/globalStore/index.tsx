@@ -1,8 +1,8 @@
 import reducerActions from './storeActions';
 import { IList, IProduct } from '../../types';
 import { useGlobalReducer } from './storeReducer';
-
 import { useContext, createContext, Dispatch } from 'react';
+
 export interface IAction<T> {
     type: string;
     payload: T;
@@ -28,7 +28,10 @@ const GlobalStoreContext = createContext<GlobalStoreContextType>({} as GlobalSto
 const { Provider } = GlobalStoreContext;
 
 export default function GlobalStoreProvider(props: React.PropsWithChildren) { // NOSONAR
-    const [globalState, dispatch] = useGlobalReducer({ lists: {} });
+    const [globalState, dispatch]: [
+        GlobalStoreContextType['globalState'],
+        GlobalStoreContextType['dispatch']
+    ] = useGlobalReducer({ lists: {} });
 
     return <Provider value={{ globalState, dispatch }} {...props} />;
 };

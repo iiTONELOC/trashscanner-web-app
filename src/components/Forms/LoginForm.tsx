@@ -4,8 +4,11 @@ import FormAction from './FormAction';
 import { ToastTypes } from '../Toast';
 import { useState, useEffect } from 'react';
 import { Authentication } from '../../utils/APIs';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { useUserContext, useToastMessageContext, IUserContextType, IToastMessageContextType } from '../../providers';
+import { useNavigate, useLocation, NavigateFunction, Location } from 'react-router-dom';
+import {
+    useUserContext, useToastMessageContext, IUserContextType,
+    IToastMessageContextType
+} from '../../providers';
 
 
 interface FormState {
@@ -25,10 +28,14 @@ export function LoginForm(): JSX.Element {// NOSONAR
     const [formState, setFormState] = useState<FormState>(defaultFormState);
 
     const Toaster: IToastMessageContextType = useToastMessageContext();
-    const { isAuthenticated, setIsAuthenticated, checkIfAuthenticated }: IUserContextType = useUserContext();
+    const {
+        isAuthenticated,
+        setIsAuthenticated,
+        checkIfAuthenticated
+    }: IUserContextType = useUserContext();
 
-    const nav = useNavigate();
-    const loc = useLocation();
+    const nav: NavigateFunction = useNavigate();
+    const loc: Location = useLocation();
 
     useEffect(() => {
         setIsMounted(true);
@@ -94,11 +101,18 @@ export function LoginForm(): JSX.Element {// NOSONAR
                 // IF this is the case a successful login should redirect the user to the
                 // requested resource
                 loc.pathname !== '/login' ?
-                    nav(loc.pathname, { replace: true }) :
+                    nav(loc.pathname) :
                     nav('/lists');
-
-            } else {
-                throw new Error('Login Failed');
+            } else if (res.status === 401) {
+                Toaster.makeToast({
+                    type: ToastTypes.Error,
+                    message: 'Invalid Credentials',
+                    title: 'Login Failed',
+                    timeOut: 7800
+                });
+            }
+            else {
+                throw new Error();
             }
         }).catch(err => {
             console.log(err);
