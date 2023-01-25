@@ -67,7 +67,10 @@ export default function ListItem(props: { product: IProduct, duplicateCount?: nu
 
         if (showEditor) {
             const target: HTMLElement = e.target as HTMLElement;
-            if (!target.hasAttribute('id') && target.getAttribute('id') !== 'list-name') {
+            if (!target.hasAttribute('id')
+                && target.getAttribute('id') !== 'list-name'
+                && !target.classList.contains('Form-label-container')
+            ) {
                 setTimeout(() => setShowEditor(false), 500);
             }
         }
@@ -86,7 +89,7 @@ export default function ListItem(props: { product: IProduct, duplicateCount?: nu
         >
             <span className='List-product-span'
 
-                onDoubleClick={() => showEditor && setShowEditor(false)}
+                onDoubleClick={(e: React.SyntheticEvent) => showEditor && handleCloseEditor(e)}
             >
                 <RenderListStatus />
                 {/* On double click we need to render the editor */}

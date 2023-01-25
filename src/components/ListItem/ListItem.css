@@ -57,10 +57,10 @@
 .completed::after {
     content: "✔";
     display: inline-block;
-    width: 1em;
-    height: 1em;
+    width: 1em !important;
+    height: 1em !important;
     padding-left: 4px;
-    border-radius: 50%;
+    border-radius: 50% !important;
     margin-right: 1em;
     color: var(--primary-accent);
 }
@@ -106,11 +106,16 @@
     justify-content: center;
 }
 
+.List-count-button:nth-child(2) p {
+    margin-bottom: 3px;
+}
+
 .List-count-button:hover {
     cursor: pointer;
     color: var(--secondary-color);
     border-color: var(--secondary-color);
 }
+
 
 .List-count-button:nth-child(1):hover {
     background-color: var(--primary-accent);

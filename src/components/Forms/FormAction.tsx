@@ -39,8 +39,11 @@ export default function FormAction(props: IProps): JSX.Element {
             <button
                 onClick={actionWrapper}
                 disabled={!props.isValid}
-                className={buttonClass}>
+                className={buttonClass}
+                onTouchStart={() => setIsClicked(!isClicked)}
+            >
                 {isClicked ? <Loading label='Processing...' /> : props.label || 'Submit'}
+
             </button>
 
             <p className='Text-shadow'>

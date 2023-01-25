@@ -1,5 +1,3 @@
-import './ListItem.css';
-import { PlusCircle } from '../Icons';
 import { handleIncreaseQuantity } from './helpers';
 import { useGlobalStoreContext, reducerActions, GlobalStoreContextType } from '../../providers';
 
@@ -24,7 +22,7 @@ export default function IncreaseQuantityButton(props: {
             className='List-count-button'
             onClick={increaseQuantity}
         >
-            <PlusCircle />
+            +
         </button>
     );
 }

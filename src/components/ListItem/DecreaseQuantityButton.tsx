@@ -1,4 +1,3 @@
-import { MinusCircle } from '../Icons';
 import { handleDecreaseQuantity } from './helpers';
 import { useGlobalStoreContext, reducerActions, GlobalStoreContextType } from '../../providers';
 
@@ -22,7 +21,7 @@ export default function DecreaseQuantityButton(props: {
             className='List-count-button'
             onClick={decreaseQuantity}
         >
-            <MinusCircle />
+            <p>-</p>
         </button>
     );
 }

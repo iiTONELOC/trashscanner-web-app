@@ -137,16 +137,16 @@
     font-size: 1.2rem;
 }
 
-.List-delete-button:hover {
+.List-delete-button {
     color: var(--error);
 }
 
 .List-set-default-button {
+    color: var(--warning);
     font-size: .8rem;
 }
 
 .List-set-default-button:hover {
-    color: var(--warning);
     font-size: 1rem;
 }
 
