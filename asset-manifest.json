@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/trashscan-app/static/css/main.61bf03c7.css",
-    "main.js": "/trashscan-app/static/js/main.6115857d.js",
+    "main.css": "/trashscan-app/static/css/main.e03b62c0.css",
+    "main.js": "/trashscan-app/static/js/main.64a4bff5.js",
     "static/media/logo.png": "/trashscan-app/static/media/logo.344f9141f3423b5806f3.png",
     "service-worker.js": "/trashscan-app/service-worker.js",
     "index.html": "/trashscan-app/index.html",
-    "main.61bf03c7.css.map": "/trashscan-app/static/css/main.61bf03c7.css.map",
-    "main.6115857d.js.map": "/trashscan-app/static/js/main.6115857d.js.map"
+    "main.e03b62c0.css.map": "/trashscan-app/static/css/main.e03b62c0.css.map",
+    "main.64a4bff5.js.map": "/trashscan-app/static/js/main.64a4bff5.js.map"
   },
   "entrypoints": [
-    "static/css/main.61bf03c7.css",
-    "static/js/main.6115857d.js"
+    "static/css/main.e03b62c0.css",
+    "static/js/main.64a4bff5.js"
   ]
 }
