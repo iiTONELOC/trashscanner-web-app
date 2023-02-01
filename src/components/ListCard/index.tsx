@@ -3,13 +3,14 @@ import { IList } from '../../types';
 import { EllipsisMenu } from '../Icons';
 import ListCardDropMenu from './CardMenu';
 import { formatter, ui } from '../../utils';
+import { useNavigate } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
 import EditableContent, { EditableContentTypes } from '../EditableContent';
-import { useNavigate } from 'react-router-dom';
+
 
 function displayMostRecentDate(createdAt: Date, updatedAt: Date): string {
     const date: Date = updatedAt > createdAt ? updatedAt : createdAt;
-    // dd Mon yy format
+
     return new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'short', year: '2-digit' })
         .format(new Date(date));
 }
@@ -93,10 +94,12 @@ export default function ListCard(props: IList): JSX.Element { //NOSONAR
             }
         }
     };
+
     function singleHandlers(e: React.SyntheticEvent): void {
         setShowDropMenu(false);
         handleCloseEditor(e);
     }
+
     const handleMobileTouch = (e: React.SyntheticEvent): void => {
 
         function doubleHandlers(e: React.SyntheticEvent): void {

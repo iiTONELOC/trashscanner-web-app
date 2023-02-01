@@ -6,8 +6,8 @@
     border-color: none;
     border-radius: 5px;
     box-shadow: 0 0 10px 0 rgba(51, 51, 51, 0.2);
-    width: 225px;
-    height: 150px;
+    width: 450px;
+    height: 225px;
     max-height: calc(100vh - 100px);
     display: grid;
     transition: all 0.5s ease-in-out;
@@ -16,8 +16,7 @@
 .List-card:hover {
     background: var(--tertiary-color);
     filter: brightness(1.05) drop-shadow(0 0 1px rgba(234, 234, 234, 0.9));
-    width: calc(225px + 22px);
-    height: calc(150px + 15px);
+    scale: 1.05;
     transition: .2s ease-in-out;
 }
 
@@ -153,23 +152,23 @@
 /* on mobile */
 
 @media screen and (max-width: 780px) {
-    .List-card {
+    /* .List-card {
         width: 200px;
         margin: 10px 0;
     }
 
     .List-card-name {
         font-size: 1.3rem;
-    }
+    } */
 }
 
 @media screen and (max-width: 680px) {
     .List-card {
-        width: 175px;
-        margin: 8px 0;
+        width: 500px;
+        height: 200px;
     }
 
-    .List-card-header {
+    /* .List-card-header {
         font-size: smaller;
     }
 
@@ -181,5 +180,41 @@
     .List-card-menu-icon {
         width: 30px;
         height: 30px;
+    } */
+}
+
+@media screen and (max-width: 500px) {
+    .List-card {
+        width: 400px;
+    }
+}
+
+@media screen and (max-width: 450px) {
+    .List-card {
+        width: 350px;
+    }
+}
+
+@media screen and (max-width: 400px) {
+    .List-card {
+        width: 300px;
+    }
+}
+
+@media screen and (max-width: 350px) {
+    .List-card {
+        width: 250px;
+    }
+}
+
+@media screen and (max-width: 300px) {
+    .List-card {
+        width: 200px;
+    }
+}
+
+@media screen and (max-width: 250px) {
+    .List-card {
+        width: 150px;
     }
 }

@@ -1,30 +1,29 @@
 import './Lists.css';
 import { useMyLists } from '../../hooks';
 import { useEffect, useState } from 'react';
-import { IList, IApiHookCall } from '../../types';
-import { AddListForm, ListCard, Loading, ToastTypes } from '../../components';
 import {
     useGlobalStoreContext, reducerActions, useToastMessageContext,
     IToastMessageContextType
 } from '../../providers';
+import { IList, IApiHookCall, GlobalStoreContextType } from '../../types';
+import { AddListForm, ListCard, Loading, ToastTypes } from '../../components';
+
 
 
 export default function Lists(): JSX.Element {// NOSONAR
     const [showAddForm, setShowAddForm] = useState<boolean>(false);
     const [isMounted, setIsMounted] = useState<null | boolean>(null);
-    const { error, loading, data }: IApiHookCall<IList[]> = useMyLists();
 
+    const { globalState, dispatch }: GlobalStoreContextType = useGlobalStoreContext();
     const Toaster: IToastMessageContextType = useToastMessageContext();
-    const { globalState, dispatch } = useGlobalStoreContext();
-    const { lists } = globalState;
-
+    const { lists }: GlobalStoreContextType['globalState'] = globalState;
+    const { error, loading, data }: IApiHookCall<IList[]> = useMyLists();
     const numLists = lists ? Object.keys(lists).length : 0;
 
     useEffect(() => {
         setIsMounted(true);
         return () => {
             setIsMounted(false);
-
         };
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
@@ -39,10 +38,10 @@ export default function Lists(): JSX.Element {// NOSONAR
             });
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [data]);
+    }, [data, isMounted]);
 
     useEffect(() => {
-        if (error) {
+        if (error && isMounted) {
             Toaster.makeToast({
                 message: error,
                 type: ToastTypes.Error,
@@ -54,7 +53,7 @@ export default function Lists(): JSX.Element {// NOSONAR
     }, [error, isMounted]);
 
 
-    return isMounted ? (
+    return isMounted && data ? (
         <section className='My-lists'>
             <header className='My-lists-header'>
                 {!showAddForm ?
@@ -68,6 +67,7 @@ export default function Lists(): JSX.Element {// NOSONAR
             {!showAddForm ? (
                 <section className='Lists-container'>
                     {!loading && lists ? (
+
                         [...Object.entries(lists)]
                             .map((list: [string, IList], index: number) => (
                                 <ListCard

@@ -53,8 +53,8 @@ export default function EditableContent(props: { // NOSONAR
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
         const { value } = e.target;
-        // replace it with a server safe string escape all bad characters
-        const safeString: string = value.replace(/[^a-zA-Z0-9 ]/g, '');
+        // replace it with a server safe string escape most special characters
+        const safeString: string = value.replace(/[^a-zA-Z0-9\-:'" ]/g, '');
         setFormState({ ...formState, [contentType]: safeString });
     };
 
@@ -64,9 +64,11 @@ export default function EditableContent(props: { // NOSONAR
         try {
             if (content && content !== defaultContent && productId && listId) {
                 const { data } = await db.editProduct(productId, content);
+                const haveState = globalState !== null && globalState.lists !== undefined;
 
-                data && ((() => {
+                data && haveState && ((() => {
                     const currentListState = globalState?.lists[listId];
+
                     const filteredProducts: IProduct[] = currentListState?.products
                         .filter((product: IProduct) => product._id !== productId);
 
@@ -180,7 +182,7 @@ export default function EditableContent(props: { // NOSONAR
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    return isMounted ? (
+    return isMounted && globalState ? (
         <div className='Editable-content-container'>
             <FormInput
                 type='textarea'

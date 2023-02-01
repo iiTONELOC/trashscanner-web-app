@@ -100,7 +100,7 @@ export function SignupForm() {// NOSONAR
 
     useEffect(() => {
         if (isMounted) {
-            isAuthenticated && nav('/lists');
+            isAuthenticated && nav('/lists', { replace: true });
             checkIfAuthenticated();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps

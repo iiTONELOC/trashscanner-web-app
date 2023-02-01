@@ -46,10 +46,12 @@ export default function ListItem(props: { product: IProduct, duplicateCount?: nu
 
     useEffect(() => {
         setIsMounted(true);
+        // check the os type in the browser
         setListId(loc.pathname.split('/')[2]?.trim());
         return () => setIsMounted(false);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
 
     const handleDoubleClick = (e: React.SyntheticEvent): void => {
         e.preventDefault();
@@ -68,7 +70,8 @@ export default function ListItem(props: { product: IProduct, duplicateCount?: nu
         if (showEditor) {
             const target: HTMLElement = e.target as HTMLElement;
             if (!target.hasAttribute('id')
-                && target.getAttribute('id') !== 'list-name'
+                && target.getAttribute('id') !== null
+                && !target.classList.contains('Editable-content')
                 && !target.classList.contains('Form-label-container')
             ) {
                 setTimeout(() => setShowEditor(false), 500);

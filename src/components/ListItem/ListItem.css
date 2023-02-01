@@ -56,13 +56,13 @@
 
 .completed::after {
     content: "✔";
-    display: inline-block;
+    display: inline-block !important;
     width: 1em !important;
     height: 1em !important;
-    padding-left: 4px;
+    padding-left: 4px !important;
     border-radius: 50% !important;
-    margin-right: 1em;
-    color: var(--primary-accent);
+    margin-right: 1em !important;
+    color: var(--primary-accent) !important;
 }
 
 .List-product-span-controls {
@@ -98,11 +98,13 @@
     border: 1px solid gray;
     background-color: var(--secondary-color);
     color: var(--secondary-accent);
-    font-size: 1.25rem;
-    font-weight: 600;
+    font-size: 1.25rem !important;
+    font-weight: 600 !important;
     display: flex;
     flex-direction: row;
     align-items: center;
+    text-align: center;
+    margin: auto;
     justify-content: center;
 }
 
@@ -161,6 +163,10 @@
     right: 0;
 
     margin-right: 20px;
+}
+
+.increase-mobile p {
+    margin-bottom: 4px;
 }
 
 /* on mobile */

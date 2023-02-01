@@ -304,7 +304,21 @@ input[type="checkbox"]:active {
 
 /* media queries */
 
+@media (max-width: 300px) {
+  .Toast {
+    width: 250px;
+  }
+}
+
+@media (max-width: 250px) {
+  .Toast {
+    width: 200px;
+  }
+}
+
 /* MOVES THE TOST BASED ON SCREEN HEIGHT */
+
+
 @media (max-height: 348px) {
   .Toast {
     top: 25%;

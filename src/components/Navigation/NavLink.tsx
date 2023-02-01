@@ -30,7 +30,7 @@ export default function NavLink(props: IProps): JSX.Element {
         e.stopPropagation();
         localStorage.removeItem('trash-user');
         setIsAuthenticated(false);
-        navigate('/');
+        navigate('/', { replace: true });
         props.afterClick && props.afterClick();
     };
 
@@ -45,7 +45,7 @@ export default function NavLink(props: IProps): JSX.Element {
      * closing after the user clicks on a link.
      */
     const mobileNavTouch = (e: React.TouchEvent) => ui.registerSingleTap(e, () => {
-        navigate(href);
+        navigate(href, { replace: true });
         setTimeout(() => {
             props.afterClick && props.afterClick();
         }, 150);
@@ -62,7 +62,7 @@ export default function NavLink(props: IProps): JSX.Element {
         e.preventDefault();
         e.stopPropagation();
 
-        navigate(href);
+        navigate(href, { replace: true });
         props.afterClick && props.afterClick();
     };
 

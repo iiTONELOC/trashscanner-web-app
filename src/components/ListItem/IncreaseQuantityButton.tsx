@@ -1,3 +1,4 @@
+import { useDeviceType } from '../../hooks';
 import { handleIncreaseQuantity } from './helpers';
 import { useGlobalStoreContext, reducerActions, GlobalStoreContextType } from '../../providers';
 
@@ -7,6 +8,7 @@ export default function IncreaseQuantityButton(props: {
     barcode: string,
 }): JSX.Element {
     const { dispatch }: GlobalStoreContextType = useGlobalStoreContext();
+    const deviceType = useDeviceType();
 
     const increaseQuantity = async (): Promise<void> => await handleIncreaseQuantity({
         listId: props.listId,
@@ -19,10 +21,10 @@ export default function IncreaseQuantityButton(props: {
 
     return (
         <button
-            className='List-count-button'
+            className={`List-count-button ${deviceType === 'mobile' ? 'increase-mobile' : 'increase'}`}
             onClick={increaseQuantity}
         >
-            +
+            <p>+</p>
         </button>
     );
 }

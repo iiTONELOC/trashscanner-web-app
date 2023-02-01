@@ -18,7 +18,7 @@ export default function DecreaseQuantityButton(props: {
 
     return (
         <button
-            className='List-count-button'
+            className='List-count-button decrease'
             onClick={decreaseQuantity}
         >
             <p>-</p>

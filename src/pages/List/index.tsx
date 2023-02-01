@@ -7,7 +7,6 @@ import { ListItem, Loading, LiveUpdateToggler } from '../../components';
 import { useGlobalStoreContext, reducerActions } from '../../providers';
 
 
-
 const upcDb: IUpcDb = new UpcDb();
 
 
@@ -60,7 +59,6 @@ export default function List(): JSX.Element {// NOSONAR
     const listId = location.pathname.split('/')[2];
 
 
-
     useEffect(() => {
         setIsMounted(true);
         return () => {
@@ -72,8 +70,8 @@ export default function List(): JSX.Element {// NOSONAR
 
     // Sets the list data is the component's state
     useEffect(() => {
-        if (listId && lists && isMounted) {
-            const _list = lists[listId];
+        if (listId && isMounted) {
+            const _list = lists ? lists[listId] || null : null;
 
             if (_list) {
                 // if list data exists in global store, set it in the component's state
@@ -88,7 +86,7 @@ export default function List(): JSX.Element {// NOSONAR
                         dispatch({
                             type: reducerActions.SET_LISTS,
                             payload: {
-                                list: data
+                                lists: [data]
                             }
                         });
                     }

@@ -74,6 +74,7 @@
     align-items: center;
     width: 350px;
     border-radius: 12px;
+
 }
 
 .Lists-add-form-buttons {
@@ -165,5 +166,17 @@ input#isDefault[type="checkbox"] {
     .Lists-add-form-buttons {
         flex-direction: column;
         width: 90%
+    }
+}
+
+@media screen and (max-width: 400px) {
+    .Lists-add-list-form {
+        width: 300px;
+    }
+}
+
+@media screen and (max-width: 350px) {
+    .Lists-add-list-form {
+        width: 250px;
     }
 }
