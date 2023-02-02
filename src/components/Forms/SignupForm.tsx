@@ -31,6 +31,8 @@ export function SignupForm() {// NOSONAR
     const [passwordErrors, setPasswordErrors] = useState<string[]>([]);
     const [usernameErrors, setUsernameErrors] = useState<string[]>([]);
     const [emailErrors, setEmailErrors] = useState<string[]>([]);
+    const [hasError, setHasError] = useState<boolean>(false);
+
     const { isAuthenticated, checkIfAuthenticated }: IUserContextType = useUserContext();
 
     const nav = useNavigate();
@@ -160,6 +162,7 @@ export function SignupForm() {// NOSONAR
                         title: 'Error',
                         timeOut: 12000
                     });
+                    setHasError(true);
                     // ELSE
                 } else {
                     throw new Error();
@@ -171,6 +174,7 @@ export function SignupForm() {// NOSONAR
                 message: 'There was an error signing up. Please try again.',
                 title: 'Error'
             });
+            setHasError(true);
         });
     };
 
@@ -219,6 +223,7 @@ export function SignupForm() {// NOSONAR
                     type="signup"
                     isValid={isFormValid || false}
                     onAction={handleSignup}
+                    hasError={hasError}
                 />
             </form>
         </>

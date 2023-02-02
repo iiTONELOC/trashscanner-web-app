@@ -5,37 +5,81 @@ import { useLocation } from 'react-router-dom';
 import { IList, IProduct, IUpcDb } from '../../types';
 import { ListItem, Loading, LiveUpdateToggler } from '../../components';
 import { useGlobalStoreContext, reducerActions } from '../../providers';
+import { getItemFromStorage, setItemIntoStorage } from '../../components/ListItem/helpers';
 
 
 const upcDb: IUpcDb = new UpcDb();
 
 
-function RenderListItems(props: { products: IProduct[] }): JSX.Element {
+function RenderListItems(props: { products: IProduct[], listId: string }): JSX.Element {
     const { products } = props;
 
     const countedProducts: { product: IProduct, duplicateCount: number }[] = [];
-    const countedIds = new Set();
+    const countedIds: Set<string> = new Set();
+
+    // index of the current item in the array
+    let itemIndex = 0;
+
+    // set of indexes already used
+    const setIndexes: Set<number> = new Set();
 
     for (const product of products) {
+        //  look for the item in local storage
+        const itemFromStorage = getItemFromStorage(props.listId, product._id);
+
+        // check to see if we already have the product in the array
         if (countedIds.has(product._id)) {
-            // if the product is already in the array, update the duplicate count
             const foundProduct = countedProducts
                 .find(countedProduct => countedProduct.product._id === product._id);
+
+            // if the product is already in the array, update the duplicate count
             if (foundProduct) {
                 foundProduct.duplicateCount++;
+
+                // add the index property to our set tracking used indexes
+                itemFromStorage['index'] && setIndexes.add(itemFromStorage['index']);
             }
         } else {
             // if the product is not in the array, add it
             countedIds.add(product._id);
+
             countedProducts.push({ product, duplicateCount: 0 });
+            let isCurrentIndexAlreadySet = setIndexes.has(itemIndex);
+
+            // will be used to set our items index property
+            const indexToUse = itemIndex;
+
+            // ensures the index is unique to the list
+            while (isCurrentIndexAlreadySet) {
+                itemIndex++;
+                isCurrentIndexAlreadySet = setIndexes.has(itemIndex);
+            }
+
+            // look for an index property
+            if (!itemFromStorage['index']) {
+                // if it doesn't exist, add one
+                itemFromStorage['index'] = indexToUse;
+                itemFromStorage['completed'] !== undefined && setItemIntoStorage(props.listId, product._id, itemFromStorage);
+                itemIndex++;
+            }
         }
     }
+
+
+    // sort the countedProducts array by the index property
+    countedProducts.sort((a, b) => {
+        const aIndex = getItemFromStorage(props.listId, a.product._id)['index'];
+        const bIndex = getItemFromStorage(props.listId, b.product._id)['index'];
+
+        return aIndex - bIndex;
+    });
 
     return (
         <>
             {countedProducts.map(countedProduct => {
                 const { product, duplicateCount } = countedProduct;
                 const count: number | undefined = duplicateCount > 0 ? duplicateCount + 1 : undefined;
+
                 return (
                     <ListItem
                         key={product._id}
@@ -114,6 +158,7 @@ export default function List(): JSX.Element {// NOSONAR
             <ul className='List-product-section'>
                 <RenderListItems
                     products={list?.products || []}
+                    listId={listId}
                 />
             </ul>
         </div>

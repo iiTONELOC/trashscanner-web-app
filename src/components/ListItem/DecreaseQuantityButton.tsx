@@ -1,13 +1,17 @@
-import { handleDecreaseQuantity } from './helpers';
+import { ui } from '../../utils';
+import { MinusCircleIcon } from '@heroicons/react/24/solid';
+import { handleDecreaseQuantity, removeItemFromStorage } from './helpers';
 import { useGlobalStoreContext, reducerActions, GlobalStoreContextType } from '../../providers';
+
 
 export default function DecreaseQuantityButton(props: {
     listId: string,
     productId: string,
+    currentQuantity: number
 }): JSX.Element {
     const { dispatch }: GlobalStoreContextType = useGlobalStoreContext();
 
-    const decreaseQuantity = async (): Promise<void> => await handleDecreaseQuantity({
+    const decreaseQuantityInState = async (): Promise<void> => await handleDecreaseQuantity({
         listId: props.listId,
         productId: props.productId,
         context: {
@@ -16,12 +20,20 @@ export default function DecreaseQuantityButton(props: {
         }
     });
 
+    const decreaseItemQuantity = (): void => {
+        // if the quantity is 1, and we are deleting the item,
+        // we need to remove it from local storage as well
+        if (props.currentQuantity === 1) {
+            removeItemFromStorage(props.listId, props.productId);
+        }
+
+        decreaseQuantityInState();
+    };
+
     return (
-        <button
-            className='List-count-button decrease'
-            onClick={decreaseQuantity}
-        >
-            <p>-</p>
-        </button>
+        <MinusCircleIcon
+            onDoubleClick={decreaseItemQuantity}
+            onTouchStart={(e: React.TouchEvent) => ui.registerDoubleTap(e, decreaseItemQuantity)}
+            className='decrease List-item-quantity-button' />
     );
 }

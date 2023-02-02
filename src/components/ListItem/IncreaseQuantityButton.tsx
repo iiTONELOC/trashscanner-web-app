@@ -1,5 +1,5 @@
-import { useDeviceType } from '../../hooks';
 import { handleIncreaseQuantity } from './helpers';
+import { PlusCircleIcon } from '@heroicons/react/24/solid';
 import { useGlobalStoreContext, reducerActions, GlobalStoreContextType } from '../../providers';
 
 
@@ -8,7 +8,6 @@ export default function IncreaseQuantityButton(props: {
     barcode: string,
 }): JSX.Element {
     const { dispatch }: GlobalStoreContextType = useGlobalStoreContext();
-    const deviceType = useDeviceType();
 
     const increaseQuantity = async (): Promise<void> => await handleIncreaseQuantity({
         listId: props.listId,
@@ -20,11 +19,8 @@ export default function IncreaseQuantityButton(props: {
     });
 
     return (
-        <button
-            className={`List-count-button ${deviceType === 'mobile' ? 'increase-mobile' : 'increase'}`}
+        <PlusCircleIcon
             onClick={increaseQuantity}
-        >
-            <p>+</p>
-        </button>
+            className='increase List-item-quantity-button' />
     );
 }

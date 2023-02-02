@@ -9,6 +9,7 @@ import {
     IToastMessageContextType
 } from '../../providers';
 import { ui } from '../../utils';
+import { TrashIcon, DocumentCheckIcon } from '@heroicons/react/24/solid';
 
 const db: IUpcDb = new UpcDb();
 
@@ -147,13 +148,16 @@ export default function CardDropMenu(props: { //NOSONAR
                         .registerDoubleTap(e, handleDelete);
                 }}
             >
-                <p className='button-text'>&#128465; Delete</p>
+                <TrashIcon className="List-set-icon" />
+                <p>Delete</p>
             </button>
 
             <button className="List-card-drop-button List-set-default-button"
                 onClick={handleSetDefault}
             >
-                <p>&#128196; Set default</p>
+
+                <DocumentCheckIcon className="List-set-icon" />
+                <p>Set default</p>
             </button>
         </div>
     ) : <></>;

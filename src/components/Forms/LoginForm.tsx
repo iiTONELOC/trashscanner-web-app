@@ -23,6 +23,7 @@ const defaultFormState: FormState = {
 
 
 export function LoginForm(): JSX.Element {// NOSONAR
+    const [hasError, setHasError] = useState<boolean>(false);
     const [isFormValid, setIsFormValid] = useState<boolean>(false);
     const [isMounted, setIsMounted] = useState<boolean | null>(false);
     const [formState, setFormState] = useState<FormState>(defaultFormState);
@@ -118,6 +119,7 @@ export function LoginForm(): JSX.Element {// NOSONAR
                     title: 'Login Failed',
                     timeOut: 7800
                 });
+                setHasError(true);
             }
             else {
                 throw new Error();
@@ -129,6 +131,7 @@ export function LoginForm(): JSX.Element {// NOSONAR
                 title: 'Login Failed',
                 timeOut: 7800
             });
+            setHasError(true);
         });
     };
 
@@ -161,6 +164,7 @@ export function LoginForm(): JSX.Element {// NOSONAR
                     type="log in"
                     isValid={isFormValid}
                     onAction={handleLogin}
+                    hasError={hasError}
                 />
             </form>
         </>
