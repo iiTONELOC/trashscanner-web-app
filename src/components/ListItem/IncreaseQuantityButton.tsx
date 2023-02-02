@@ -1,5 +1,5 @@
-import { PlusCircle } from '../Icons';
 import { handleIncreaseQuantity } from './helpers';
+import { PlusCircleIcon } from '@heroicons/react/24/solid';
 import { useGlobalStoreContext, reducerActions, GlobalStoreContextType } from '../../providers';
 
 
@@ -19,11 +19,8 @@ export default function IncreaseQuantityButton(props: {
     });
 
     return (
-        <button
-            className='List-count-button'
+        <PlusCircleIcon
             onClick={increaseQuantity}
-        >
-            <PlusCircle />
-        </button>
+            className='increase List-item-quantity-button' />
     );
 }

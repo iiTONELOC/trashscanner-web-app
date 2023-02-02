@@ -4,9 +4,23 @@
     max-height: fit-content;
 }
 
+.My-lists-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.My-lists-header-title-container {
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-start;
+    width: 80%;
+    height: 100%;
+}
+
 .My-lists-header-p {
     color: var(--primary-accent);
-    margin-left: 1rem;
 }
 
 .List-product-section {

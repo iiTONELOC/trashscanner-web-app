@@ -1,5 +1,5 @@
-import { IApiResponse, IJwtPayload, IList, IProduct } from '../../types';
 import jwt_decode from 'jwt-decode';
+import { IApiResponse, IJwtPayload, IList, IProduct } from '../../types';
 
 export interface IUpcDb {
     getMyLists(): Promise<IApiResponse<IList[]>>;
@@ -12,21 +12,21 @@ export interface IUpcDb {
     editProduct(id: string, name: string, barcode?: string): Promise<IApiResponse<IProduct>>;
 }
 
+const tokenName = 'trash-user';
 
 export class UpcDb implements IUpcDb {
     private static readonly API_KEY = process.env.REACT_APP_UPC_DB_API_KEY;
     private static readonly API_URL = process.env.REACT_APP_UPC_DB_URL;
-    protected USER: string;
-    protected USER_ID?: string;
+    private USER: string = localStorage.getItem(tokenName) || '';
+    private USER_ID?: string;
 
     constructor() {
-        const token = localStorage.getItem('trash-user') || '';
-        this.USER = token;
-        this.USER_ID = this._getUserId() || undefined;
+        this._refreshToken();
     }
 
     async getMyLists(): Promise<IApiResponse<IList[]>> {
         try {
+            this._refreshToken();
             const response: Response = await fetch(`${UpcDb.API_URL}/lists/user`, {
                 method: 'GET',
                 headers: this._getHeaders()
@@ -37,9 +37,10 @@ export class UpcDb implements IUpcDb {
             } else {
                 throw new Error('Error getting lists');
             }
-        } catch (error) {
+        } catch (err: any) {
             return {
                 error: {
+                    // message: 'An error occurred while attempting to get lists'
                     message: 'An error occurred while attempting to get lists'
                 },
                 status: 500,
@@ -50,6 +51,7 @@ export class UpcDb implements IUpcDb {
 
     async getList(id: string): Promise<IApiResponse<IList>> {
         try {
+            this._refreshToken();
             const response: Response = await fetch(`${UpcDb.API_URL}/lists/${id}`, {
                 method: 'GET',
                 headers: this._getHeaders()
@@ -73,6 +75,7 @@ export class UpcDb implements IUpcDb {
 
     async addProductToList(id: string, barcode: string): Promise<IApiResponse<IList>> {
         try {
+            this._refreshToken();
             const response: Response = await fetch(`${UpcDb.API_URL}/lists/${id}/products/${barcode}`, {
                 method: 'PUT',
                 headers: this._getHeaders()
@@ -96,6 +99,7 @@ export class UpcDb implements IUpcDb {
 
     async removeProductFromList(id: string, productId: string): Promise<IApiResponse<IList>> {
         try {
+            this._refreshToken();
             const response: Response = await fetch(`${UpcDb.API_URL}/lists/${id}/products/${productId}`, {
                 method: 'DELETE',
                 headers: this._getHeaders()
@@ -118,8 +122,8 @@ export class UpcDb implements IUpcDb {
     }
 
     async createList(name: string, isDefault: boolean | null = null): Promise<IApiResponse<IList>> {
-        console.log('createList', name, isDefault);
         try {
+            this._refreshToken();
             this.USER_ID = this._getUserId() || undefined;
             const response: Response = await fetch(`${UpcDb.API_URL}/lists`, {
                 method: 'POST',
@@ -145,6 +149,7 @@ export class UpcDb implements IUpcDb {
 
     async editList(id: string, name?: string, isDefault: boolean | null = null): Promise<IApiResponse<IList>> {
         try {
+            this._refreshToken();
             this.USER_ID = this._getUserId() || undefined;
             const response: Response = await fetch(`${UpcDb.API_URL}/lists/${id}`, {
                 method: 'PUT',
@@ -170,6 +175,7 @@ export class UpcDb implements IUpcDb {
 
     async deleteList(id: string): Promise<IApiResponse<IList>> {
         try {
+            this._refreshToken();
             const response: Response = await fetch(`${UpcDb.API_URL}/lists/${id}`, {
                 method: 'DELETE',
                 headers: this._getHeaders()
@@ -193,8 +199,8 @@ export class UpcDb implements IUpcDb {
 
     // USERS CAN'T EDIT PRODUCTS AT ALL. THEY HAVE ACCESS TO THEIR INDIVIDUAL WRAPPERS
     async editProduct(productId: string, name: string | null): Promise<IApiResponse<IProduct>> {
-        console.log('editProduct', productId, name);
         try {
+            this._refreshToken();
             const response: Response = await fetch(
                 `${UpcDb.API_URL}/lists/user/${this.USER_ID}/product/${productId}`, {
                 method: 'PUT',
@@ -205,12 +211,9 @@ export class UpcDb implements IUpcDb {
             if (response.status === 200) {
                 return response.json();
             } else {
-                console.log('editProduct error', response);
-
                 throw new Error('Error editing product');
             }
         } catch (error) {
-            console.log('editProduct error', error);
             return {
                 error: {
                     message: 'An error occurred while attempting to edit product'
@@ -222,7 +225,7 @@ export class UpcDb implements IUpcDb {
     }
 
 
-    protected _getHeaders(): Headers {
+    private _getHeaders(): Headers {
         const headers = new Headers();
         headers.append('Content-Type', 'application/json');
         headers.append('Authorization', `Bearer ${UpcDb.API_KEY}`);
@@ -230,12 +233,22 @@ export class UpcDb implements IUpcDb {
         return headers;
     }
 
-    protected _getUserId(): string | null {
+    private _getUserId(): string | null {
         try {
             const decodedToken: IJwtPayload = jwt_decode(this.USER);
             return decodedToken?.nameid;
         } catch (error) {
             return null;
+        }
+    }
+
+    private _refreshToken(): void {
+        try {
+            this.USER = localStorage.getItem(tokenName) || '';
+            this.USER_ID = this._getUserId() || undefined;
+        } catch (error) {
+            localStorage.removeItem(tokenName);
+            this.USER = '';
         }
     }
 }

@@ -53,31 +53,38 @@ export default function EditableContent(props: { // NOSONAR
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
         const { value } = e.target;
-        // replace it with a server safe string escape all bad characters
-        const safeString: string = value.replace(/[^a-zA-Z0-9 ]/g, '');
-        setFormState({ ...formState, [contentType]: safeString });
-    };
 
-    // To: Create Hooks for CRUD Ops that can be used in any component
+        const saferString: string = value.replace(/[^a-zA-Z0-9-:'"., ]/g, '');
+        setFormState({ ...formState, [contentType]: saferString });
+    };
 
     async function updateProducts(content: string) {
         try {
             if (content && content !== defaultContent && productId && listId) {
                 const { data } = await db.editProduct(productId, content);
+                const haveState = globalState !== null && globalState.lists !== undefined;
 
-                data && ((() => {
+                data && haveState && ((() => {
                     const currentListState = globalState?.lists[listId];
-                    const filteredProducts: IProduct[] = currentListState?.products
-                        .filter((product: IProduct) => product._id !== productId);
 
-                    const updatedProducts = [...filteredProducts, data];
+                    const editedProducts: IProduct[] = currentListState?.products
+                        .map((product: IProduct) => {
+                            if (product._id !== productId) {
+                                return product;
+                            } else {
+                                return {
+                                    ...product,
+                                    alias: content
+                                };
+                            }
+                        });
 
                     const updatedList = {
                         ...currentListState,
-                        products: updatedProducts
+                        products: editedProducts
                     };
 
-                    updatedProducts && ((() => {
+                    editedProducts && ((() => {
                         dispatch({
                             type: reducerActions.UPDATE_LIST,
                             payload: {
@@ -93,7 +100,7 @@ export default function EditableContent(props: { // NOSONAR
                         });
                     })());
 
-                    !updatedProducts && (
+                    !editedProducts && (
                         (() => { throw new Error(); })());
                 })());
                 !data && ((
@@ -180,7 +187,7 @@ export default function EditableContent(props: { // NOSONAR
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    return isMounted ? (
+    return isMounted && globalState ? (
         <div className='Editable-content-container'>
             <FormInput
                 type='textarea'

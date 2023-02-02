@@ -1,12 +1,13 @@
 export function headingNormalizer(text = '') {
 
-    if (!text) {
+    if (!text || text === undefined) {
         return '';
     }
 
+    text = text.replace(/\s+/g, ' ').trim();
     return text.toLowerCase()
         .split(' ')
-        .map((word: string) => word[0].toUpperCase() + word.slice(1))
+        .map((word: string) => word[0]?.toUpperCase() + word?.slice(1))
         .join(' ');
 }
 

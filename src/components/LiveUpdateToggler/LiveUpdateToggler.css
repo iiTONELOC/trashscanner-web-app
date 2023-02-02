@@ -1,0 +1,41 @@
+.Live-update-toggle-container {
+    width: 20%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.Live-control-icon {
+    width: 2rem;
+    height: 2rem;
+    cursor: pointer;
+}
+
+/* create a radiating color effect for the icon's color */
+
+.Live-control-icon-live {
+    animation: breathe 4s infinite;
+    color: var(--warning);
+}
+
+.Live-control-icon-off {
+    color: var(--gray-text);
+}
+
+/* create a breathing effect */
+
+
+@keyframes breathe {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.2);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}

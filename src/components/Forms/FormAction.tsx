@@ -1,5 +1,5 @@
 import './Forms.css';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Loading from '../Loading';
 import { useNavigate } from 'react-router-dom';
 
@@ -8,6 +8,7 @@ interface IProps {
     isValid: boolean;
     onAction?: (event: React.MouseEvent<HTMLButtonElement>) => void;
     label?: string;
+    hasError?: boolean;
 }
 
 export default function FormAction(props: IProps): JSX.Element {
@@ -30,17 +31,26 @@ export default function FormAction(props: IProps): JSX.Element {
         if (props.onAction) {
             setIsClicked(true);
             props.onAction(event);
-            setIsClicked(false);
         }
     };
+
+    useEffect(() => {
+        if (props.hasError) {
+            setIsClicked(false);
+        }
+    }, [props.hasError]);
+
 
     return (
         <div className='Form-action-container'>
             <button
                 onClick={actionWrapper}
                 disabled={!props.isValid}
-                className={buttonClass}>
+                className={buttonClass}
+                onTouchStart={() => setIsClicked(!isClicked)}
+            >
                 {isClicked ? <Loading label='Processing...' /> : props.label || 'Submit'}
+
             </button>
 
             <p className='Text-shadow'>

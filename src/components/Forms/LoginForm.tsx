@@ -4,8 +4,11 @@ import FormAction from './FormAction';
 import { ToastTypes } from '../Toast';
 import { useState, useEffect } from 'react';
 import { Authentication } from '../../utils/APIs';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { useUserContext, useToastMessageContext, IUserContextType, IToastMessageContextType } from '../../providers';
+import { useNavigate, useLocation, NavigateFunction, Location } from 'react-router-dom';
+import {
+    useUserContext, useToastMessageContext, IUserContextType,
+    IToastMessageContextType
+} from '../../providers';
 
 
 interface FormState {
@@ -20,15 +23,20 @@ const defaultFormState: FormState = {
 
 
 export function LoginForm(): JSX.Element {// NOSONAR
+    const [hasError, setHasError] = useState<boolean>(false);
     const [isFormValid, setIsFormValid] = useState<boolean>(false);
     const [isMounted, setIsMounted] = useState<boolean | null>(false);
     const [formState, setFormState] = useState<FormState>(defaultFormState);
 
     const Toaster: IToastMessageContextType = useToastMessageContext();
-    const { isAuthenticated, setIsAuthenticated, checkIfAuthenticated }: IUserContextType = useUserContext();
+    const {
+        isAuthenticated,
+        setIsAuthenticated,
+        checkIfAuthenticated
+    }: IUserContextType = useUserContext();
 
-    const nav = useNavigate();
-    const loc = useLocation();
+    const nav: NavigateFunction = useNavigate();
+    const loc: Location = useLocation();
 
     useEffect(() => {
         setIsMounted(true);
@@ -93,21 +101,37 @@ export function LoginForm(): JSX.Element {// NOSONAR
                 // component, even thought the URL is not /login.
                 // IF this is the case a successful login should redirect the user to the
                 // requested resource
-                loc.pathname !== '/login' ?
-                    nav(loc.pathname, { replace: true }) :
-                    nav('/lists');
 
-            } else {
-                throw new Error('Login Failed');
+                // a timeout is used to allow the token to be activated. A Not before error
+                // occurs if the redirect happens at the exact same time as token activation
+                setTimeout(() => {
+                    // if the user was redirected to the login page, reload their requested
+                    // resource, else redirect to the lists page
+                    loc.pathname !== '/login' ?
+                        window.location.reload() :
+                        nav('/lists', { replace: true });
+                }, 550);
+
+            } else if (res.status === 401) {
+                Toaster.makeToast({
+                    type: ToastTypes.Error,
+                    message: 'Invalid Credentials',
+                    title: 'Login Failed',
+                    timeOut: 7800
+                });
+                setHasError(true);
+            }
+            else {
+                throw new Error();
             }
         }).catch(err => {
-            console.log(err);
             Toaster.makeToast({
                 type: ToastTypes.Error,
                 message: 'Server Error',
                 title: 'Login Failed',
                 timeOut: 7800
             });
+            setHasError(true);
         });
     };
 
@@ -140,6 +164,7 @@ export function LoginForm(): JSX.Element {// NOSONAR
                     type="log in"
                     isValid={isFormValid}
                     onAction={handleLogin}
+                    hasError={hasError}
                 />
             </form>
         </>

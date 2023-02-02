@@ -2,15 +2,19 @@ import type { IApiHookCall } from '.';
 import { UpcDb } from '../utils/APIs';
 import { useState, useEffect } from 'react';
 import { IApiResponse, IList, IUpcDb } from '../types';
+import { useUserContext, IUserContextType } from '../providers';
 
 const upcDb: IUpcDb = new UpcDb();
 const dataErrorMsg = 'Error fetching lists, please check your internet connection and try again later';
+
 
 const useMyLists = (): IApiHookCall<IList[]> => {
     const [data, setData] = useState<null | IList[]>(null);
     const [error, setError] = useState<null | string>(null);
     const [loading, setLoading] = useState<boolean | null>(null);
     const [isMounted, setIsMounted] = useState<null | boolean>(null);
+
+    const { isAuthenticated }: IUserContextType = useUserContext();
 
     useEffect(() => {
         setIsMounted(true);
@@ -43,13 +47,13 @@ const useMyLists = (): IApiHookCall<IList[]> => {
     };
 
     useEffect(() => {
-        if (isMounted) {
+        if (isMounted && isAuthenticated) {
             fetchMyLists();
         }
-    }, [isMounted]);
+    }, [isMounted, isAuthenticated]);
 
     const refetch = (): void => {
-        if (isMounted) {
+        if (isMounted && isAuthenticated) {
             reset();
             fetchMyLists();
         }

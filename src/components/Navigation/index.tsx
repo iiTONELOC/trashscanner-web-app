@@ -1,24 +1,27 @@
 import './Navigation.css';
 import NavLink from './NavLink';
-import { useState } from 'react';
+import { ui } from '../../utils';
+import React, { useState } from 'react';
 import BasicLogo from '../BasicLogo';
 import { INavLinks } from '../../types';
 import { useIsMobile } from '../../hooks';
 import { useNavLinkContext } from '../../providers';
 import { ArrowLeft, CloseIcon, EllipsisMenu } from '../Icons';
+import { useNavigate, NavigateFunction } from 'react-router-dom';
 
 
 export default function Navigation(): JSX.Element {
     const [showMobileMenu, setShowMobileMenu] = useState<boolean>(false);
-    const isMobile: boolean = useIsMobile();
+
 
     const { navLinks }: INavLinks = useNavLinkContext();
+    const navigate: NavigateFunction = useNavigate();
+    const isMobile: boolean = useIsMobile();
 
-    const toggleMobileMenu = (): void => setShowMobileMenu(!showMobileMenu);
+    const toggleMobileMenu = (e?: React.SyntheticEvent): void => setShowMobileMenu(!showMobileMenu);
 
     const onMobileBack = (): void => {
-        // set the location to the previous state
-        window.history.back();
+        navigate(-1);
     };
 
     return (
@@ -57,6 +60,10 @@ export default function Navigation(): JSX.Element {
                                         <CloseIcon
                                             className='Navigation-menu-close'
                                             onClick={toggleMobileMenu}
+                                            onTouchStart={
+                                                (e: React.TouchEvent) => ui
+                                                    .registerSingleTap(e, () => toggleMobileMenu(e))
+                                            }
                                         />
 
                                         {

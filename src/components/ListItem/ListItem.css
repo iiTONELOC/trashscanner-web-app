@@ -48,21 +48,23 @@
     background-color: var(--primary-color);
 }
 
+.List-item-status-completed {
+    background-color: var(--success);
+    border-color: var(--primary-color)
+}
+
 .List-item-status:hover {
     cursor: pointer;
     scale: 1.05;
-    background-color: var(--secondary-color);
+
 }
 
-.completed::after {
-    content: "✔";
-    display: inline-block;
-    width: 1em;
-    height: 1em;
-    padding-left: 4px;
-    border-radius: 50%;
-    margin-right: 1em;
-    color: var(--primary-accent);
+.List-item-status-icon {
+    color: var(--primary-accent) !important;
+}
+
+.List-item-status-icon-completed {
+    color: var(--primary-color) !important;
 }
 
 .List-product-span-controls {
@@ -84,40 +86,12 @@
 }
 
 .List-count {
+    min-width: 25px;
     width: 90%;
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: flex-start;
-}
-
-.List-count-button {
-    width: 25px !important;
-    height: 25px !important;
-    border-radius: 50% !important;
-    border: 1px solid gray;
-    background-color: var(--secondary-color);
-    color: var(--secondary-accent);
-    font-size: 1.25rem;
-    font-weight: 600;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-}
-
-.List-count-button:hover {
-    cursor: pointer;
-    color: var(--secondary-color);
-    border-color: var(--secondary-color);
-}
-
-.List-count-button:nth-child(1):hover {
-    background-color: var(--primary-accent);
-}
-
-.List-count-button:nth-child(2):hover {
-    background-color: var(--error);
 }
 
 .List-add-remove-btn-container {
@@ -131,7 +105,25 @@
     gap: 15px;
 }
 
-/* Re-class the menu icon for the list item */
+.List-item-quantity-button {
+    width: 30px;
+    height: 30px;
+}
+
+.List-item-quantity-button:hover {
+    cursor: pointer;
+    width: 32.5px;
+    height: 32.5px;
+}
+
+.increase {
+    color: var(--primary-accent);
+}
+
+.decrease {
+    color: var(--error);
+}
+
 .List-item-menu-icon {
     cursor: default;
     color: inherit;
@@ -142,19 +134,14 @@
     padding: -10px;
 }
 
-
-/* Move the children closer together for the look we want */
 .List-item-menu-icon:nth-child(1) {
     align-self: flex-end;
     margin-right: -7px;
 }
 
 .Double-ellipsis-menu {
-    /* make it absolutely position towards the right of its parent */
-
     position: absolute;
     right: 0;
-
     margin-right: 20px;
 }
 
@@ -223,7 +210,6 @@
 }
 
 @media screen and (max-width: 285px) {
-
     .List-product-span-controls {
         width: 100%;
         margin-right: 20px;
