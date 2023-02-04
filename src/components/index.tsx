@@ -12,6 +12,7 @@ export { default as Navigation } from './Navigation';
 export { default as Toast, ToastTypes } from './Toast';
 export { default as ViewRenderer } from './ViewRenderer';
 export { default as MainFormTitle } from './MainFormTitle';
+export { default as BarcodeScanner } from './BarcodeScanner';
 export { default as LiveUpdateToggler } from './LiveUpdateToggler';
 export { SignupForm, LoginForm, FormPageContainer, AddListForm } from './Forms';
 

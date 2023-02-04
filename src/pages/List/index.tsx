@@ -3,8 +3,8 @@ import { UpcDb } from '../../utils/APIs';
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { IList, IProduct, IUpcDb } from '../../types';
-import { ListItem, Loading, LiveUpdateToggler } from '../../components';
 import { useGlobalStoreContext, reducerActions } from '../../providers';
+import { ListItem, Loading, LiveUpdateToggler, BarcodeScanner } from '../../components';
 import { getItemFromStorage, setItemIntoStorage } from '../../components/ListItem/helpers';
 
 
@@ -12,11 +12,9 @@ const upcDb: IUpcDb = new UpcDb();
 
 
 function RenderListItems(props: { products: IProduct[], listId: string }): JSX.Element {
-    const { products } = props;
-
     const countedProducts: { product: IProduct, duplicateCount: number }[] = [];
     const countedIds: Set<string> = new Set();
-
+    const { products } = props;
     // index of the current item in the array
     let itemIndex = 0;
 
@@ -68,8 +66,8 @@ function RenderListItems(props: { products: IProduct[], listId: string }): JSX.E
 
     // sort the countedProducts array by the index property
     countedProducts.sort((a, b) => {
-        const aIndex = getItemFromStorage(props.listId, a.product._id)['index'];
-        const bIndex = getItemFromStorage(props.listId, b.product._id)['index'];
+        const aIndex: number = getItemFromStorage(props.listId, a.product._id)['index'];
+        const bIndex: number = getItemFromStorage(props.listId, b.product._id)['index'];
 
         return aIndex - bIndex;
     });
@@ -93,14 +91,45 @@ function RenderListItems(props: { products: IProduct[], listId: string }): JSX.E
 }
 
 export default function List(): JSX.Element {// NOSONAR
+    const [isLive, setIsLive] = useState<boolean>(false);
     const [list, setList] = useState<IList | null>(null);
+    const [cancel, setCancel] = useState<boolean>(false);
+    const [showList, setShowList] = useState<boolean>(true);
     const [isMounted, setIsMounted] = useState<null | boolean>(null);
+    const [detectedBarcode, setDetectedBarcode] = useState<boolean | null>(null);
 
     const { globalState, dispatch } = useGlobalStoreContext();
     const { lists } = globalState;
 
     const location = useLocation();
     const listId = location.pathname.split('/')[2];
+
+    const toggleLive = () => {
+        setIsLive(!isLive);
+    };
+
+    const handleCancelButton = () => {
+        setCancel(true);
+
+        return new Promise<void>(resolve => {
+            setTimeout(() => {
+                resolve();
+                // give small amount of time for the component to unmount before forcing it to
+                // this ensures that the camera is not still running in the background
+            }, 25);
+        }).then(() => {
+            setShowList(true);
+            setCancel(false);
+            setIsLive(false);
+        });
+    };
+
+    const handleLaunchScanner = () => {
+        setShowList(false);
+        setDetectedBarcode(null);
+        // turn on live update
+        setIsLive(true);
+    };
 
 
     useEffect(() => {
@@ -111,6 +140,13 @@ export default function List(): JSX.Element {// NOSONAR
         };
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
+    useEffect(() => {
+        if (detectedBarcode) {
+            //  we need to close the camera and show the list
+            handleCancelButton();
+        }
+    }, [detectedBarcode]);
 
     // Sets the list data is the component's state
     useEffect(() => {
@@ -141,6 +177,7 @@ export default function List(): JSX.Element {// NOSONAR
     }, [isMounted, listId, lists]);
 
 
+
     return isMounted && list ? (
         <div className="List-page-container">
             <header className='My-lists-header'>
@@ -148,18 +185,45 @@ export default function List(): JSX.Element {// NOSONAR
                     <h1>{list?.name}</h1>
                     <p className='My-lists-header-p'>({list?.products?.length || 0})</p>
                 </div>
+
                 <LiveUpdateToggler
-                    listId={listId}
                     db={upcDb}
+                    listId={listId}
+                    isLive={isLive}
                     listSetter={setList}
+                    setIsLive={setIsLive}
+                    toggleLive={toggleLive}
                 />
+
             </header>
 
             <ul className='List-product-section'>
-                <RenderListItems
-                    products={list?.products || []}
-                    listId={listId}
-                />
+                {
+                    showList ?
+                        <RenderListItems
+                            products={list?.products || []}
+                            listId={listId}
+                        />
+                        :
+                        <BarcodeScanner
+                            cancel={cancel}
+                            listId={listId}
+                            dispatch={dispatch}
+                            setDetectedBarcode={setDetectedBarcode}
+                        />
+                }
+                <li>
+                    <button
+                        aria-label={'Add Item Manually'}
+                        tabIndex={0}
+                        onClick={() => !showList ? handleCancelButton() : handleLaunchScanner()}
+                        className={`${showList ? 'Action-button Text-shadow' :
+                            'Action-button Text-shadow Cancel'}`}
+                    >
+                        {showList ? '+ Add Item Manually' : 'Cancel'}
+                    </button>
+                </li>
+
             </ul>
         </div>
 

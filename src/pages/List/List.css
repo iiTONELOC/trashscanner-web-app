@@ -33,3 +33,11 @@
     list-style: none;
     row-gap: 1rem;
 }
+
+.Cancel {
+    background-color: var(--secondary-color);
+}
+
+.Cancel:hover {
+    background-color: var(--error);
+}
