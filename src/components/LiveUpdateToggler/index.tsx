@@ -7,14 +7,16 @@ export default function LiveUpdateToggler(props: {// NOSONAR
     listId: string;
     db: IUpcDb;
     listSetter: React.Dispatch<React.SetStateAction<IList | null>>;
+    isLive: boolean;
+    setIsLive: React.Dispatch<React.SetStateAction<boolean>>;
+    toggleLive: () => void;
 }): JSX.Element {
     const [isMounted, setIsMounted] = useState<null | boolean>(null);
     const [updater, setUpdater] = useState<NodeJS.Timeout | null>(null);
-    const [isLive, setIsLive] = useState<boolean>(false);
 
-    const toggleLive = () => {
-        setIsLive(!isLive);
-    };
+    const { isLive, setIsLive, toggleLive } = props;
+
+
 
     useEffect(() => {
         setIsMounted(true);
