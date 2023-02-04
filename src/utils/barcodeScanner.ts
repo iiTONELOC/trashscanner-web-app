@@ -41,17 +41,16 @@ export const locateBarcode = (
             readers: ['code_128_reader', 'ean_reader']
         },
         inputStream: {
-            size: size?.width,
+            size: 640,
             willReadFrequently: false,
             singleChannel: false,
         },
         locate: true,
         locator: {
             halfSample: false,
-            patchSize: 'small',
+            patchSize: 'medium',
         },
-        src: image,
-
+        src: image
     }, function (result) {
         if (result?.codeResult) {
             // get the error rate of the barcode

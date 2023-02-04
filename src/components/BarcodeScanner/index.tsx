@@ -99,8 +99,8 @@ export default function BarcodeScanner(props: {
 
             // search for the barcode
             locateBarcode(source, {
-                width: imageDimensions?.width || 300,
-                height: imageDimensions?.height || 300,
+                width: imageDimensions?.width || 600,
+                height: imageDimensions?.height || 800,
             }).then(barcode => {
 
                 addToList(barcode as string);
