@@ -92,6 +92,8 @@ export default function EditableContent(props: { // NOSONAR
                             }
                         });
 
+                        // we also have to update the entry in localStorage
+
                         Toaster.makeToast({
                             type: ToastTypes.Success,
                             message: 'Your product was updated successfully.',

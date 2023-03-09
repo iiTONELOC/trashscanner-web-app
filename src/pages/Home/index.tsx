@@ -38,7 +38,7 @@ export default function Home(): JSX.Element {
                     <em>The Device</em>? Not a problem!
                     <span className='Green-text'> TrashScan&#8482;
                     </span><em>The App</em> will allow you to manually add items to your shopping list
-                    using your device's camera in the near future!
+                    using your device's camera!
                 </p>
                 {!isAuthenticated && <div className='Action-button-container'>
                     <Link

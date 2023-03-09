@@ -47,10 +47,21 @@ export default function CardDropMenu(props: { //NOSONAR
             response && (() => {
                 // remove list from global state
                 const currentList: IList = globalState?.lists[listId];
+
+                // remove the linkedList from local storage by list id
+                localStorage.removeItem(listId);
+
+                // we also have to remove the list items from local storage, they contain the
+                for (const item of currentList.products) {
+                    localStorage.removeItem(`${listId}-${item._id}`);
+                }
+
+                // update global state
                 dispatch({
                     type: reducerActions.DELETE_LIST,
                     payload: { list: { ...currentList } }
                 });
+
             })();
 
             Toaster.makeToast({
@@ -59,7 +70,9 @@ export default function CardDropMenu(props: { //NOSONAR
                 type: messageType,
                 timeOut: messageTimeOut
             });
+
             props.setShowMenu(false);
+
         } catch (error) {
             Toaster.makeToast({
                 message: ErrorMessage,
@@ -104,10 +117,7 @@ export default function CardDropMenu(props: { //NOSONAR
                     type: reducerActions.UPDATE_LIST,
                     payload: { list: { ...updatedExistingDefaultList as IList } }
                 });
-                // ________
 
-
-                // THIS CAN BE MADE REUSABLE
                 const listToSetAsDefault = globalState.lists[listId];
                 const updatedListToSetAsDefault = {
                     ...listToSetAsDefault,
@@ -142,7 +152,11 @@ export default function CardDropMenu(props: { //NOSONAR
     return isMounted ? (
         <div className="List-card-drop-menu">
             <button className="List-card-drop-button List-delete-button"
-                onDoubleClick={handleDelete}
+                onDoubleClick={(e: React.MouseEvent) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    handleDelete();
+                }}
                 onTouchStart={(e: React.TouchEvent) => {
                     ui
                         .registerDoubleTap(e, handleDelete);
@@ -155,7 +169,6 @@ export default function CardDropMenu(props: { //NOSONAR
             <button className="List-card-drop-button List-set-default-button"
                 onClick={handleSetDefault}
             >
-
                 <DocumentCheckIcon className="List-set-icon" />
                 <p>Set default</p>
             </button>
