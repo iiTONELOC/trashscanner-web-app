@@ -108,8 +108,7 @@ body {
   top: 15%;
   transform: translate(-50%, -50%);
   width: 300px;
-  min-height: 100px;
-  max-height: min-content;
+  height: 125px;
   background-color: black;
   border: .5px solid var(--light-gray-text);
   border-radius: 5px;

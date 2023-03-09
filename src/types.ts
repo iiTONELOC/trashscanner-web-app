@@ -20,7 +20,9 @@ export type {
 
 //  UTIL TYPES
 export type {
-    IValidator
+    IMyNode,
+    IValidator,
+    ILinkedList,
 } from './utils';
 
 // NAV

@@ -1,4 +1,5 @@
 import './styles.css';
+import { useDeviceType } from '../../hooks';
 import { locateBarcode } from '../../utils';
 import { useEffect, useState } from 'react';
 import { ToastTypes } from '../../components';
@@ -14,6 +15,7 @@ export default function BarcodeScanner(props: {
     setDetectedBarcode: React.Dispatch<React.SetStateAction<boolean | null>>;
     dispatch: React.Dispatch<IAction<IPayloads>>;
 }) {
+    const device: 'mobile' | 'desktop' = useDeviceType();
     const [source, setSource] = useState<string | null>('');
     const [manualInput, setManualInput] = useState<string>('');
     const [errorMessage, setErrorMessage] = useState<string>('');
@@ -23,6 +25,8 @@ export default function BarcodeScanner(props: {
     const toaster: IToastMessageContextType = useToastMessageContext();
     const { setDetectedBarcode, dispatch } = props;
 
+    const manualButtonLabel: string = device === 'mobile' ?
+        'Use Device Camera' : 'Upload Barcode Image';
 
     const handleCapture = (target: HTMLInputElement) => {
         if (target.files && target.files.length !== 0) {
@@ -115,16 +119,11 @@ export default function BarcodeScanner(props: {
     }, [source, props.listId]);
 
 
-
-
-
     return (
         <div className='Barcode-scanner-container'>
             <h2 className='Barcode-title'>Manual Barcode Scanner</h2>
 
-
             {source === null && (<h3 className='Barcode-not-found'>Barcode not detected!</h3>)}
-
 
             {source && (
                 <div className='Image-preview-container'>
@@ -133,7 +132,7 @@ export default function BarcodeScanner(props: {
             )}
 
             <input
-                style={{ display: 'none' }}
+                className='Capture-input'
                 accept="image/*"
                 id="icon-button-file"
                 type="file"
@@ -151,7 +150,7 @@ export default function BarcodeScanner(props: {
                     }}
                     className='Capture-button'
                 >
-                    <span className='Text-shadow'>Take Picture</span>
+                    <span className='Text-shadow'>{manualButtonLabel}</span>
                 </button>
             </label>
 
@@ -161,9 +160,10 @@ export default function BarcodeScanner(props: {
                         {errorMessage !== '' ? errorMessage : undefined}
                     </p>
 
+                    <label className='Manual-entry-label Text-shadow'>Manually Enter Barcode</label>
                     <input
                         type='text'
-                        placeholder='Enter Barcode'
+                        placeholder='Enter a valid barcode'
                         className='Manual-entry-input'
                         value={manualInput}
                         onChange={handleManualInput}

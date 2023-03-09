@@ -9,23 +9,26 @@ const getCountAndReset = (e: React.TouchEvent): number => {
     // set the tap count to 1 if it's 0
     target.tapCount = tapCount + 1;
     // set the tap count to 0 after 300ms
-
+    // tap count shouldn't be higher than 2
+    target.tapCount = target.tapCount > 2 ? 2 : target.tapCount;
     setTimeout(() => {
         target.tapCount = 0;
-    }, 300);
+    }, 550);
 
     return tapCount;
 };
 
 const registerDoubleTap = (e: React.TouchEvent,
     callback: (e: React.Touch | React.MouseEvent) => void) => {
-
+    e?.preventDefault();
+    e?.stopPropagation();
     const eve = e as any;
     const target = eve?.currentTarget;
     // get the current tap count on the element
     getCountAndReset(eve);
 
     if (target.tapCount === 2) {
+        target.tapCount = 0;
         callback(e as any);
     }
 };
@@ -33,6 +36,8 @@ const registerDoubleTap = (e: React.TouchEvent,
 const registerSingleTap = (e: React.TouchEvent,
     callback: (e: React.Touch | React.MouseEvent | React.SyntheticEvent) => void) => {
     const eve = e as any;
+    eve?.preventDefault();
+    eve?.stopPropagation();
     const target = eve?.currentTarget;
 
     getCountAndReset(eve);

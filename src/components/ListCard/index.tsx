@@ -67,6 +67,7 @@ export default function ListCard(props: IList): JSX.Element { //NOSONAR
             && !target.classList.contains('button-text')
             && !target.classList.contains('List-card-drop-button')
             && !target.classList.contains('Form-label-container')
+            && !target.classList.contains('List-delete-button')
         ) {
             handleRouteChange(`/list/${_id}`);
         }

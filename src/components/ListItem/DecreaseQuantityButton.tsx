@@ -33,7 +33,7 @@ export default function DecreaseQuantityButton(props: {
     return (
         <MinusCircleIcon
             onDoubleClick={decreaseItemQuantity}
-            onTouchStart={(e: React.TouchEvent) => ui.registerDoubleTap(e, decreaseItemQuantity)}
+            onTouchEnd={(e: React.TouchEvent) => ui.registerDoubleTap(e, decreaseItemQuantity)}
             className='decrease List-item-quantity-button' />
     );
 }

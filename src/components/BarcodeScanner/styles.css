@@ -16,6 +16,10 @@
     margin-top: 1em;
 }
 
+.Capture-input {
+    display: none;
+}
+
 .Capture-button {
     width: 75px;
     height: 75px;

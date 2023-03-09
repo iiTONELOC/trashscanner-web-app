@@ -1,96 +1,17 @@
 import './List.css';
 import { UpcDb } from '../../utils/APIs';
 import { useEffect, useState } from 'react';
+import { RenderListItems } from './helpers';
 import { useLocation } from 'react-router-dom';
-import { IList, IProduct, IUpcDb } from '../../types';
+import { IList, IUpcDb } from '../../types';
+import { useDeviceType } from '../../hooks';
 import { useGlobalStoreContext, reducerActions } from '../../providers';
-import { ListItem, Loading, LiveUpdateToggler, BarcodeScanner } from '../../components';
-import { getItemFromStorage, setItemIntoStorage } from '../../components/ListItem/helpers';
-
+import { Loading, LiveUpdateToggler, BarcodeScanner } from '../../components';
 
 const upcDb: IUpcDb = new UpcDb();
 
-
-function RenderListItems(props: { products: IProduct[], listId: string }): JSX.Element {
-    const countedProducts: { product: IProduct, duplicateCount: number }[] = [];
-    const countedIds: Set<string> = new Set();
-    const { products } = props;
-    // index of the current item in the array
-    let itemIndex = 0;
-
-    // set of indexes already used
-    const setIndexes: Set<number> = new Set();
-
-    for (const product of products) {
-        //  look for the item in local storage
-        const itemFromStorage = getItemFromStorage(props.listId, product._id);
-
-        // check to see if we already have the product in the array
-        if (countedIds.has(product._id)) {
-            const foundProduct = countedProducts
-                .find(countedProduct => countedProduct.product._id === product._id);
-
-            // if the product is already in the array, update the duplicate count
-            if (foundProduct) {
-                foundProduct.duplicateCount++;
-
-                // add the index property to our set tracking used indexes
-                itemFromStorage['index'] && setIndexes.add(itemFromStorage['index']);
-            }
-        } else {
-            // if the product is not in the array, add it
-            countedIds.add(product._id);
-
-            countedProducts.push({ product, duplicateCount: 0 });
-            let isCurrentIndexAlreadySet = setIndexes.has(itemIndex);
-
-            // will be used to set our items index property
-            const indexToUse = itemIndex;
-
-            // ensures the index is unique to the list
-            while (isCurrentIndexAlreadySet) {
-                itemIndex++;
-                isCurrentIndexAlreadySet = setIndexes.has(itemIndex);
-            }
-
-            // look for an index property
-            if (!itemFromStorage['index']) {
-                // if it doesn't exist, add one
-                itemFromStorage['index'] = indexToUse;
-                itemFromStorage['completed'] !== undefined && setItemIntoStorage(props.listId, product._id, itemFromStorage);
-                itemIndex++;
-            }
-        }
-    }
-
-
-    // sort the countedProducts array by the index property
-    countedProducts.sort((a, b) => {
-        const aIndex: number = getItemFromStorage(props.listId, a.product._id)['index'];
-        const bIndex: number = getItemFromStorage(props.listId, b.product._id)['index'];
-
-        return aIndex - bIndex;
-    });
-
-    return (
-        <>
-            {countedProducts.map(countedProduct => {
-                const { product, duplicateCount } = countedProduct;
-                const count: number | undefined = duplicateCount > 0 ? duplicateCount + 1 : undefined;
-
-                return (
-                    <ListItem
-                        key={product._id}
-                        product={product}
-                        duplicateCount={count}
-                    />
-                );
-            })}
-        </>
-    );
-}
-
 export default function List(): JSX.Element {// NOSONAR
+    const device: 'mobile' | 'desktop' = useDeviceType();
     const [isLive, setIsLive] = useState<boolean>(false);
     const [list, setList] = useState<IList | null>(null);
     const [cancel, setCancel] = useState<boolean>(false);
@@ -103,6 +24,9 @@ export default function List(): JSX.Element {// NOSONAR
 
     const location = useLocation();
     const listId = location.pathname.split('/')[2];
+
+    const manualButtonLabel: string = device === 'mobile' ?
+        '+ Scan Item' : '+ Upload Barcode Image';
 
     const toggleLive = () => {
         setIsLive(!isLive);
@@ -177,7 +101,6 @@ export default function List(): JSX.Element {// NOSONAR
     }, [isMounted, listId, lists]);
 
 
-
     return isMounted && list ? (
         <div className="List-page-container">
             <header className='My-lists-header'>
@@ -220,14 +143,11 @@ export default function List(): JSX.Element {// NOSONAR
                         className={`${showList ? 'Action-button Text-shadow' :
                             'Action-button Text-shadow Cancel'}`}
                     >
-                        {showList ? '+ Add Item Manually' : 'Cancel'}
+                        {showList ? manualButtonLabel : 'Cancel'}
                     </button>
                 </li>
-
             </ul>
         </div>
 
-        // the Loading component won't be rendered if we are refetching data in the
-        // useEffect hook
     ) : <Loading />;
 }
