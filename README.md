@@ -1,8 +1,18 @@
 # Trash Scan&#8482;, the _App_
 
-![TrashScan](./src/assets/images/logo.png)
+## Screenshot
 
-## Coming Soon
+![TrashScan](./src/assets/images/trashscan-screenshot-min.png)
+
+## Table of Contents
+
+- [`Description`](#description)
+- [`Usage`](#usage)
+  - [`PWA Installation`](./docs/installation/installation.md#pwa-installation-instructions)
+  - [`Using the App on a Desktop Device`](./docs/upload-picture-desktop/upload-desktop-readme.md#how-to-use-the-app-on-a-desktop-device)
+- [`How to Contribute`](#how-to-contribute)
+- [`Contact`](#contact)
+- [`License`](#license)
 
 ## Description
 
@@ -18,7 +28,7 @@ I want to be able to access the list of discarded items on my phone or computer
 So that I can view them later for purchasing.
 ```
 
-**Trash Scan**&#8482;, the _App_, provides the UI for the remaining user requirements. Ideally, **Trash Scan**&#8482;, the _App_, should be used with **Trash Scan**&#8482;, the _Device_. But the app has been expanded for general-purpose use and provides a bar code scanner via your device's camera as a back-up.
+**Trash Scan**&#8482;, the _App_, is a progressive web application that provides the UI for the remaining user requirements. Ideally, **Trash Scan**&#8482;, the _App_, should be used with **Trash Scan**&#8482;, the _Device_. But the app has been expanded for general-purpose use and provides a bar code scanner via your device's camera as a back-up.
 
 In the preliminary stages, **Trash Scan**&#8482;, the _App_ has been implemented around the following user story and needs:
 
@@ -39,16 +49,32 @@ I want to be able to indicate an item isn't needed without removing it from the 
 
 ```
 
+## Usage
+
+**Trash Scan**&#8482;, the _App_ can be accessed at [`https://iitoneloc.github.io/trashscan-app/`](https://iitoneloc.github.io/trashscan-app/) and is a _Progressive Web Application_ or **PWA**. This means that the app can be installed to your device via the browser, as a glorified shortcut, while retaining the look, feel, and functionality of a traditional application without the need for using a device-specific marketplace.
+
+> Please note that not all browsers support this functionality, Firefox is a prime example. However the application is installable in chrome based browsers like Microsoft Edge, Google Chrome, Brave, etc, as well as Safari.
+
+### PWA Installation Instructions
+
+[`View the instructions here`](./docs/installation/installation.md#pwa-installation-instructions)
+
+### Application Usage Instructions
+
+[`Using the app on a computer`](./docs/upload-picture-desktop/upload-desktop-readme.md#how-to-use-the-app-on-a-desktop-device)
+
 ## How to Contribute
 
 If you have ideas for improving **Trash Scan**&#8482;, the _App_, or you wish to contribute to the project please feel free to send me an email!
 
 ## Contact
 
-If you have any questions please feel free to email me @ [anthonytropeano@protonmail.com](mailto:anthonytropeano@protonmail.com)
+If you have any questions please feel free to email me @ [`anthonytropeano@protonmail.com`](mailto:anthonytropeano@protonmail.com)
 
 ## License
 
 This product is not licensed for reuse at this time.
 
 © 2023 Anthony Tropeano
+
+[`Back to Top`](#screenshot)
