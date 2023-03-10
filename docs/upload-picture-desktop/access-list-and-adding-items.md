@@ -46,8 +46,9 @@ If the extraction was successful you should see a success response like the one 
 
 If the extraction wasn't successful it might not be your fault! The barcode extraction from images is still a work in progress.
 
-To ensure that barcode can be extracted we have to help the algorithm find the it. This can be done by setting your camera's zoom to at least 2x zoom before taking a picture. Additionally try to get just the barcode if possible. What I have noticed is the spacing between the barcode lines needs to be exaggerated as this seems to be where it gets confused.
+What I have noticed is the spacing between the barcode lines needs to be exaggerated as this seems to be where it gets confused.
 
+To ensure that barcode can be extracted we have to help the algorithm find it. This can be done by setting your camera's zoom to at least 2x zoom before taking a picture. Additionally try to get only the barcode if possible.
 ## Image Examples for Barcode Extraction
 
 ### Figure 5
@@ -66,7 +67,7 @@ _Unacceptable Barcode Example_
 
 ### Manual Entry
 
-The first time a barcode isn't extracted the option is provided to enter the barcode information manually. You could of course click on `Upload Barcode Image` to try a different picture if you wished but this may be a faster solution:
+The first time a barcode isn't extracted the option is provided to enter the barcode information manually. You could of course click on `Upload Barcode Image` button to try a different picture, but this may be a faster solution:
 
 ### Figure 7
 
