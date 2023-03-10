@@ -62,7 +62,7 @@ _Acceptable Barcode Example_
 _Unacceptable Barcode Example_
 ![Bad Barcode](./images/bad-barcode-min.jpeg)
 
-> Notice: How the spacing on the barcode is much closer together? A barcode captured like this won't be captured.
+> Notice: How the spacing on the barcode is much closer together? A barcode captured like this won't be decoded.
 
 ### Manual Entry
 
