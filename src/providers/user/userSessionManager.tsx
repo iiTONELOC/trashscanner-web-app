@@ -73,7 +73,7 @@ export default function UserSessionManager(props: IUserContextType) { // NOSONAR
     const [isMounted, setIsMounted] = useState<boolean>(false);
 
     // events that will reset the token expiration
-    const tokenResetEvents: string[] = ['keypress', 'touchstart', 'scroll', 'click'];
+    const tokenResetEvents: string[] = ['keypress', 'touchstart', 'scroll', 'click', 'touchmove', 'touchend'];
 
     const loc: Location = useLocation();
 

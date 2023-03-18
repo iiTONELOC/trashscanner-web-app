@@ -84,9 +84,11 @@ export class UpcDb implements IUpcDb {
             if (response.status === 200) {
                 return response.json();
             } else {
+                console.error(response);
                 throw new Error('Error adding product to list');
             }
         } catch (error) {
+            console.error(error);
             return {
                 error: {
                     message: 'An error occurred while attempting to add product to list'
