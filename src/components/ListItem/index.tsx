@@ -5,12 +5,14 @@ import { DoubleEllipsisMenu } from '../Icons';
 import { useLocation, Location } from 'react-router';
 import React, { useEffect, useMemo, useState } from 'react';
 import EditableContent, { EditableContentTypes } from '../EditableContent';
-import { useDeviceType, useSwipe, ISwipeConfig, Direction, DirectionInfo } from '../../hooks';
+import { useDeviceType, useSwipe, ISwipeConfig, IUseSwipe, Direction, DirectionInfo } from '../../hooks';
 import {
-    ItemCount, ItemStatus, DecreaseQuantityButton, IncreaseQuantityButton,
-    AddOneOnSwipeRight, SwipeLeft, DeleteOne
+    ItemCount, ItemStatus, DecreaseQuantityButton,
+    IncreaseQuantityButton, AddOneOnSwipeRight, SwipeLeft
 } from './ListItemComponents';
 
+// used in multiple places to determine if the target element is editable
+const EDITABLE_CONTENT = 'Editable-content';
 
 // The class names of the Elements that are swipe-able within the list item component
 const acceptableClasses: string[] = [
@@ -20,7 +22,8 @@ const acceptableClasses: string[] = [
     'List-item-menu-icon',
     'List-product-span-controls',
     'List-add-remove-btn-container',
-    'List-item-swipe-container'
+    'List-item-swipe-container',
+    EDITABLE_CONTENT
 ];
 
 // The configuration for the swipe hook
@@ -38,23 +41,22 @@ enum SwipeJustifications {
 
 export default function ListItem(props: { product: IProduct, duplicateCount?: number }) { //NOSONAR
     const [justifySwipeContent, setJustifySwipeContent] = useState<SwipeJustifications>(SwipeJustifications.None);
-    const { handleTouchMove, handleTouchStart, handleTouchEnd } = useSwipe(swipeConfig);
     const [swipeDirection, setSwipeDirection] = useState<Direction>(Direction.None);
     const [showEditQuantity, setShowEditQuantity] = useState<boolean>(false);
     const [visibleSwipeWidth, setVisibleSwipeWidth] = useState<number>(0);
+    const [containerHeight, setContainerHeight] = useState<number>(-1);
     const [showEditor, setShowEditor] = useState<boolean>(false);
     const [isMounted, setIsMounted] = useState<boolean>(false);
     const [listId, setListId] = useState<string | null>(null);
     const [swipeXDiff, setSwipeXDiff] = useState<number>(0);
+    const [reset, setReset] = useState<boolean>(false);
 
+
+    const { handleTouchMove, handleTouchStart, handleTouchEnd }: IUseSwipe = useSwipe(swipeConfig);
+    const isMobileDevice: boolean = useDeviceType() === 'mobile';
     const { _id, product, alias }: IProduct = props.product;
     const { barcode, name }: IProduct['product'] = product;
-
-    // Hash router
     const loc: Location = useLocation();
-
-    // Actual device type rather than screen size
-    const isMobileDevice: boolean = useDeviceType() === 'mobile';
 
     // displays the product name or the alias if it exists
     const productNameToDisplay = (_name: string): string => alias && alias !== ' ' ? alias : _name;
@@ -67,15 +69,17 @@ export default function ListItem(props: { product: IProduct, duplicateCount?: nu
     // Highlights the product name and barcode if the product name is not found
     const pClass = `List-name-barcode Editable-content ${nameNotFound ? 'Yellow-text' : ''}`;
 
+    // _______ Component Helper Functions _______
+
     // double click handler for editing the product name - barcode isn't editable
-    const handleDoubleClick = (e: React.SyntheticEvent): void => {
+    const handleShowEditorOnDblClick = (e: React.SyntheticEvent): void => {
         e.preventDefault();
         e.stopPropagation();
 
         const target: HTMLElement = e.target as HTMLElement;
         target
             .classList
-            .contains('Editable-content') && setShowEditor(true);
+            .contains(EDITABLE_CONTENT) && setShowEditor(true);
     };
 
     // Handles the closing of the editor
@@ -87,7 +91,7 @@ export default function ListItem(props: { product: IProduct, duplicateCount?: nu
             const target: HTMLElement = e.target as HTMLElement;
             if (!target.hasAttribute('id')
                 && target.getAttribute('id') !== null
-                && !target.classList.contains('Editable-content')
+                && !target.classList.contains(EDITABLE_CONTENT)
                 && !target.classList.contains('Form-label-container')
             ) {
                 setTimeout(() => setShowEditor(false), 500);
@@ -95,92 +99,99 @@ export default function ListItem(props: { product: IProduct, duplicateCount?: nu
         }
     };
 
-    // Allows for the user to edit the product name and barcode on a mobile device
-    // This registers a double tap on the product name and barcode
-    const handleEditFormMobile = (e: React.TouchEvent): void => ui
-        .registerDoubleTap(e, () => handleDoubleClick(e as unknown as React.SyntheticEvent));
-
-    // Allows for the user to edit the product quantity on a mobile device
-    // const handleCountMobile = (e: React.TouchEvent): void => ui
-    //     .registerDoubleTap(e, () => setShowEditQuantity(!showEditQuantity));
-
-
-    // Provides swipe actions on touch devices
-    const handleSwipeMovement = (e: React.TouchEvent): void => {
-        const { direction, xDiff }: DirectionInfo = handleTouchMove(e);
-
-        // update our state values tracking the swipe direction and the xDiff
-        setSwipeDirection(direction);
-        setSwipeXDiff(xDiff);
-    };
-
-    // Resets the touched element when released
+    // Wrapper. Allows for an optional reset of the swipe direction &
+    // Swipe state. If the state is reset, the UI will not display the
+    // action buttons.
+    // Then calls the original handleTouchEnd function
     const _handleTouchEnd = (e: React.TouchEvent): void => {
-        //reset remaining settings on swipe right only
-        const isLeftSwipe = swipeDirection === Direction.Left && visibleSwipeWidth > 125;
-
-        if (swipeDirection === Direction.Right || isLeftSwipe) {
+        if (reset || swipeDirection === Direction.None) {
             setJustifySwipeContent(SwipeJustifications.None);
             setSwipeXDiff(0);
             setVisibleSwipeWidth(0);
-            setSwipeDirection(Direction.None);
+            setContainerHeight(-1);
+            setReset(false);
         }
 
         handleTouchEnd(e);
     };
 
+    const handleContainerHeight = (): void => {
+        const listItemHeight: number = document.querySelector(`[data-product-id="${_id}"]`)?.clientHeight || 0;
+        setContainerHeight(listItemHeight);
+    };
 
-    // Adjusts the width of swipe-able action (add 1 or delete all)
-    function adjustSwipeContentWidth({ swipeDirection, swipeXDiff }:
-        { swipeDirection: Direction, swipeXDiff: number }) {
+    // Wrapper. Resets the swipe direction so we don't get a false positive
+    // Then calls the original handleTouchStart function
+    const _handleTouchStart = (e: React.TouchEvent): void => {
+        // get the element with the data-product-id attribute
 
+        handleContainerHeight();
+        setSwipeDirection(Direction.None);
+        handleTouchStart(e);
+    };
 
-        // get the element by the _id 
-        const el: HTMLElement | null = document.querySelector(`[data-product-id="${_id}"]`);
+    // Allows for the user to edit the product name on a mobile device
+    // This registers a double tap on the product details
+    const handleEditFormMobile = (e: React.TouchEvent): void => ui
+        .registerDoubleTap(e, () => handleShowEditorOnDblClick(e as unknown as React.SyntheticEvent));
 
-        if (el) {
-            // console log the rendering width of the html element
-            const elWidth: number = el.offsetWidth;
+    // Provides swipe actions on touch devices
+    const handleSwipeMovement = (e: React.TouchEvent): void => {
+        const { direction, xDiff, speed }: DirectionInfo = handleTouchMove(e);
+        const _speed: number = speed || 0;
+
+        // must swipe at least 75px and at a speed of 700ms to trigger the swipe action
+        const triggerSpeed = 700;
+        const triggerMovePx = 75;
+
+        // update our state values tracking the swipe direction and the xDiff
+        setSwipeDirection(direction);
+        setSwipeXDiff(xDiff);
+        handleContainerHeight();
+
+        // If left and the swipe is greater than 75px
+        if (visibleSwipeWidth > triggerMovePx && swipeDirection === Direction.Left) {
+            const deleteAllButton: HTMLElement | null = document.querySelector(`[data-delete-one-id="${_id}"]`);
+            // check the speed
+            _speed > triggerSpeed && (() => {
+                deleteAllButton?.click();
+                setReset(true);
+                _handleTouchEnd(e as unknown as React.TouchEvent);
+            })();
+        }
+
+        // Right swipe
+        if (visibleSwipeWidth > triggerMovePx && swipeDirection === Direction.Right) {
+            const addOneButton: HTMLElement | null = document.querySelector(`[data-add-one-id="${_id}"]`);
+            // check the speed
+            _speed > triggerSpeed && (() => {
+                addOneButton?.click();
+                setReset(true);
+                _handleTouchEnd(e as unknown as React.TouchEvent);
+            })();
+        }
+    };
+
+    // Adjusts the width of swipe-able action (add 1 or delete 1)
+    const adjustSwipeContentWidth = ({ swipeXDiff }: { swipeXDiff: number }) => {
+        const movingEl: HTMLElement | null = document.querySelector(`[data-product-id="${_id}"]`);
+
+        if (movingEl) {
+            const elWidth: number = movingEl.offsetWidth;
 
             // figure percentage moved based on the swipeXDiff and our elWidth
             const widthPercentageMoved: number = swipeXDiff / elWidth;
-
             const swipeDeleteContainer: HTMLElement | null = document.querySelector(`[data-swipe-id="${_id}"]`);
+
             if (swipeDeleteContainer) {
                 // set the width of the Swipe-delete-container
                 const currentWidth = Math.ceil(Math.abs(widthPercentageMoved) * 100);
                 setVisibleSwipeWidth(currentWidth);
             }
         }
-    }
-
-    const _handleTouchMove = (e: React.TouchEvent): void => {
-        const currentWidth = visibleSwipeWidth;
-
-        if (currentWidth > 125 && swipeDirection === Direction.Left) {
-            // click the delete all button
-            const deleteAllButton: HTMLElement | null = document.querySelector(`[data-delete-all-id="${_id}"]`);
-            deleteAllButton?.click();
-
-            _handleTouchEnd(e as unknown as React.TouchEvent);
-
-            // TODO: DISPLAY A TOAST MESSAGE
-        }
-
-        else if (currentWidth > 110 && swipeDirection === Direction.Right) {
-            // click the add 1 button
-            const addOneButton: HTMLElement | null = document.querySelector(`[data-add-one-id="${_id}"]`);
-            addOneButton?.click();
-            _handleTouchEnd(e as unknown as React.TouchEvent);
-        }
-
-        else {
-            handleSwipeMovement(e);
-        }
     };
 
-
-
+    // _______ Component Effects _______
     useEffect(() => {
         setIsMounted(true);
         // check the os type in the browser
@@ -188,6 +199,12 @@ export default function ListItem(props: { product: IProduct, duplicateCount?: nu
         return () => setIsMounted(false);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
+    // updates the width of the swipe content based on the swipe direction and swipe xDiff
+    useMemo(() => {
+        adjustSwipeContentWidth({ swipeXDiff });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [swipeXDiff]);
 
     // updates direction of swipe
     useMemo(() => {
@@ -202,18 +219,13 @@ export default function ListItem(props: { product: IProduct, duplicateCount?: nu
         }
     }, [isMounted, swipeDirection]);
 
-    // updates the width of the swipe content based on the swipe direction and swipe xDiff
-    useMemo(() => {
-        adjustSwipeContentWidth({ swipeDirection, swipeXDiff });
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [swipeDirection, swipeXDiff]);
-
-
 
     return isMounted ? (
-        <li className={`List-item-swipe-container ${justifySwipeContent}`}>
+        <li className={`List-item-swipe-container ${justifySwipeContent}`} style={{
+            height: containerHeight === -1 ? 'auto' : `${containerHeight}px`,
+        }}>
             {/* Add one on swipe right */}
-            {Direction.Right === swipeDirection &&
+            {swipeDirection === Direction.Right &&
                 <AddOneOnSwipeRight
                     _id={_id}
                     width={visibleSwipeWidth}
@@ -223,8 +235,8 @@ export default function ListItem(props: { product: IProduct, duplicateCount?: nu
 
             {/* LIST ITEM START */}
             <section className="List-item-product"
-                onTouchStart={handleTouchStart}
-                onTouchMove={_handleTouchMove}
+                onTouchStart={_handleTouchStart}
+                onTouchMove={handleSwipeMovement}
                 onTouchEnd={_handleTouchEnd}
                 onClick={handleCloseEditor}
                 data-product-id={_id}
@@ -239,7 +251,7 @@ export default function ListItem(props: { product: IProduct, duplicateCount?: nu
                     {!showEditor ? (
                         <>
                             <p
-                                onDoubleClick={handleDoubleClick}
+                                onDoubleClick={handleShowEditorOnDblClick}
                                 onTouchEnd={handleEditFormMobile}
                                 className={pClass}>
                                 {formatter.headingNormalizer(productNameToDisplay(name))} - {barcode[0]}
@@ -292,7 +304,7 @@ export default function ListItem(props: { product: IProduct, duplicateCount?: nu
             {/* END LIST ITEM */}
 
             {/* Delete all on swipe left */}
-            {Direction.Left === swipeDirection &&
+            {swipeDirection === Direction.Left &&
                 <SwipeLeft
                     _id={_id}
                     listId={listId as string}

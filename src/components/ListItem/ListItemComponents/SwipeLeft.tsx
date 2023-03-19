@@ -1,5 +1,7 @@
 import { DeleteOne } from '.';
 import { DecreaseQuantity } from '../hooks';
+import { TrashIcon } from '@heroicons/react/24/solid';
+
 
 export default function SwipeLeft(props:
     { _id: string, listId: string, currentQuantity: number, width: number }
@@ -11,15 +13,13 @@ export default function SwipeLeft(props:
         currentQuantity: props.currentQuantity
     });
 
-    const handleDeleteAll = async (): Promise<void> => {
-        // for the length of the current quantity, call the decreaseItemQuantity function
-        const length = props.currentQuantity;
-        for (let i = 0; i < length; i++) {
+    const handleDeleteAll = async (e: React.SyntheticEvent): Promise<void> => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        for (let i = 0; i < props.currentQuantity; i++) {
             await decreaseItemQuantity();
         }
-
-        // remove the entry from local storage
-        localStorage.removeItem(`${props.listId}-${props._id}`);
     };
 
     return (
@@ -32,10 +32,13 @@ export default function SwipeLeft(props:
             <button
                 data-delete-all-id={props._id}
                 className='Swipe-delete-button Text-shadow'
-                onClick={handleDeleteAll}
+                onClick={async (e: React.SyntheticEvent) => handleDeleteAll(e)}
                 type='button'
             >
-                Delete All
+                <TrashIcon
+                    onClick={async (e: React.SyntheticEvent) => handleDeleteAll(e)}
+                    className='Delete-all-icon'
+                /> All
             </button>
 
             <DeleteOne {...props} />

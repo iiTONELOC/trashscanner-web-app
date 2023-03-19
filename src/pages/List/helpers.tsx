@@ -1,8 +1,9 @@
-import { IProduct, ILinkedList } from '../../types';
-import LinkedList from '../../utils/linkedList';
+import { linkedList } from '../../utils';
 import { useEffect, useState } from 'react';
 import { ListItem } from '../../components';
-import { linkedList } from '../../utils';
+import LinkedList from '../../utils/linkedList';
+import { IProduct, ILinkedList } from '../../types';
+import { removeItemFromStorage } from '../../components/ListItem/helpers';
 
 // represents the data structure of the list item from storage contained in the linked list
 interface IStorageList {
@@ -20,11 +21,11 @@ interface IStorageList {
  * @returns the updated linked list
  */
 function addItemsToEmptyLinkedList(list: ILinkedList<IStorageList>,
-    items: { product: IProduct, duplicateCount: number }[]): ILinkedList<IStorageList> {
+    items: { product: IProduct, duplicateCount: number }[], increaseCount = true): ILinkedList<IStorageList> {
 
     for (const countedProduct of items) {
         const { product, duplicateCount } = countedProduct;
-        const count: number = duplicateCount > 0 ? duplicateCount + 1 : 0;
+        const count: number = duplicateCount > 0 && increaseCount ? duplicateCount + 1 : duplicateCount;
 
         const listEntry: IStorageList = {
             [`${product._id}`]: {
@@ -63,7 +64,6 @@ function addItemsToPopulatedLinkedList(list: ILinkedList<IStorageList>,
                     found = Object.values(item)[0];
                 }
             }
-
             return found;
         };
 
@@ -153,10 +153,76 @@ export function RenderListItems(props: { products: IProduct[], listId: string })
     const buildLinkedList = (listFromStorage: ILinkedList<IStorageList>): ILinkedList<IStorageList> => {
         // if the linked list is empty
         if (listFromStorage.size() === 0) {
-            listFromStorage = addItemsToEmptyLinkedList(listFromStorage, countedProducts);
+            listFromStorage = addItemsToEmptyLinkedList(listFromStorage, countedProducts, false);
         } else {
             // has existing data
             listFromStorage = addItemsToPopulatedLinkedList(listFromStorage, countedProducts);
+        }
+
+        // before returning the list we need to check all the product ids in the list against,
+        // the product ids in the products array, if we are using an existing list, there is
+        // a chance that the product ids in the list are no longer in the products array
+        // so we will have to remove them from the list accordingly as these should be in sync
+        // but the React State is our source of truth
+        const listID = LIST_NAME;
+        // remove duplicate ids from the list
+        const productIds: string[] = products
+            .map(product => product._id)
+            .filter((id, index, self) => self.indexOf(id) === index);
+
+        const idsToRemove: string[] = [];
+        const productIdsFromLinkedList: string[] = [];
+
+        const listObject = listFromStorage.toObject();
+
+        // extract the product ids from the object
+        for (const item of Object.values(listObject)) {
+            productIdsFromLinkedList.push(Object.values(item)[0].id);
+        }
+
+        // create an array of ids to remove
+        for (const id of productIdsFromLinkedList) {
+            if (!productIds.includes(id)) {
+                idsToRemove.push(id);
+            }
+        }
+
+        // remove the ids from localStorage and the linked list
+        for (const id of idsToRemove) {
+
+            // this entry in local storage tracks status
+            removeItemFromStorage(listID || '', id);
+
+            // update the linked list
+            removeItemFromLinkedList(id);
+        }
+
+
+        function removeItemFromLinkedList(id: string) {
+            // create an object so we can manipulate the linked list easier
+            const listObject = listFromStorage.toObject();
+
+            // we can remove items easily if we know the ids, this was intentionally
+            // made to be a PITA so that we don't accidentally remove items
+            let index = 0;
+
+            // remove the item from the object
+            for (const item of Object.values(listObject)) {
+                if (Object.values(item)[0].id === id) {
+                    delete listObject[index];
+                    break;
+                }
+                index++;
+            }
+
+
+            // convert the object back to a linked list
+            listFromStorage = new LinkedList();
+            for (const item of Object.values(listObject)) {
+                listFromStorage.add(item);
+            }
+            // set it back to local storage
+            localStorage.setItem(listID || '', JSON.stringify(listFromStorage));
         }
 
         return listFromStorage;
@@ -181,17 +247,13 @@ export function RenderListItems(props: { products: IProduct[], listId: string })
 
             // we only want to render the item once, so we need to count the duplicates
             countDuplicates();
-
-            // update the linked list with the new data
-            buildLinkedList(listFromStorage);
-
+            const updatedList = buildLinkedList(listFromStorage);
             // save the linked list data as an object in state
-            setListObjectToMap({ ...listFromStorage });
+            setListObjectToMap(updatedList);
 
             // save the linked list data to local storage
-            localStorage.setItem(LIST_NAME, JSON.stringify(listFromStorage));
+            localStorage.setItem(LIST_NAME, JSON.stringify(updatedList));
         }
-
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isMounted, products]);

@@ -11,6 +11,7 @@ export default function DeleteAllSwipeLeft(props: { _id: string, listId: string,
     return (
 
         <button
+            data-delete-one-id={props._id}
             className='Swipe-delete-one-button Text-shadow'
             type='button'
             onClick={decreaseItemQuantity}

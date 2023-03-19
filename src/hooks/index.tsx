@@ -4,8 +4,6 @@ export { default as useDeviceType } from './deviceType';
 export { default as useSwipe, Direction } from './useSwipe';
 export { default as useInputValidation } from './inputValidation';
 
-export type { IValidationRules, IValidationError, IUseValidators } from './inputValidation';
-
 export interface IApiHookCall<T> {
     data: T | null;
     error: string | null;
@@ -13,4 +11,5 @@ export interface IApiHookCall<T> {
     refetch: () => void;
 }
 
-export type { ISwipeConfig, DirectionInfo } from './useSwipe';
+export type { ISwipeConfig, DirectionInfo, IUseSwipe } from './useSwipe';
+export type { IValidationRules, IValidationError, IUseValidators } from './inputValidation';

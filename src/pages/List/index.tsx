@@ -2,9 +2,9 @@ import './List.css';
 import { UpcDb } from '../../utils/APIs';
 import { useEffect, useState } from 'react';
 import { RenderListItems } from './helpers';
-import { useLocation } from 'react-router-dom';
 import { IList, IUpcDb } from '../../types';
 import { useDeviceType } from '../../hooks';
+import { useLocation } from 'react-router-dom';
 import { useGlobalStoreContext, reducerActions } from '../../providers';
 import { Loading, LiveUpdateToggler, BarcodeScanner } from '../../components';
 

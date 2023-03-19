@@ -19,9 +19,17 @@ export enum Direction {
 
 export interface DirectionInfo {
     direction: Direction;
+    deltaT?: number;
     xDiff: number;
     yDiff: number;
+    speed?: number;
 };
+
+export interface IUseSwipe {
+    handleTouchStart: (e: React.TouchEvent) => void;
+    handleTouchEnd: (e: React.TouchEvent) => void;
+    handleTouchMove: (e: React.TouchEvent) => DirectionInfo;
+}
 
 function determineSwipeDirection(
     x1: number,
@@ -34,6 +42,7 @@ function determineSwipeDirection(
 
     const dirInfo: DirectionInfo = {
         direction: Direction.None,
+        deltaT: 0,
         xDiff,
         yDiff
     };
@@ -66,15 +75,16 @@ function determineSwipeDirection(
 }
 
 
-export default function useSwipe(props: ISwipeConfig) {
-    const [isMounted, setIsMounted] = useState<boolean>(false);
-    const [acceptableClassNames, setAcceptableClassNames] = useState<string[]>([]);
+export default function useSwipe(props: ISwipeConfig): {
+    handleTouchStart: (e: React.TouchEvent) => void,
+    handleTouchEnd: (e: React.TouchEvent) => void,
+    handleTouchMove: (e: React.TouchEvent) => DirectionInfo
+} {
     const [watchDirection, setWatchDirection] = useState<'horizontal' | 'vertical' | 'both'>('both');
+    const [acceptableClassNames, setAcceptableClassNames] = useState<string[]>([]);
+    const [isMounted, setIsMounted] = useState<boolean>(false);
 
-    const {
-        swipeDirection,
-        acceptableClasses
-    }: ISwipeConfig = props;
+    const { swipeDirection, acceptableClasses }: ISwipeConfig = props;
 
     useEffect(() => {
         setIsMounted(true);
@@ -111,7 +121,7 @@ export default function useSwipe(props: ISwipeConfig) {
             target.setAttribute('touchStartTimestamp', `${Date.now()}`);
             target.setAttribute('touchStartX', `${e.touches[0].clientX}`);
         }
-        // reset the auth timeout in the 
+        // reset the auth timeout in the
     };
 
     // Remove extra attributes from the target
@@ -130,24 +140,32 @@ export default function useSwipe(props: ISwipeConfig) {
         // default is no movement
         const dirInfo = {
             direction: Direction.None,
+            deltaT: 0,
             xDiff: 0,
-            yDiff: 0
+            yDiff: 0,
+            speed: 0
         };
 
         if (containsAcceptableClass(target.classList)) {
-            // previous x position
+            // Timings
+            const previousTime = parseInt(target.getAttribute('touchStartTimestamp') as string, 10);
+            const currentTime = Date.now();
+
+            // Position
             const touchStartX: number = parseInt(target.getAttribute('touchStartX') as string, 10);
-            // current x position
             const touchCurrentX: number = e.touches[0].clientX;
 
-            // figure out the direction and distance moved
             const directionMoved: DirectionInfo = determineSwipeDirection(touchStartX, touchCurrentX, 0, 0);
 
+            // update the deltaT with the time it took to move
+            dirInfo.deltaT = currentTime - previousTime;
 
-            // update the dirInfo with the direction and distance moved from the last position
+            // calculate the speed in milliseconds
+            dirInfo.speed = Math.abs(directionMoved.xDiff) / dirInfo.deltaT * 1000;
+
+            // Do not care about vertical movement
             if (watchDirection === 'horizontal') {
-
-                // if we moved past our minimum xDiff, then we have a swipe
+                // if we moved past our minimum xDiff, then we can register the movement
                 if (directionMoved.direction === Direction.Left
                     && Math.abs(directionMoved.xDiff) > MIN_X_DIFF) {
                     dirInfo.direction = Direction.Left;
@@ -165,9 +183,9 @@ export default function useSwipe(props: ISwipeConfig) {
                 }
             }
         }
-
         return dirInfo;
     };
+
     return {
         handleTouchStart,
         handleTouchEnd,

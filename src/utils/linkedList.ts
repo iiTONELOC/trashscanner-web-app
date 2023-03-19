@@ -8,7 +8,8 @@ export interface ILinkedList<T> {
     length: number;
     add(value: T): void;
     size(): number;
-    removeAt(value: number): void;
+    getIndexOf(value: T): number;
+    removeAt(value: number): (IMyNode<T> | null);
     toObject(): { [key: number]: T };
     print(): void;
 }
@@ -27,7 +28,7 @@ export class LinkedList<T> implements ILinkedList<T> {
     head: (IMyNode<T> | null);
     length: number;
 
-    constructor(obj?: ILinkedList<T>) {
+    constructor(obj?: { head: (IMyNode<T> | null), length: number }) {
         this.head = null;
         this.length = 0;
 
@@ -66,6 +67,8 @@ export class LinkedList<T> implements ILinkedList<T> {
             const temp = this.head;
             this.head = this?.head?.next || null;
             this.length--;
+            temp?.value && (temp.value = {} as T);
+
             return temp;
         }
 
@@ -117,9 +120,25 @@ export class LinkedList<T> implements ILinkedList<T> {
         return temp;
     }
 
+    getIndexOf(value: T): number {
+        let current: (IMyNode<T> | null) = this.head;
+        let index = 0;
+
+        while (current) {
+            if (current.value === value) {
+                return index;
+            }
+            current = current.next;
+            index++;
+        }
+
+        return -1;
+    }
+
     size(): number {
         return this.length;
     }
+
 }
 
 export default LinkedList;

@@ -36,6 +36,27 @@ export default function Lists(): JSX.Element {// NOSONAR
                     lists: data || []
                 }
             });
+
+            if (data) {
+                const currentIds = data ? data.map((list: IList) => list._id) : [];
+
+                // get a list of the keys in local storage
+                const localStorageEntries = Object.keys(localStorage);
+                // filter the keys to only include the ones that don't have a hyphen
+                const localStorageKeys = localStorageEntries.filter((key: string) => !key.includes('-'));
+
+
+                // if any of the ids in the localStorageKeys array are not in the currentIds array
+                // then remove them from local storage
+                localStorageKeys.forEach((key: string) => {
+                    if (!currentIds.includes(key)) {
+                        localStorage.removeItem(key);
+                    }
+                });
+            }
+
+
+
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [data, isMounted]);
