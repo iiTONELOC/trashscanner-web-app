@@ -1,5 +1,7 @@
+import { ApolloProvider } from '@apollo/client';
 import { useState, useEffect, Suspense } from 'react';
 import { Home, SignUp, Login, List, Lists } from './pages';
+import { apolloClient } from './utils/graphQL/clientConfig';
 import { HashRouter, Route, Routes } from 'react-router-dom';
 import { Layout, Footer, Navigation, Toaster, WithAuth, Loading } from './components';
 import { GlobalStoreProvider, UserProvider, ToastProvider, NavLinkProvider } from './providers';
@@ -16,44 +18,47 @@ function App(): JSX.Element { //  NOSONAR
 
 
   return isMounted ? (
+
     <ToastProvider>
       <HashRouter>
-        <UserProvider>
-          {/* TODO: Refactor the NavLink Provider to a hook */}
-          <NavLinkProvider>
-            <Layout>
-              <Navigation />
-              <GlobalStoreProvider>
-                {/* TODO: Clean this up*/}
-                <Routes>
-                  <Route path="/" element={<Home />} />
-                  <Route path="/signup" element={<SignUp />} />
-                  <Route path="/login" element={<Login />} />
+        <ApolloProvider client={apolloClient}>
+          <UserProvider>
+            {/* TODO: Refactor the NavLink Provider to a hook */}
+            <NavLinkProvider>
+              <Layout>
+                <Navigation />
+                <GlobalStoreProvider>
+                  {/* TODO: Clean this up*/}
+                  <Routes>
+                    <Route path="/" element={<Home />} />
+                    <Route path="/signup" element={<SignUp />} />
+                    <Route path="/login" element={<Login />} />
 
-                  <Route path="/lists" element={
-                    <WithAuth>
-                      <Suspense fallback={<Loading />}>
-                        <Lists />
-                      </Suspense>
-                    </WithAuth>}
-                  />
+                    <Route path="/lists" element={
+                      <WithAuth>
+                        <Suspense fallback={<Loading />}>
+                          <Lists />
+                        </Suspense>
+                      </WithAuth>}
+                    />
 
-                  <Route path="/list/:id" element={
-                    <WithAuth>
-                      <Suspense fallback={<Loading />}>
-                        <List />
-                      </Suspense>
-                    </WithAuth>}
-                  />
+                    <Route path="/list/:id" element={
+                      <WithAuth>
+                        <Suspense fallback={<Loading />}>
+                          <List />
+                        </Suspense>
+                      </WithAuth>}
+                    />
 
-                  <Route path="*" element={<Home />} />
-                </Routes>
-              </GlobalStoreProvider>
-              <Toaster />
-              <Footer />
-            </Layout>
-          </NavLinkProvider>
-        </UserProvider>
+                    <Route path="*" element={<Home />} />
+                  </Routes>
+                </GlobalStoreProvider>
+                <Toaster />
+                <Footer />
+              </Layout>
+            </NavLinkProvider>
+          </UserProvider>
+        </ApolloProvider>
       </HashRouter>
     </ToastProvider >
   ) : <></>;

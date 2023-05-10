@@ -11,6 +11,10 @@ import {
 } from '../../providers';
 
 
+import { LOGIN_USER } from '../../utils/graphQL/mutations';
+import { useMutation } from '@apollo/client';
+
+
 interface FormState {
     username: string | null;
     password: string | null;
@@ -27,6 +31,8 @@ export function LoginForm(): JSX.Element {// NOSONAR
     const [isFormValid, setIsFormValid] = useState<boolean>(false);
     const [isMounted, setIsMounted] = useState<boolean | null>(false);
     const [formState, setFormState] = useState<FormState>(defaultFormState);
+
+    const [LoginUser] = useMutation(LOGIN_USER);
 
     const Toaster: IToastMessageContextType = useToastMessageContext();
     const {
@@ -82,28 +88,17 @@ export function LoginForm(): JSX.Element {// NOSONAR
         setFormState({ ...formState, [name]: safeString });
     };
 
-    const handleLogin = (e: React.SyntheticEvent): void => {
+    const handleLogin = async (e: React.SyntheticEvent): Promise<void> => {
         e.preventDefault();
         e.stopPropagation();
 
-        const { username, password }: FormState = formState;
+        try {
+            const loggedInUser = await LoginUser({ variables: { ...formState } });
 
-        Authentication.login(username || '', password || '').then(res => {
-            if (res.status === 200) {
-                res.data && (
-                    () => {
-                        localStorage.setItem('trash-user', res.data);
-                        setIsAuthenticated(true);
-                    }
-                )();
-
-                // IF a user's token doesn't exist they may be redirected to the login page
-                // component, even thought the URL is not /login.
-                // IF this is the case a successful login should redirect the user to the
-                // requested resource
-
-                // a timeout is used to allow the token to be activated. A Not before error
-                // occurs if the redirect happens at the exact same time as token activation
+            const { token } = loggedInUser.data.loginUser;
+            if (token) {
+                localStorage.setItem('trash-user', token);
+                setIsAuthenticated(true);
                 setTimeout(() => {
                     // if the user was redirected to the login page, reload their requested
                     // resource, else redirect to the lists page
@@ -111,28 +106,68 @@ export function LoginForm(): JSX.Element {// NOSONAR
                         window.location.reload() :
                         nav('/lists', { replace: true });
                 }, 550);
+            } else {
+                throw new Error('Invalid Credentials');
+            }
 
-            } else if (res.status === 401) {
-                Toaster.makeToast({
-                    type: ToastTypes.Error,
-                    message: 'Invalid Credentials',
-                    title: 'Login Failed',
-                    timeOut: 7800
-                });
-                setHasError(true);
-            }
-            else {
-                throw new Error();
-            }
-        }).catch(err => {
+        } catch (error: any) {
             Toaster.makeToast({
                 type: ToastTypes.Error,
-                message: 'Server Error',
+                message: error['message'] || 'Unknown Error',
                 title: 'Login Failed',
                 timeOut: 7800
             });
             setHasError(true);
-        });
+        }
+
+        // const { username, password }: FormState = formState;
+
+        // Authentication.login(username || '', password || '').then(res => {
+        //     if (res.status === 200) {
+        //         res.data && (
+        //             () => {
+        //                 localStorage.setItem('trash-user', res.data);
+        //                 setIsAuthenticated(true);
+        //             }
+        //         )();
+
+        //         // IF a user's token doesn't exist they may be redirected to the login page
+        //         // component, even thought the URL is not /login.
+        //         // IF this is the case a successful login should redirect the user to the
+        //         // requested resource
+
+        //         // a timeout is used to allow the token to be activated. A Not before error
+        //         // occurs if the redirect happens at the exact same time as token activation
+        //         setTimeout(() => {
+        //             // if the user was redirected to the login page, reload their requested
+        //             // resource, else redirect to the lists page
+        //             loc.pathname !== '/login' ?
+        //                 window.location.reload() :
+        //                 nav('/lists', { replace: true });
+        //         }, 550);
+
+        //     } else if (res.status === 401) {
+        //         Toaster.makeToast({
+        //             type: ToastTypes.Error,
+        //             message: 'Invalid Credentials',
+        //             title: 'Login Failed',
+        //             timeOut: 7800
+        //         });
+        //         setHasError(true);
+        //     }
+        //     else {
+        //         throw new Error();
+        //     }
+        // }).catch(err => {
+        //     Toaster.makeToast({
+        //         type: ToastTypes.Error,
+        //         message: 'Server Error',
+        //         title: 'Login Failed',
+        //         timeOut: 7800
+        //     });
+        //     setHasError(true);
+        // });
+
     };
 
 
