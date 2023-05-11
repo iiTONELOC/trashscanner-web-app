@@ -107,8 +107,8 @@ mutation removeMyList($listId: ID!) {
 }`;
 
 export const ADD_BARCODE_TO_LIST = gql`
-mutation addBarcodeToList($listId: ID!, $barcode: String!, $quantity: Int!, $isCompleted: Boolean!) {
-  addToList(listId: $listId, barcode: $barcode, quantity: $quantity, isCompleted: $isCompleted) {
+mutation addBarcodeToList($listId: ID!, $barcode: String!) {
+  addToList(listId: $listId, barcode: $barcode) {
     _id
     isCompleted
     notes
@@ -139,6 +139,7 @@ mutation removeItemFromList($listItemId: ID!, $listId: ID!) {
         name
       }
     }
+    username
   }
 }`;
 
@@ -158,6 +159,20 @@ mutation updateItem($listItemId: ID!, $notes: String, $quantity: Int, $isComplet
       }
     }
     quantity
+  }
+}`;
+
+export const UPDATE_LIST_ITEM_ALIAS = gql`
+mutation UpdateAlias($userProductId: ID!, $productAlias: String) {
+  updateUserProduct(userProductId: $userProductId, productAlias: $productAlias) {
+    _id
+    createdAt
+    productAlias
+    productData {
+      barcode
+      createdAt
+    }
+    updatedAt
   }
 }`;
 

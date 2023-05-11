@@ -1,8 +1,7 @@
 import './EditableContent.css';
 import FormInput from '../FormInput';
 import { ToastTypes } from '../Toast';
-import { IProduct, IUpcDb } from '../../types';
-import { UpcDb } from '../../utils/APIs';
+import { IListItem } from '../../types';
 import { useState, useEffect } from 'react';
 import {
     useToastMessageContext, useGlobalStoreContext,
@@ -10,6 +9,12 @@ import {
     GlobalStoreContextType,
     IToastMessageContextType
 } from '../../providers';
+
+
+
+import { useMutation } from '@apollo/client';
+import { UPDATE_LIST, UPDATE_LIST_ITEM_ALIAS } from '../../utils/graphQL/mutations';
+
 
 
 export enum EditableContentTypes {
@@ -22,7 +27,6 @@ interface FormState {
     [EditableContentTypes.ListName]: string | null;
 }
 
-const db: IUpcDb = new UpcDb();
 
 const defaultFormState: FormState = {
     [EditableContentTypes.ProductName]: '',
@@ -51,6 +55,10 @@ export default function EditableContent(props: { // NOSONAR
     const { globalState, dispatch }: GlobalStoreContextType = useGlobalStoreContext();
     const Toaster: IToastMessageContextType = useToastMessageContext();
 
+
+    const [updateList] = useMutation(UPDATE_LIST);
+    const [updateListItemAlias] = useMutation(UPDATE_LIST_ITEM_ALIAS);
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
         const { value } = e.target;
 
@@ -61,14 +69,20 @@ export default function EditableContent(props: { // NOSONAR
     async function updateProducts(content: string) {
         try {
             if (content && content !== defaultContent && productId && listId) {
-                const { data } = await db.editProduct(productId, content);
+                const { data } = await updateListItemAlias({
+                    variables: {
+                        userProductId: productId,
+                        productAlias: content
+                    }
+                });
+
                 const haveState = globalState !== null && globalState.lists !== undefined;
 
                 data && haveState && ((() => {
                     const currentListState = globalState?.lists[listId];
 
-                    const editedProducts: IProduct[] = currentListState?.products
-                        .map((product: IProduct) => {
+                    const editedProducts: IListItem[] = currentListState?.products
+                        .map((product: IListItem) => {
                             if (product._id !== productId) {
                                 return product;
                             } else {
@@ -121,7 +135,14 @@ export default function EditableContent(props: { // NOSONAR
     async function updateListName(listName: string) {
         try {
             if (listName && listName !== defaultContent && listId) {
-                const { data } = await db.editList(listId, listName);
+                const { data } = await updateList({
+                    variables: {
+                        listId,
+                        name: listName
+                    }
+                });
+
+
                 data && ((() => {
                     const currentListState = globalState?.lists[listId];
                     const updatedList = {

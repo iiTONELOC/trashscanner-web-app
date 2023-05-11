@@ -1,9 +1,10 @@
+import { IList } from '../../types';
 import FormInput from '../FormInput';
 import { validators } from '../../utils';
-import { UpcDb, IUpcDb } from '../../utils/APIs';
-import React, { useState, useEffect } from 'react';
-import { IApiResponse, IList } from '../../types';
+import { useMutation } from '@apollo/client';
 import { ToastTypes } from '../../components';
+import React, { useState, useEffect } from 'react';
+import { CREATE_NEW_LIST } from '../../utils/graphQL/mutations';
 import {
     useGlobalStoreContext,
     reducerActions, useToastMessageContext,
@@ -26,7 +27,6 @@ const defaultFormState: IFormState = {
     isDefault: false
 };
 
-const db: IUpcDb = new UpcDb();
 
 const validateInput = (input: string): string[] => {
     const errors: string[] = [];
@@ -53,6 +53,8 @@ export default function AddListForm(props: IAddListFormProps): JSX.Element { // 
     const [listNameErrors, setListNameErrors] = useState<string[]>([]);
     const [formState, setFormState] = useState<IFormState>(defaultFormState);
 
+    const [createNewList, { error }] = useMutation(CREATE_NEW_LIST);
+
     const Toaster: IToastMessageContextType = useToastMessageContext();
     const { dispatch, globalState }: GlobalStoreContextType = useGlobalStoreContext();
 
@@ -78,12 +80,14 @@ export default function AddListForm(props: IAddListFormProps): JSX.Element { // 
         }
     };
 
-    const handleCreateNewList = (): void => {
+    const handleCreateNewList = async (): Promise<void> => {
         const { listName, isDefault }: IFormState = formState;
-        db.createList(listName, isDefault).then((response: IApiResponse<IList>) => {
-            if (response.status === 200 || response !== null) {
-                // @ts-ignore
-                const data: IList = response?.data || response as IList;
+
+        try {
+            const createdList = await createNewList({ variables: { name: listName, isDefault } });
+
+            if (createdList && !error) {
+                const data: IList = createdList.data.addList;
 
                 if (!isDefault) {
                     dispatch({
@@ -120,16 +124,16 @@ export default function AddListForm(props: IAddListFormProps): JSX.Element { // 
             } else {
                 throw new Error('Error creating list');
             }
-        }).catch((error: Error) => {
+        } catch (error: any) {
             Toaster.makeToast({
-                message: 'Error creating list',
+                message: error.message,
                 type: ToastTypes.Error,
                 title: 'Error',
                 timeOut: 9000
             });
-        }).finally(() => {
+        } finally {
             setShowAddForm(false);
-        });
+        }
     };
 
     useEffect(() => {
@@ -201,8 +205,6 @@ export default function AddListForm(props: IAddListFormProps): JSX.Element { // 
                     )}
                 </div>
             </section>
-
-
         </>
     ) : <></>;
 }

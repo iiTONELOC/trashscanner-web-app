@@ -35,12 +35,15 @@ query getMyLists {
       }
       quantity
     }
+    createdAt
+    updatedAt
   }
 }`;
 
 export const GET_LIST = gql`
 query getList($listId: ID!) {
   list(listId: $listId) {
+    _id
     isDefault
     name
     productCount
