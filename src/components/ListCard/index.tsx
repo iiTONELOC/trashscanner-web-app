@@ -8,11 +8,11 @@ import React, { useEffect, useState } from 'react';
 import EditableContent, { EditableContentTypes } from '../EditableContent';
 
 
-function displayMostRecentDate(createdAt: Date, updatedAt: Date): string {
-    const date: Date = updatedAt > createdAt ? updatedAt : createdAt;
+function displayMostRecentDate(createdAt: string, updatedAt: string): string {
+    const date: string = (Number(updatedAt) > Number(createdAt)) ? (updatedAt) : (createdAt) || Date.now().toString();
 
     return new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'short', year: '2-digit' })
-        .format(new Date(date));
+        .format(new Date(parseInt(date, 10)));
 }
 
 function DefaultIcon(): JSX.Element {
@@ -34,14 +34,19 @@ function preventDefaults(e: React.SyntheticEvent): void {
 }
 
 export default function ListCard(props: IList): JSX.Element { //NOSONAR
-    const { name, isDefault, createdAt, updatedAt, products, _id }: IList = props;
+    const { name, isDefault, createdAt, updatedAt, _id, itemCount }: IList = props;
     const [showDropMenu, setShowDropMenu] = useState<boolean>(false);
     const [showEditor, setShowEditor] = useState<boolean>(false);
     const [isMounted, setIsMounted] = useState<boolean>(false);
 
-    const handleRouteChange = useNavigate();
+    const navTo = useNavigate();
 
-    const numProducts: number = products?.length || 0;
+    const handleRouteChange = (route: string) => {
+        setIsMounted(false);
+        navTo(route);
+    };
+
+    const numProducts: number = itemCount || 0;
 
     useEffect(() => {
         setIsMounted(true);

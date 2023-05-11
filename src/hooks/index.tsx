@@ -1,4 +1,3 @@
-export { default as useMyLists } from './myLists';
 export { default as useIsMobile } from './isMobile';
 export { default as useDeviceType } from './deviceType';
 export { default as useSwipe, Direction } from './useSwipe';

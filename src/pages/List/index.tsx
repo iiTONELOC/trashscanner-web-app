@@ -1,14 +1,13 @@
 import './List.css';
-import { UpcDb } from '../../utils/APIs';
+import { IList } from '../../types';
+import { useQuery } from '@apollo/client';
 import { useEffect, useState } from 'react';
-import { RenderListItems } from './helpers';
-import { IList, IUpcDb } from '../../types';
 import { useDeviceType } from '../../hooks';
 import { useLocation } from 'react-router-dom';
+import { GET_LIST } from '../../utils/graphQL/queries';
 import { useGlobalStoreContext, reducerActions } from '../../providers';
-import { Loading, LiveUpdateToggler, BarcodeScanner } from '../../components';
+import { Loading, LiveUpdateToggler, BarcodeScanner, ListItem } from '../../components';
 
-const upcDb: IUpcDb = new UpcDb();
 
 export default function List(): JSX.Element {// NOSONAR
     const device: 'mobile' | 'desktop' = useDeviceType();
@@ -20,10 +19,16 @@ export default function List(): JSX.Element {// NOSONAR
     const [detectedBarcode, setDetectedBarcode] = useState<boolean | null>(null);
 
     const { globalState, dispatch } = useGlobalStoreContext();
-    const { lists } = globalState;
 
     const location = useLocation();
     const listId = location.pathname.split('/')[2];
+
+
+    const { data, loading, error } = useQuery(GET_LIST, {
+        variables: {
+            listId
+        }
+    });
 
     const manualButtonLabel: string = device === 'mobile' ?
         '+ Scan Item' : '+ Upload Barcode Image';
@@ -74,43 +79,47 @@ export default function List(): JSX.Element {// NOSONAR
 
     // Sets the list data is the component's state
     useEffect(() => {
-        if (listId && isMounted) {
-            const _list = lists ? lists[listId] || null : null;
+        if (data) {
+            setList(data.list);
+            dispatch({
+                type: reducerActions.ADD_TO_LISTS,
+                payload: {
+                    list: data.list
+                }
+            });
+        }
 
-            if (_list) {
-                // if list data exists in global store, set it in the component's state
-                setList(_list);
-            } else {
-                // if list data does not exist in global store, fetch it from the API
-                // and set it in the global store
-                upcDb.getList(listId).then(res => {
-                    const { data } = res;
-                    if (data) {
-                        setList(data);
-                        dispatch({
-                            type: reducerActions.SET_LISTS,
-                            payload: {
-                                lists: [data]
-                            }
-                        });
-                    }
-                });
-            }
+        if (error) {
+            console.error(error);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isMounted, listId, lists]);
+    }, [data, error]);
+
+    const currentListData = globalState.lists[listId];
+
+    useEffect(() => {
+        if (currentListData) {
+            setList(currentListData);
+            dispatch({
+                type: reducerActions.UPDATE_LIST,
+                payload: {
+                    list: currentListData
+                }
+            });
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [currentListData]);
 
 
-    return isMounted && list ? (
+    return isMounted && list && !loading ? (
         <div className="List-page-container">
             <header className='My-lists-header'>
                 <div className='My-lists-header-title-container'>
                     <h1>{list?.name}</h1>
-                    <p className='My-lists-header-p'>({list?.products?.length || 0})</p>
+                    <p className='My-lists-header-p'>({list.itemCount || 0})</p>
                 </div>
 
                 <LiveUpdateToggler
-                    db={upcDb}
                     listId={listId}
                     isLive={isLive}
                     listSetter={setList}
@@ -123,10 +132,14 @@ export default function List(): JSX.Element {// NOSONAR
             <ul className='List-product-section'>
                 {
                     showList ?
-                        <RenderListItems
-                            products={list?.products || []}
-                            listId={listId}
-                        />
+                        list.products.map((product) => (
+                            <ListItem
+                                key={`${product._id}`}
+                                product={product}
+                                listItemId={product._id}
+                                duplicateCount={product.quantity}
+                            />
+                        ))
                         :
                         <BarcodeScanner
                             cancel={cancel}

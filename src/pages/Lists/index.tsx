@@ -1,13 +1,13 @@
 import './Lists.css';
-import { useMyLists } from '../../hooks';
 import { useEffect, useState } from 'react';
+import { useQuery } from '@apollo/client';
+import { GET_MY_LISTS } from '../../utils/graphQL/queries';
+import { IList, GlobalStoreContextType } from '../../types';
+import { AddListForm, ListCard, Loading, ToastTypes } from '../../components';
 import {
     useGlobalStoreContext, reducerActions, useToastMessageContext,
     IToastMessageContextType
 } from '../../providers';
-import { IList, IApiHookCall, GlobalStoreContextType } from '../../types';
-import { AddListForm, ListCard, Loading, ToastTypes } from '../../components';
-
 
 
 export default function Lists(): JSX.Element {// NOSONAR
@@ -17,7 +17,13 @@ export default function Lists(): JSX.Element {// NOSONAR
     const { globalState, dispatch }: GlobalStoreContextType = useGlobalStoreContext();
     const Toaster: IToastMessageContextType = useToastMessageContext();
     const { lists }: GlobalStoreContextType['globalState'] = globalState;
-    const { error, loading, data }: IApiHookCall<IList[]> = useMyLists();
+
+
+    const { error, loading, data } = useQuery(GET_MY_LISTS, {
+        fetchPolicy: 'network-only'
+    });
+
+
     const numLists = lists ? Object.keys(lists).length : 0;
 
     useEffect(() => {
@@ -29,42 +35,21 @@ export default function Lists(): JSX.Element {// NOSONAR
     }, []);
 
     useEffect(() => {
-        if (isMounted) {
+        if (isMounted && data) {
             dispatch({
                 type: reducerActions.SET_LISTS,
                 payload: {
-                    lists: data || []
+                    lists: [...data.myLists]
                 }
             });
-
-            if (data) {
-                const currentIds = data ? data.map((list: IList) => list._id) : [];
-
-                // get a list of the keys in local storage
-                const localStorageEntries = Object.keys(localStorage);
-                // filter the keys to only include the ones that don't have a hyphen
-                const localStorageKeys = localStorageEntries.filter((key: string) => !key.includes('-'));
-
-
-                // if any of the ids in the localStorageKeys array are not in the currentIds array
-                // then remove them from local storage
-                localStorageKeys.forEach((key: string) => {
-                    if (!currentIds.includes(key)) {
-                        localStorage.removeItem(key);
-                    }
-                });
-            }
-
-
-
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [data, isMounted]);
+    }, [data?.myLists?.length]);
 
     useEffect(() => {
         if (error && isMounted) {
             Toaster.makeToast({
-                message: error,
+                message: error?.message || 'Error fetching lists, please check your internet connection and try again later',
                 type: ToastTypes.Error,
                 timeOut: 12000,
                 title: 'Data Error'
@@ -74,7 +59,7 @@ export default function Lists(): JSX.Element {// NOSONAR
     }, [error, isMounted]);
 
 
-    return isMounted && data ? (
+    return isMounted && data && !loading ? (
         <section className='My-lists'>
             <header className='My-lists-header'>
                 {!showAddForm ?
