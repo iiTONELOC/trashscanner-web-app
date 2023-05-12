@@ -1,25 +1,29 @@
-import { IList, IUpcDb } from '../../types';
+import { ui } from '../../utils';
+import { IList } from '../../types';
 import { ToastTypes } from '../Toast';
-import { UpcDb } from '../../utils/APIs';
+import { useMutation } from '@apollo/client';
 import React, { useEffect, useState } from 'react';
+import { TrashIcon, DocumentCheckIcon } from '@heroicons/react/24/solid';
+import { DELETE_LIST, UPDATE_LIST } from '../../utils/graphQL/mutations';
 import {
     useToastMessageContext, useGlobalStoreContext,
     reducerActions,
     GlobalStoreContextType,
     IToastMessageContextType
 } from '../../providers';
-import { ui } from '../../utils';
-import { TrashIcon, DocumentCheckIcon } from '@heroicons/react/24/solid';
 
-const db: IUpcDb = new UpcDb();
+
 
 export default function CardDropMenu(props: { //NOSONAR
     listId: string,
     setShowMenu: React.Dispatch<React.SetStateAction<boolean>>
 }): JSX.Element { //NOSONAR
+    const [deleteList] = useMutation(DELETE_LIST);
+    const [updateList] = useMutation(UPDATE_LIST);
     const [isMounted, setIsMounted] = useState<boolean>(false);
     const Toaster: IToastMessageContextType = useToastMessageContext();
     const { dispatch, globalState }: GlobalStoreContextType = useGlobalStoreContext();
+
 
     useEffect(() => {
         setIsMounted(true);
@@ -33,35 +37,29 @@ export default function CardDropMenu(props: { //NOSONAR
         const ErrorTimeOut = 5000;
 
         try {
-            const response = await db.deleteList(listId);
 
-            const messageType = response ?
-                ToastTypes.Success : ToastTypes.Error;
-            const message = response ?
-                'List deleted successfully' : ErrorMessage;
-            const messageTitle = response ?
-                'Success' : ErrorTitle;
-            const messageTimeOut = response ?
-                3000 : ErrorTimeOut;
+            const response = await deleteList({
+                variables: {
+                    listId
+                }
+            });
 
-            response && (() => {
+            const deletedList: IList = response?.data?.removeList;
+
+            const messageType = deletedList ? ToastTypes.Success : ToastTypes.Error;
+            const message = deletedList ? 'List deleted successfully' : ErrorMessage;
+            const messageTitle = deletedList ? 'Success' : ErrorTitle;
+            const messageTimeOut = deletedList ? 3000 : ErrorTimeOut;
+
+            deletedList && (() => {
                 // remove list from global state
                 const currentList: IList = globalState?.lists[listId];
 
-                // remove the linkedList from local storage by list id
-                localStorage.removeItem(listId);
-
-                // we also have to remove the list items from local storage, they contain the
-                for (const item of currentList.products) {
-                    localStorage.removeItem(`${listId}-${item._id}`);
-                }
-
-                // update global state
+                //update global state
                 dispatch({
                     type: reducerActions.DELETE_LIST,
                     payload: { list: { ...currentList } }
                 });
-
             })();
 
             Toaster.makeToast({
@@ -90,18 +88,25 @@ export default function CardDropMenu(props: { //NOSONAR
         const ErrorTimeOut = 5000;
 
         try {
-            const response = await db.editList(listId, undefined, true);
+            const response = await updateList({
+                variables: {
+                    listId,
+                    isDefault: true
+                }
+            });
 
-            const messageType = response ?
+            const updatedList: IList = response?.data?.updateList;
+
+            const messageType = updatedList ?
                 ToastTypes.Success : ToastTypes.Error;
-            const message = response ?
+            const message = updatedList ?
                 'List set as default successfully' : ErrorMessage;
-            const messageTitle = response ?
+            const messageTitle = updatedList ?
                 'Success' : ErrorTitle;
-            const messageTimeOut = response ?
+            const messageTimeOut = updatedList ?
                 3000 : ErrorTimeOut;
 
-            response && (() => {
+            updatedList && (() => {
                 // get existing default list
 
                 // THIS CAN BE REUSED ______

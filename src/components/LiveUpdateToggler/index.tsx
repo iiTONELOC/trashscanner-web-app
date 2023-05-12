@@ -1,11 +1,15 @@
 import './LiveUpdateToggler.css';
-import { IList, IUpcDb } from '../../types';
+import { IList } from '../../types';
+import { useQuery } from '@apollo/client';
 import { useEffect, useState } from 'react';
 import { SignalIcon, NoSignalIcon } from '../Icons';
+import { GET_LIST } from '../../utils/graphQL/queries';
+
+
+
 
 export default function LiveUpdateToggler(props: {// NOSONAR
     listId: string;
-    db: IUpcDb;
     listSetter: React.Dispatch<React.SetStateAction<IList | null>>;
     isLive: boolean;
     setIsLive: React.Dispatch<React.SetStateAction<boolean>>;
@@ -16,6 +20,11 @@ export default function LiveUpdateToggler(props: {// NOSONAR
 
     const { isLive, setIsLive, toggleLive } = props;
 
+    const { refetch } = useQuery(GET_LIST, {
+        variables: {
+            listId: props.listId
+        }
+    });
 
 
     useEffect(() => {
@@ -30,18 +39,19 @@ export default function LiveUpdateToggler(props: {// NOSONAR
     useEffect(() => {
 
         if (isLive && isMounted) {
-            const refetch = setInterval(() => {
+            const _refetch = setInterval(async () => {
                 if (props.listId) {
-                    props.db.getList(props.listId).then(res => {
-                        const { data } = res;
-                        if (data) {
-                            props.listSetter(data);
-                        }
-                    });
+                    const { data } = await refetch({ listId: props.listId });
+                    // props.db.getList(props.listId).then(res => {
+                    //     const { data } = res;
+                    //     if (data) {
+                    //         props.listSetter(data);
+                    //     }
+                    // });
                 }
             }, 5000);
 
-            setUpdater(refetch);
+            setUpdater(_refetch);
         }
 
         if (!isLive && updater && isMounted) {

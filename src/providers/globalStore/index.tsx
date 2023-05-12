@@ -1,5 +1,5 @@
 import reducerActions from './storeActions';
-import { IList, IProduct } from '../../types';
+import { IList, IListItem } from '../../types';
 import { useGlobalReducer } from './storeReducer';
 import { useContext, createContext, Dispatch } from 'react';
 
@@ -8,10 +8,15 @@ export interface IAction<T> {
     payload: T;
 }
 
+interface IAddToList {
+    listId: string;
+    item: IListItem;
+}
+
 export interface IPayloads {
     lists?: IList[];
     list?: IList;
-    product?: IProduct;
+    addToList?: IAddToList
 }
 
 export interface GlobalStoreContextType {

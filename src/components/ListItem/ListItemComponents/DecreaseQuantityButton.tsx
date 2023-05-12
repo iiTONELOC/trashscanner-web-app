@@ -6,7 +6,7 @@ import { MinusCircleIcon } from '@heroicons/react/24/solid';
 
 export default function DecreaseQuantityButton(props: {
     listId: string,
-    productId: string,
+    listItemId: string,
     currentQuantity: number
 }): JSX.Element {
     const { decreaseItemQuantity } = DecreaseQuantity(props);

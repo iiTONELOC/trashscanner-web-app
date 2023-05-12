@@ -56,7 +56,6 @@ export default function FormAction(props: IProps): JSX.Element {
             <p className='Text-shadow'>
                 {props.type === 'signup' ? 'Already have an account?' : 'Don\'t have an account?'}
                 <span
-                    role={'navigation'}
                     aria-label={label}
                     onClick={handleClick}
                 >

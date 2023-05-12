@@ -51,39 +51,48 @@ export interface IApiResponse<T> {
 export interface ISource {
     _id: string;
     name: string;
-    createdAt: Date;
-    updatedAt: Date;
+    createdAt: string;
+    updatedAt: string;
 }
 
 export interface IProduct {
+    barcode: string[];
+    name: string;
+}
+
+export interface IUserProduct {
+    _id: string;
+    productAlias: string | null;
+    productData: IProduct;
+    createdAt?: string;
+    updatedAt?: string;
+}
+
+export interface IListItem {
     _id: string;
     listId?: string;
     userId?: string;
     alias: string | null;
-    product: {
-        barcode: string[];
-        name: string;
-        source: ISource;
-        url?: string;
-        createdAt?: Date;
-        updatedAt?: Date;
-    }
-    createdAt: Date;
-    updatedAt: Date;
+    notes: string | null;
+    username?: string | null;
+    quantity: number;
+    product: IUserProduct;
+    createdAt: string;
+    updatedAt: string;
 }
 
 export interface IList {
     _id: string;
     name: string;
     userId: string;
-    products: IProduct[];
+    products: IListItem[];
+    productCount: number;
+    itemCount: number;
     isDefault: boolean;
-    createdAt: Date;
-    updatedAt: Date;
+    createdAt: string;
+    updatedAt: string;
 }
 
-// UPC DB API
-export type { IUpcDb } from './utils/APIs/UpcDb';
 
 
 // PROVIDERS

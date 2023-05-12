@@ -4,7 +4,7 @@ export default function DeleteAllSwipeLeft(props: { _id: string, listId: string,
 
     const { decreaseItemQuantity } = DecreaseQuantity({
         listId: props.listId,
-        productId: props._id,
+        listItemId: props._id,
         currentQuantity: props.currentQuantity
     });
 

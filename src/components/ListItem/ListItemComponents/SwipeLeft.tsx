@@ -9,7 +9,7 @@ export default function SwipeLeft(props:
 
     const { decreaseItemQuantity } = DecreaseQuantity({
         listId: props.listId,
-        productId: props._id,
+        listItemId: props._id,
         currentQuantity: props.currentQuantity
     });
 

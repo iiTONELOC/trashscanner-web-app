@@ -1,5 +1,5 @@
 import './ListItem.css';
-import { IProduct } from '../../types';
+import { IListItem } from '../../types';
 import { formatter, ui } from '../../utils';
 import { DoubleEllipsisMenu } from '../Icons';
 import { useLocation, Location } from 'react-router';
@@ -39,7 +39,11 @@ enum SwipeJustifications {
     Right = 'Swipe-justify-right'
 }
 
-export default function ListItem(props: { product: IProduct, duplicateCount?: number }) { //NOSONAR
+export default function ListItem(props: {
+    listItemId: string,
+    product: IListItem,
+    duplicateCount?: number
+}) { //NOSONAR
     const [justifySwipeContent, setJustifySwipeContent] = useState<SwipeJustifications>(SwipeJustifications.None);
     const [swipeDirection, setSwipeDirection] = useState<Direction>(Direction.None);
     const [showEditQuantity, setShowEditQuantity] = useState<boolean>(false);
@@ -54,15 +58,15 @@ export default function ListItem(props: { product: IProduct, duplicateCount?: nu
 
     const { handleTouchMove, handleTouchStart, handleTouchEnd }: IUseSwipe = useSwipe(swipeConfig);
     const isMobileDevice: boolean = useDeviceType() === 'mobile';
-    const { _id, product, alias }: IProduct = props.product;
-    const { barcode, name }: IProduct['product'] = product;
+    const { _id, productData, productAlias } = props.product.product;
+    const { barcode, name } = productData;
     const loc: Location = useLocation();
 
     // displays the product name or the alias if it exists
-    const productNameToDisplay = (_name: string): string => alias && alias !== ' ' ? alias : _name;
+    const productNameToDisplay = (_name: string): string => productAlias && productAlias !== ' ' ? productAlias : _name;
 
     // Determines if the product name is not found
-    const nameNotFound = !alias && name
+    const nameNotFound = !productAlias && name
         .toLowerCase()
         .includes('not found');
 
@@ -230,7 +234,7 @@ export default function ListItem(props: { product: IProduct, duplicateCount?: nu
                     _id={_id}
                     width={visibleSwipeWidth}
                     listId={listId as string}
-                    barcode={props.product.product.barcode[0]} />
+                    barcode={barcode[0]} />
             }
 
             {/* LIST ITEM START */}
@@ -245,7 +249,7 @@ export default function ListItem(props: { product: IProduct, duplicateCount?: nu
                 <span className='List-product-span'
                     onDoubleClick={(e: React.SyntheticEvent) => showEditor && handleCloseEditor(e)}
                 >
-                    <ItemStatus itemId={_id} listId={listId || ''} />
+                    <ItemStatus itemId={_id} />
 
                     {/* On double click we need to render the editor */}
                     {!showEditor ? (
@@ -274,7 +278,7 @@ export default function ListItem(props: { product: IProduct, duplicateCount?: nu
                         <div className='List-count'>
                             <ItemCount
                                 // onTouchEnd={handleCountMobile}
-                                count={props.duplicateCount || 0} />
+                                count={props.product.quantity || 0} />
                             {/* This only should be visible on desktop devices */}
                             {showEditQuantity && !isMobileDevice && (
                                 <div className='List-add-remove-btn-container'>
@@ -284,9 +288,9 @@ export default function ListItem(props: { product: IProduct, duplicateCount?: nu
                                     />
 
                                     <DecreaseQuantityButton
-                                        currentQuantity={props.duplicateCount || 1}
+                                        currentQuantity={props.product.quantity || 1}
                                         listId={listId as string}
-                                        productId={_id}
+                                        listItemId={props.listItemId}
                                     />
                                 </div>
                             )}
@@ -308,7 +312,7 @@ export default function ListItem(props: { product: IProduct, duplicateCount?: nu
                 <SwipeLeft
                     _id={_id}
                     listId={listId as string}
-                    currentQuantity={props.duplicateCount || 1}
+                    currentQuantity={props.product.quantity || 1}
                     width={visibleSwipeWidth} />
             }
         </li>

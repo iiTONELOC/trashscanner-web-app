@@ -2,12 +2,12 @@ import './styles.css';
 import { useDeviceType } from '../../hooks';
 import { locateBarcode } from '../../utils';
 import { useEffect, useState } from 'react';
+import { useMutation } from '@apollo/client';
 import { ToastTypes } from '../../components';
-import { UpcDb, IUpcDb } from '../../utils/APIs';
-import { IPayloads, IAction, IList } from '../../types';
+import { IPayloads, IAction } from '../../types';
+import { ADD_BARCODE_TO_LIST } from '../../utils/graphQL/mutations';
 import { reducerActions, useToastMessageContext, IToastMessageContextType } from '../../providers';
 
-const upcDb: IUpcDb = new UpcDb();
 
 export default function BarcodeScanner(props: {
     listId: string;
@@ -15,6 +15,7 @@ export default function BarcodeScanner(props: {
     setDetectedBarcode: React.Dispatch<React.SetStateAction<boolean | null>>;
     dispatch: React.Dispatch<IAction<IPayloads>>;
 }) {
+
     const device: 'mobile' | 'desktop' = useDeviceType();
     const [source, setSource] = useState<string | null>('');
     const [manualInput, setManualInput] = useState<string>('');
@@ -22,8 +23,10 @@ export default function BarcodeScanner(props: {
     const [showManualEntry, setShowManualEntry] = useState<boolean>(false);
     const [validatedManualBarcode, setValidatedManualBarcode] = useState<boolean>(false);
 
+    const [addBarcodeToList] = useMutation(ADD_BARCODE_TO_LIST);
     const toaster: IToastMessageContextType = useToastMessageContext();
     const { setDetectedBarcode, dispatch } = props;
+
 
     const manualButtonLabel: string = device === 'mobile' ?
         'Use Device Camera' : 'Upload Barcode Image';
@@ -36,14 +39,24 @@ export default function BarcodeScanner(props: {
         }
     };
 
-    function addToList(_barcode: string) {
-        return upcDb.addProductToList(props.listId, _barcode).then(res => {
+    async function addToList(_barcode: string) {
+
+        try {
+            const { data } = await addBarcodeToList({
+                variables: {
+                    listId: props.listId,
+                    barcode: _barcode
+                }
+            });
 
             // have to update the list's global state
             dispatch({
-                type: reducerActions.SET_LISTS,
+                type: reducerActions.ADD_ITEM_TO_LIST,
                 payload: {
-                    lists: [res.data as IList]
+                    addToList: {
+                        listId: props.listId,
+                        item: data.addToList
+                    }
                 }
             });
 
@@ -58,11 +71,16 @@ export default function BarcodeScanner(props: {
             // and close the view
             setDetectedBarcode(true);
             setSource('');
-        }).catch(err => {
-            console.log('Error adding item to list: ', err);
+
+        } catch (error) {
+            toaster.makeToast({
+                type: ToastTypes.Error,
+                message: `Could not add ${_barcode} to list!`,
+                title: 'Error!'
+            });
             setDetectedBarcode(false);
             setSource(null);
-        });
+        }
     }
 
     function handleManualInput(e: React.ChangeEvent<HTMLInputElement>) {
@@ -109,7 +127,6 @@ export default function BarcodeScanner(props: {
 
                 addToList(barcode as string);
             }).catch(err => {
-                console.log('Error Detecting Barcode: ', err);
                 setSource(null);
                 setDetectedBarcode(null);
                 setShowManualEntry(true);
@@ -181,7 +198,6 @@ export default function BarcodeScanner(props: {
                         {!validatedManualBarcode ? 'Enter a valid barcode' : 'Add Item to List'}
                     </button>
                 </div>
-
             )}
         </div>
     );
