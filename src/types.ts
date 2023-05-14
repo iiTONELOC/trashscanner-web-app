@@ -71,6 +71,7 @@ export interface IUserProduct {
 export interface IListItem {
     _id: string;
     listId?: string;
+    isCompleted: boolean;
     userId?: string;
     alias: string | null;
     notes: string | null;

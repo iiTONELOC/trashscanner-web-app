@@ -24,7 +24,7 @@ export default function List(): JSX.Element {// NOSONAR
     const listId = location.pathname.split('/')[2];
 
 
-    const { data, loading, error } = useQuery(GET_LIST, {
+    const { data, loading, error, refetch } = useQuery(GET_LIST, {
         variables: {
             listId
         }
@@ -98,17 +98,19 @@ export default function List(): JSX.Element {// NOSONAR
     const currentListData = globalState.lists[listId];
 
     useEffect(() => {
-        if (currentListData) {
-            setList(currentListData);
-            dispatch({
-                type: reducerActions.UPDATE_LIST,
-                payload: {
-                    list: currentListData
-                }
-            });
-        }
+        refetch({ listId }).then(({ data }) => {
+            if (data) {
+                setList(data.list);
+                dispatch({
+                    type: reducerActions.UPDATE_LIST,
+                    payload: {
+                        list: data.list
+                    }
+                });
+            }
+        });
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [currentListData]);
+    }, [currentListData?.itemCount, currentListData?.products?.length]);
 
 
     return isMounted && list && !loading ? (
@@ -137,6 +139,7 @@ export default function List(): JSX.Element {// NOSONAR
                                 key={`${product._id}`}
                                 product={product}
                                 listItemId={product._id}
+                                isCompleted={product.isCompleted}
                                 duplicateCount={product.quantity}
                             />
                         ))

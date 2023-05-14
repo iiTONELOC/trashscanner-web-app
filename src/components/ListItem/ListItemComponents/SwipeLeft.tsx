@@ -32,11 +32,11 @@ export default function SwipeLeft(props:
             <button
                 data-delete-all-id={props._id}
                 className='Swipe-delete-button Text-shadow'
-                onClick={async (e: React.SyntheticEvent) => handleDeleteAll(e)}
+                onClick={async (e: React.SyntheticEvent) => await handleDeleteAll(e)}
                 type='button'
             >
                 <TrashIcon
-                    onClick={async (e: React.SyntheticEvent) => handleDeleteAll(e)}
+                    onClick={async (e: React.SyntheticEvent) => await handleDeleteAll(e)}
                     className='Delete-all-icon'
                 /> All
             </button>

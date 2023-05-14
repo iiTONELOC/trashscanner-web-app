@@ -5,9 +5,9 @@ import { useMutation } from '@apollo/client';
 import { UPDATE_LIST_ITEM } from '../../../utils/graphQL/mutations';
 
 
-export default function ItemStatus(props: { itemId: string }): JSX.Element { //NOSONAR
+export default function ItemStatus(props: { itemId: string, currentStatus: boolean }): JSX.Element { //NOSONAR
     const [isMounted, setIsMounted] = useState<boolean>(false);
-    const [isCompleted, setIsCompleted] = useState<boolean>(false);
+    const [isCompleted, setIsCompleted] = useState<boolean>(props.currentStatus || false);
 
     const [updateListItem] = useMutation(UPDATE_LIST_ITEM);
 
@@ -26,13 +26,15 @@ export default function ItemStatus(props: { itemId: string }): JSX.Element { //N
     useEffect(() => {
         // Updates the completed status of the item on component mount
         if (isMounted) {
+            console.log('updating item status');
             (async () => {
-                await updateListItem({
+                const data = await updateListItem({
                     variables: {
                         listItemId: props.itemId,
                         isCompleted
                     }
                 });
+                console.log({ data });
             })();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps

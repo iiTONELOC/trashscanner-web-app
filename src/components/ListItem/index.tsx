@@ -11,6 +11,7 @@ import {
     IncreaseQuantityButton, AddOneOnSwipeRight, SwipeLeft
 } from './ListItemComponents';
 
+
 // used in multiple places to determine if the target element is editable
 const EDITABLE_CONTENT = 'Editable-content';
 
@@ -39,8 +40,11 @@ enum SwipeJustifications {
     Right = 'Swipe-justify-right'
 }
 
+
+
 export default function ListItem(props: {
     listItemId: string,
+    isCompleted: boolean,
     product: IListItem,
     duplicateCount?: number
 }) { //NOSONAR
@@ -49,6 +53,7 @@ export default function ListItem(props: {
     const [showEditQuantity, setShowEditQuantity] = useState<boolean>(false);
     const [visibleSwipeWidth, setVisibleSwipeWidth] = useState<number>(0);
     const [containerHeight, setContainerHeight] = useState<number>(-1);
+    const [isScrolling, setIsScrolling] = useState<boolean>(false);
     const [showEditor, setShowEditor] = useState<boolean>(false);
     const [isMounted, setIsMounted] = useState<boolean>(false);
     const [listId, setListId] = useState<string | null>(null);
@@ -56,9 +61,11 @@ export default function ListItem(props: {
     const [reset, setReset] = useState<boolean>(false);
 
 
+
     const { handleTouchMove, handleTouchStart, handleTouchEnd }: IUseSwipe = useSwipe(swipeConfig);
-    const isMobileDevice: boolean = useDeviceType() === 'mobile';
     const { _id, productData, productAlias } = props.product.product;
+    const isMobileDevice: boolean = useDeviceType() === 'mobile';
+    const { listItemId, isCompleted } = props;
     const { barcode, name } = productData;
     const loc: Location = useLocation();
 
@@ -120,7 +127,7 @@ export default function ListItem(props: {
     };
 
     const handleContainerHeight = (): void => {
-        const listItemHeight: number = document.querySelector(`[data-product-id="${_id}"]`)?.clientHeight || 0;
+        const listItemHeight: number = document.querySelector(`[data-product-id="${listItemId}"]`)?.clientHeight || 0;
         setContainerHeight(listItemHeight);
     };
 
@@ -143,49 +150,51 @@ export default function ListItem(props: {
     const handleSwipeMovement = (e: React.TouchEvent): void => {
         const { direction, xDiff, speed }: DirectionInfo = handleTouchMove(e);
         const _speed: number = speed || 0;
+        // only register swipes if the user isn't scrolling
+        if (!isScrolling) {
+            // must swipe at least 75px and at a speed of 700ms to trigger the swipe action
+            const triggerSpeed = 700;
+            const triggerMovePx = 75;
 
-        // must swipe at least 75px and at a speed of 700ms to trigger the swipe action
-        const triggerSpeed = 700;
-        const triggerMovePx = 75;
+            // update our state values tracking the swipe direction and the xDiff
+            setSwipeDirection(direction);
+            setSwipeXDiff(xDiff);
+            handleContainerHeight();
 
-        // update our state values tracking the swipe direction and the xDiff
-        setSwipeDirection(direction);
-        setSwipeXDiff(xDiff);
-        handleContainerHeight();
+            // If left and the swipe is greater than 75px
+            if (visibleSwipeWidth > triggerMovePx && swipeDirection === Direction.Left) {
+                const deleteAllButton: HTMLElement | null = document.querySelector(`[data-delete-one-id="${listItemId}"]`);
+                // check the speed
+                _speed > triggerSpeed && (() => {
+                    deleteAllButton?.click();
+                    setReset(true);
+                    _handleTouchEnd(e as unknown as React.TouchEvent);
+                })();
+            }
 
-        // If left and the swipe is greater than 75px
-        if (visibleSwipeWidth > triggerMovePx && swipeDirection === Direction.Left) {
-            const deleteAllButton: HTMLElement | null = document.querySelector(`[data-delete-one-id="${_id}"]`);
-            // check the speed
-            _speed > triggerSpeed && (() => {
-                deleteAllButton?.click();
-                setReset(true);
-                _handleTouchEnd(e as unknown as React.TouchEvent);
-            })();
-        }
-
-        // Right swipe
-        if (visibleSwipeWidth > triggerMovePx && swipeDirection === Direction.Right) {
-            const addOneButton: HTMLElement | null = document.querySelector(`[data-add-one-id="${_id}"]`);
-            // check the speed
-            _speed > triggerSpeed && (() => {
-                addOneButton?.click();
-                setReset(true);
-                _handleTouchEnd(e as unknown as React.TouchEvent);
-            })();
+            // Right swipe
+            if (visibleSwipeWidth > triggerMovePx && swipeDirection === Direction.Right) {
+                const addOneButton: HTMLElement | null = document.querySelector(`[data-add-one-id="${listItemId}"]`);
+                // check the speed
+                _speed > triggerSpeed && (() => {
+                    addOneButton?.click();
+                    setReset(true);
+                    _handleTouchEnd(e as unknown as React.TouchEvent);
+                })();
+            }
         }
     };
 
     // Adjusts the width of swipe-able action (add 1 or delete 1)
     const adjustSwipeContentWidth = ({ swipeXDiff }: { swipeXDiff: number }) => {
-        const movingEl: HTMLElement | null = document.querySelector(`[data-product-id="${_id}"]`);
+        const movingEl: HTMLElement | null = document.querySelector(`[data-product-id="${listItemId}"]`);
 
         if (movingEl) {
             const elWidth: number = movingEl.offsetWidth;
 
             // figure percentage moved based on the swipeXDiff and our elWidth
             const widthPercentageMoved: number = swipeXDiff / elWidth;
-            const swipeDeleteContainer: HTMLElement | null = document.querySelector(`[data-swipe-id="${_id}"]`);
+            const swipeDeleteContainer: HTMLElement | null = document.querySelector(`[data-swipe-id="${listItemId}"]`);
 
             if (swipeDeleteContainer) {
                 // set the width of the Swipe-delete-container
@@ -204,6 +213,19 @@ export default function ListItem(props: {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
+    useEffect(() => {
+        if (isMounted) {
+            // listen for scrolling events to set the isScrolling state
+            window.addEventListener('scroll', () => setIsScrolling(true));
+            window.addEventListener('touchend', () => setIsScrolling(false));
+            window.addEventListener('touchcancel', () => setIsScrolling(false));
+        }
+        return () => {
+            window.removeEventListener('scroll', () => setIsScrolling(true));
+            window.removeEventListener('touchend', () => setIsScrolling(false));
+            window.removeEventListener('touchcancel', () => setIsScrolling(false));
+        };
+    }, [isMounted]);
     // updates the width of the swipe content based on the swipe direction and swipe xDiff
     useMemo(() => {
         adjustSwipeContentWidth({ swipeXDiff });
@@ -231,7 +253,7 @@ export default function ListItem(props: {
             {/* Add one on swipe right */}
             {swipeDirection === Direction.Right &&
                 <AddOneOnSwipeRight
-                    _id={_id}
+                    _id={listItemId}
                     width={visibleSwipeWidth}
                     listId={listId as string}
                     barcode={barcode[0]} />
@@ -243,13 +265,15 @@ export default function ListItem(props: {
                 onTouchMove={handleSwipeMovement}
                 onTouchEnd={_handleTouchEnd}
                 onClick={handleCloseEditor}
-                data-product-id={_id}
+                data-product-id={listItemId}
                 tabIndex={0}
             >
                 <span className='List-product-span'
                     onDoubleClick={(e: React.SyntheticEvent) => showEditor && handleCloseEditor(e)}
                 >
-                    <ItemStatus itemId={_id} />
+                    <ItemStatus
+                        itemId={listItemId}
+                        currentStatus={isCompleted} />
 
                     {/* On double click we need to render the editor */}
                     {!showEditor ? (
@@ -310,7 +334,7 @@ export default function ListItem(props: {
             {/* Delete all on swipe left */}
             {swipeDirection === Direction.Left &&
                 <SwipeLeft
-                    _id={_id}
+                    _id={listItemId}
                     listId={listId as string}
                     currentQuantity={props.product.quantity || 1}
                     width={visibleSwipeWidth} />
