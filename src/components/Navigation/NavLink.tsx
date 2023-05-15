@@ -1,8 +1,10 @@
 import { ui } from '../../utils';
 import React, { useEffect } from 'react';
+import { useIsMobile } from '../../hooks';
 import { useUserContext, IUserContextType } from '../../providers';
 import { Link, useLocation, useNavigate, Location, NavigateFunction } from 'react-router-dom';
-import { useIsMobile } from '../../hooks';
+
+
 
 
 interface IProps {
@@ -21,7 +23,7 @@ export default function NavLink(props: IProps): JSX.Element {
     const navigate: NavigateFunction = useNavigate();
     const { setIsAuthenticated }: IUserContextType = useUserContext();
 
-    const isActive = (link: string): boolean => currentPath === link;
+    const isActive = (link: string): boolean => (currentPath || window.location.href) === link;
     const navItemClassName = (link: string): string => `Navigation-item${isActive(link) ? '-active' : ''}`;
 
 
@@ -30,7 +32,6 @@ export default function NavLink(props: IProps): JSX.Element {
         e.stopPropagation();
         localStorage.removeItem('trash-user');
         setIsAuthenticated(false);
-        navigate('/', { replace: true });
         props.afterClick && props.afterClick();
     };
 
@@ -68,7 +69,6 @@ export default function NavLink(props: IProps): JSX.Element {
 
     return (
         <li
-            role={'navigation'}
             aria-label={'navigation'}
             key={name}
         >

@@ -18,7 +18,7 @@ const { Provider }: React.Context<IUserContextType> = UserContext;
 
 export default function UserProvider(props: React.PropsWithChildren) { // NOSONAR
     const [user, setUser] = useState<IJwtPayload | null>(getToken() ? decodeToken(getToken() || '') : null);
-    const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+    const [isAuthenticated, setIsAuthenticated] = useState<boolean>(true); // if we start out false, the token will always be deleted
 
     const checkIfAuthenticated = (): boolean => {
         const activeUser = user;
@@ -36,27 +36,15 @@ export default function UserProvider(props: React.PropsWithChildren) { // NOSONA
         return !_isExpired;
     };
 
-    const handleStorageEvent = (event: StorageEvent) => {
-        // see if the event was triggered by the token being removed from local storage
-        if (event.key === tokenName && getToken() === null) {
-            setUser(null);
-            setIsAuthenticated(false);
-        }
-    };
+
 
     useEffect(() => {
-        checkIfAuthenticated();
-        window.addEventListener('storage', (event: StorageEvent) => {
-            handleStorageEvent(event);
-        }, false);
-
-        return () => {
-            window.removeEventListener('storage', (event: StorageEvent) => {
-                handleStorageEvent(event);
-            }, false);
-        };
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+        // if the user isn't authenticated, remove the token from local storage
+        if (!isAuthenticated) {
+            localStorage.removeItem(tokenName);
+            setUser(null);
+        }
+    }, [isAuthenticated]);
 
 
     // Manages the user's session and validates a user on every requested page

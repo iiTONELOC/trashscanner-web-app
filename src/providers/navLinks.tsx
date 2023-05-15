@@ -16,15 +16,21 @@ const { Provider }: React.Context<ILinkContextType> = LinkContext;
  * Generates the appropriate navigation links based on the user's authentication status
  */
 export default function LinkProvider(props: React.PropsWithChildren): JSX.Element { // NOSONAR
-    const { isAuthenticated }: IUserContextType = useUserContext();
+    const { isAuthenticated, user }: IUserContextType = useUserContext();
     const [navLinks, setNavLinks] = useState<ILinkContextType['navLinks']>(
         isAuthenticated ? loggedInNavLinks : _navLinks);
 
     const currentLocation = useLocation();
 
     useEffect(() => {
-        setNavLinks(isAuthenticated ? loggedInNavLinks : _navLinks);
-    }, [isAuthenticated, currentLocation.pathname]);
+        if (isAuthenticated) {
+            setNavLinks(loggedInNavLinks);
+        } else {
+            setNavLinks(_navLinks);
+        }
+    }, [currentLocation.pathname, isAuthenticated, user]);
+
+
 
     return <Provider value={{ navLinks }} {...props} />;
 }

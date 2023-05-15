@@ -1,3 +1,13 @@
 .Editable-content-container label {
     display: none;
 }
+
+.Editable-content-container {
+    width: 100%;
+    height: auto;
+}
+
+#product-name, #list-name {
+    width: 100%;
+    font-size: larger;
+}
