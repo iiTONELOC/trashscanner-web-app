@@ -75,6 +75,10 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+iframe {
+  display: none;
+}
+
 .Green-text {
   color: var(--success);
 }

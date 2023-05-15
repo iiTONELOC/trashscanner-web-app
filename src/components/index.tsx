@@ -3,6 +3,7 @@ export { default as Footer } from './Footer';
 export { default as Toaster } from './Toaster';
 export { default as Loading } from './Loading';
 export { default as Spinner } from './Spinner';
+export { ErrorBoundary } from './ErrorBoundary';
 export { default as ListCard } from './ListCard';
 export { default as ListItem } from './ListItem';
 export { default as WithAuth } from './WithAuth';

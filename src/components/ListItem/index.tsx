@@ -297,7 +297,6 @@ export default function ListItem(props: {
 
                     <span
                         className='List-product-span-controls'
-                        onMouseLeave={!isMobileDevice ? () => setShowEditQuantity(false) : undefined}
                     >
                         <div className='List-count'>
                             <ItemCount

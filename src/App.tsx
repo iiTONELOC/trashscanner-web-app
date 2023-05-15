@@ -18,7 +18,6 @@ function App(): JSX.Element { //  NOSONAR
 
 
   return isMounted ? (
-
     <ToastProvider>
       <HashRouter>
         <ApolloProvider client={apolloClient}>

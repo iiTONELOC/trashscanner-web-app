@@ -1,6 +1,6 @@
 import { IJwtPayload } from '../../types';
 import { useContext, createContext, useState, useEffect } from 'react';
-import UserSessionManager, { isExpired, decodeToken, getToken } from './userSessionManager';
+import UserSessionManager, { isExpired, decodeToken, getToken, tokenName } from './userSessionManager';
 
 export interface IUserContextType {
     user: IJwtPayload | null;
@@ -36,9 +36,28 @@ export default function UserProvider(props: React.PropsWithChildren) { // NOSONA
         return !_isExpired;
     };
 
+    const handleStorageEvent = (event: StorageEvent) => {
+        // see if the event was triggered by the token being removed from local storage
+        if (event.key === tokenName && getToken() === null) {
+            setUser(null);
+            setIsAuthenticated(false);
+        }
+    };
+
     useEffect(() => {
         checkIfAuthenticated();
+        window.addEventListener('storage', (event: StorageEvent) => {
+            handleStorageEvent(event);
+        }, false);
+
+        return () => {
+            window.removeEventListener('storage', (event: StorageEvent) => {
+                handleStorageEvent(event);
+            }, false);
+        };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
 
     // Manages the user's session and validates a user on every requested page
     UserSessionManager({ user, isAuthenticated, setIsAuthenticated, checkIfAuthenticated });
