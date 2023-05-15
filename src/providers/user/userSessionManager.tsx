@@ -81,10 +81,10 @@ export default function UserSessionManager(props: IUserContextType) { // NOSONAR
     const resetTokenExpiration = (): void => {
         // clear any existing timeouts
         clearTokenTimeout(tokenCollectorId);
-        const token = getToken();
 
-        if (token) {
-            const decodedToken = decodeToken(token);
+
+        if (user) {
+            const decodedToken = { ...user };
             if (decodedToken) {
                 const { exp } = decodedToken;
                 const now = Math.floor(Date.now() / 1000);

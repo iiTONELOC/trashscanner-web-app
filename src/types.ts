@@ -20,9 +20,7 @@ export type {
 
 //  UTIL TYPES
 export type {
-    IMyNode,
-    IValidator,
-    ILinkedList,
+    IValidator
 } from './utils';
 
 // NAV
@@ -32,10 +30,9 @@ export interface INavLinks {
 
 //  AUTHENTICATION
 export interface IJwtPayload {
-    unique_name: string;
+    username: string;
     email: string;
-    nameid: string;
-    nbf: number;
+    _id: string;
     exp: number;
     iat: number;
 }

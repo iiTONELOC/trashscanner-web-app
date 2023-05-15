@@ -20,16 +20,19 @@ export default function UserProvider(props: React.PropsWithChildren) { // NOSONA
     const [user, setUser] = useState<IJwtPayload | null>(getToken() ? decodeToken(getToken() || '') : null);
     const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
 
-    /*
-     * Fetches the token from local storage, decodes it, and sets the user state
-     * Then sets the isAuthenticated state depending on the token's validity
-     * Returns true if the token is valid, false otherwise
-     */
     const checkIfAuthenticated = (): boolean => {
-        const token = getToken();
-        const _isExpired = isExpired(token || '');
-        setUser(token && !_isExpired ? decodeToken(token) : null);
-        setIsAuthenticated(!_isExpired);
+        const activeUser = user;
+
+        let _isExpired = true;
+        if (activeUser) {
+            _isExpired = isExpired(activeUser);
+            setIsAuthenticated(!_isExpired);
+        } else {
+            const token: string | null = getToken();
+            _isExpired = isExpired(token || '');
+            setUser(token && !_isExpired ? decodeToken(token) : null);
+            setIsAuthenticated(!_isExpired);
+        }
         return !_isExpired;
     };
 

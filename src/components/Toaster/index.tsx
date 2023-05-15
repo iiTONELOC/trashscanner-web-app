@@ -1,4 +1,3 @@
-import Portal from '../Portal';
 import { useEffect, useState } from 'react';
 import Toast, { ToastTypes } from '../Toast';
 import { IToastMessageContextType } from '../../types';
@@ -28,13 +27,11 @@ export default function Toaster(): JSX.Element {//  NOSONAR
 
 
     return isMounted && showToast ? (
-        <Portal>
-            <Toast
-                message={message || 'This is a notification message'}
-                type={type || ToastTypes.Info}
-                title={title || ''}
-                onClose={() => setShowToast(false)}
-            />
-        </Portal>
+        <Toast
+            message={message || 'This is a notification message'}
+            type={type || ToastTypes.Info}
+            title={title || ''}
+            onClose={() => setShowToast(false)}
+        />
     ) : <></>;
 }
