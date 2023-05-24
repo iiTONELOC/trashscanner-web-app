@@ -79,6 +79,11 @@ iframe {
   display: none;
 }
 
+.hidden {
+  display: none;
+}
+
+
 .Green-text {
   color: var(--success);
 }
@@ -281,7 +286,11 @@ iframe {
 }
 
 .Text-shadow {
-  text-shadow: 0 0 0.4rem rgba(0, 0, 0, 0.9);
+  /* text-shadow: 0 0 0.4rem rgba(0, 0, 0, 0.9); */
+  text-shadow: 1px 1px 0 black,
+    -1px -1px 0 black,
+    1px -1px 0 black,
+    -1px 1px 0 black;
 }
 
 .Editable-content {

@@ -117,7 +117,7 @@ export default function List(): JSX.Element {// NOSONAR
         <div className="List-page-container">
             <header className='My-lists-header'>
                 <div className='My-lists-header-title-container'>
-                    <h1>{list?.name}</h1>
+                    <h1 data-list-friendly='true'>{list?.name}</h1>
                     <p className='My-lists-header-p'>({list.itemCount || 0})</p>
                 </div>
 
@@ -131,7 +131,10 @@ export default function List(): JSX.Element {// NOSONAR
 
             </header>
 
-            <ul className='List-product-section'>
+            <ul
+                className='List-product-section'
+                data-list-friendly='true'
+            >
                 {
                     showList ?
                         list.products.map((product) => (

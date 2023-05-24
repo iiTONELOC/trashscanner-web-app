@@ -71,6 +71,7 @@ export default function NavLink(props: IProps): JSX.Element {
         <li
             aria-label={'navigation'}
             key={name}
+            className='Text-shadow'
         >
 
             {href !== '/logout' ? (

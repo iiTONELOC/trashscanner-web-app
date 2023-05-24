@@ -78,7 +78,7 @@ export default function ListItem(props: {
         .includes('not found');
 
     // Highlights the product name and barcode if the product name is not found
-    const pClass = `List-name-barcode Editable-content ${nameNotFound ? 'Yellow-text' : ''}`;
+    const pClass = `List-name-barcode Editable-content ${nameNotFound ? 'Yellow-text' : ''} Text-shadow`;
 
     // _______ Component Helper Functions _______
 
