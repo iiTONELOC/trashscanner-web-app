@@ -137,7 +137,7 @@ export default function List(): JSX.Element {// NOSONAR
             >
                 {
                     showList ?
-                        list.products.map((product) => (
+                        [...Object.values(list.products)].reverse().map(product => (
                             <ListItem
                                 key={`${product._id}`}
                                 product={product}

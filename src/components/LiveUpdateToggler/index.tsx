@@ -39,17 +39,15 @@ export default function LiveUpdateToggler(props: {// NOSONAR
     useEffect(() => {
 
         if (isLive && isMounted) {
-            const _refetch = setInterval(async () => {
+            const _refetch = setInterval(() => {
                 if (props.listId) {
-                    const { data } = await refetch({ listId: props.listId });
-                    // props.db.getList(props.listId).then(res => {
-                    //     const { data } = res;
-                    //     if (data) {
-                    //         props.listSetter(data);
-                    //     }
-                    // });
+                    (async () => {
+                        const { data } = await refetch({ listId: props.listId });
+                        const { list } = data;
+                        props.listSetter(list);
+                    })();
                 }
-            }, 5000);
+            }, 750);
 
             setUpdater(_refetch);
         }
