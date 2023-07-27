@@ -51,7 +51,7 @@ I want to be able to indicate an item isn't needed without removing it from the 
 
 ## Usage
 
-**Trash Scanner**&#8482;, the _App_ can be accessed at [`https://iitoneloc.github.io/trashscan-app/`](https://iitoneloc.github.io/trashscan-app/) and is a _Progressive Web Application_ or **PWA**. This means that the app can be installed to your device via the browser, as a glorified shortcut, while retaining the look, feel, and functionality of a traditional application without the need for using a device-specific marketplace.
+**Trash Scanner**&#8482;, the _App_ can be accessed at [`https://iitoneloc.github.io/trashscanner-web-app/`](https://iitoneloc.github.io/trashscanner-web-app/) and is a _Progressive Web Application_ or **PWA**. This means that the app can be installed to your device via the browser, as a glorified shortcut, while retaining the look, feel, and functionality of a traditional application without the need for using a device-specific marketplace.
 
 > Please note that not all browsers support this functionality, Firefox is a prime example. However the application is installable in chrome based browsers like Microsoft Edge, Google Chrome, Brave, etc, as well as Safari.
 
