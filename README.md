@@ -2,7 +2,7 @@
 
 ## Screenshot
 
-![TrashScanner](./src/assets/images/trashscan-screenshot-min.png)
+![TrashScanner](./src/assets/images/trashscanner-screenshot-min.png)
 
 ## Table of Contents
 
