@@ -11,7 +11,7 @@ interface State {
 }
 
 export function logError(error: Error, errorInfo: ErrorInfo): void {
-    console.error(`TrashScan App - uncaught error!\n ${error}\n`); // NOSONAR
+    console.error(`TrashScanner App - uncaught error!\n ${error}\n`); // NOSONAR
 }
 
 export class ErrorBoundary extends Component<Props, State> {

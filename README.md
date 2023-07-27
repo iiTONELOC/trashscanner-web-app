@@ -1,8 +1,8 @@
-# Trash Scan&#8482;, the _App_
+# Trash Scanner&#8482;, the _App_
 
 ## Screenshot
 
-![TrashScan](./src/assets/images/trashscan-screenshot-min.png)
+![TrashScanner](./src/assets/images/trashscan-screenshot-min.png)
 
 ## Table of Contents
 
@@ -16,7 +16,7 @@
 
 ## Description
 
-**Trash Scan**&#8482;, the _Device_, provides users an inexpensive way to track the items they throw away so that they can be repurchased with ease. This was a request from a family member and the user story for the scanner is as follows:
+**Trash Scanner**&#8482;, the _Device_, provides users an inexpensive way to track the items they throw away so that they can be repurchased with ease. This was a request from a family member and the user story for the scanner is as follows:
 
 ```txt
 I want a device near my trash can
@@ -28,9 +28,9 @@ I want to be able to access the list of discarded items on my phone or computer
 So that I can view them later for purchasing.
 ```
 
-**Trash Scan**&#8482;, the _App_, is a progressive web application that provides the UI for the remaining user requirements. Ideally, **Trash Scan**&#8482;, the _App_, should be used with **Trash Scan**&#8482;, the _Device_. But the app has been expanded for general-purpose use and provides a bar code scanner via your device's camera as a back-up.
+**Trash Scanner**&#8482;, the _App_, is a progressive web application that provides the UI for the remaining user requirements. Ideally, **Trash Scanner**&#8482;, the _App_, should be used with **Trash Scanner**&#8482;, the _Device_. But the app has been expanded for general-purpose use and provides a bar code scanner via your device's camera as a back-up.
 
-In the preliminary stages, **Trash Scan**&#8482;, the _App_ has been implemented around the following user story and needs:
+In the preliminary stages, **Trash Scanner**&#8482;, the _App_ has been implemented around the following user story and needs:
 
 ```txt
 When I sign in as an authenticated user, I am taken to my dashboard.
@@ -39,7 +39,7 @@ Where I can create, view, edit, and delete item-lists.
 
 I want to be able to name my lists and know when it was created or last updated.
 
-Scanned items from Trash Scan the device should automatically appear as an item in my default list, or a list I have designated as a default list.
+Scanned items from Trash Scanner the device should automatically appear as an item in my default list, or a list I have designated as a default list.
 
 If a default list doesn't exist then one should be created automatically so that I do not lose track of any items.
 
@@ -51,7 +51,7 @@ I want to be able to indicate an item isn't needed without removing it from the 
 
 ## Usage
 
-**Trash Scan**&#8482;, the _App_ can be accessed at [`https://iitoneloc.github.io/trashscan-app/`](https://iitoneloc.github.io/trashscan-app/) and is a _Progressive Web Application_ or **PWA**. This means that the app can be installed to your device via the browser, as a glorified shortcut, while retaining the look, feel, and functionality of a traditional application without the need for using a device-specific marketplace.
+**Trash Scanner**&#8482;, the _App_ can be accessed at [`https://iitoneloc.github.io/trashscan-app/`](https://iitoneloc.github.io/trashscan-app/) and is a _Progressive Web Application_ or **PWA**. This means that the app can be installed to your device via the browser, as a glorified shortcut, while retaining the look, feel, and functionality of a traditional application without the need for using a device-specific marketplace.
 
 > Please note that not all browsers support this functionality, Firefox is a prime example. However the application is installable in chrome based browsers like Microsoft Edge, Google Chrome, Brave, etc, as well as Safari.
 
@@ -65,7 +65,7 @@ I want to be able to indicate an item isn't needed without removing it from the 
 
 ## How to Contribute
 
-If you have ideas for improving **Trash Scan**&#8482;, the _App_, or you wish to contribute to the project please feel free to send me an email!
+If you have ideas for improving **Trash Scanner**&#8482;, the _App_, or you wish to contribute to the project please feel free to send me an email!
 
 ## Contact
 

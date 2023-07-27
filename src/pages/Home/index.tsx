@@ -11,7 +11,7 @@ export default function Home(): JSX.Element {
         <section className='Home-container Text-shadow'>
             <header className='Home-header'>
                 <h1>WELCOME TO </h1>
-                <h1>TRASH<span>SCAN&#8482;</span></h1>
+                <h1>TRASH<span>SCANNER&#8482;</span></h1>
             </header>
 
             <div className='Home-main'>
@@ -27,16 +27,16 @@ export default function Home(): JSX.Element {
                 <p>Now you don't have to!</p>
 
                 <p>
-                    Use <span className='Blue-text'> TrashScan&#8482;</span>
+                    Use <span className='Blue-text'> TrashScanner&#8482;</span>
                     <em>The Device</em> to scan the barcodes of your discarded items where they are added to
                     your default product list. Then, when you're ready to go shopping, simply open the
-                    <span className='Green-text'> TrashScan&#8482;</span> app and your list will be ready to go!
+                    <span className='Green-text'> TrashScanner&#8482;</span> app and your list will be ready to go!
                 </p>
 
                 <p>
-                    Don't have <span className='Blue-text'>TrashScan&#8482;</span>
+                    Don't have <span className='Blue-text'>TrashScanner&#8482;</span>
                     <em>The Device</em>? Not a problem!
-                    <span className='Green-text'> TrashScan&#8482;
+                    <span className='Green-text'> TrashScanner&#8482;
                     </span><em>The App</em> will allow you to manually add items to your shopping list
                     using your device's camera!
                 </p>
@@ -55,7 +55,7 @@ export default function Home(): JSX.Element {
             </div>
 
             <div className='Home-hero'>
-                <img alt='TrashScan Logo' src={logoImage} />
+                <img alt='TrashScanner Logo' src={logoImage} />
             </div>
         </section>
     );

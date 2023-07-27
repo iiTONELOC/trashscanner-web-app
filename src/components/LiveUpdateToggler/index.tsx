@@ -6,8 +6,6 @@ import { SignalIcon, NoSignalIcon } from '../Icons';
 import { GET_LIST } from '../../utils/graphQL/queries';
 
 
-
-
 export default function LiveUpdateToggler(props: {// NOSONAR
     listId: string;
     listSetter: React.Dispatch<React.SetStateAction<IList | null>>;
@@ -25,7 +23,6 @@ export default function LiveUpdateToggler(props: {// NOSONAR
             listId: props.listId
         }
     });
-
 
     useEffect(() => {
         setIsMounted(true);
@@ -74,7 +71,6 @@ export default function LiveUpdateToggler(props: {// NOSONAR
                 <NoSignalIcon className='Live-control-icon Live-control-icon-off' /> :
                 <SignalIcon className='Live-control-icon Live-control-icon-live' />
             }
-
         </div>
     ) : <></>;
 }
