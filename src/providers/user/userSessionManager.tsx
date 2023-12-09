@@ -82,7 +82,6 @@ export default function UserSessionManager(props: IUserContextType) { // NOSONAR
         // clear any existing timeouts
         clearTokenTimeout(tokenCollectorId);
 
-
         if (user) {
             const decodedToken = { ...user };
             if (decodedToken) {

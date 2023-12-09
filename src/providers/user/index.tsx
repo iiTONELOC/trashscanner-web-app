@@ -17,9 +17,8 @@ const { Provider }: React.Context<IUserContextType> = UserContext;
  */
 
 export default function UserProvider(props: React.PropsWithChildren) { // NOSONAR
-    const [user, setUser] = useState<IJwtPayload | null>(getToken() ? decodeToken(getToken() || '') : null);
-    const [isAuthenticated, setIsAuthenticated] = useState<boolean>(true); // if we start out false, the token will always be deleted
-
+    const [user, setUser] = useState<IJwtPayload | null>(getToken() ? decodeToken(getToken() ?? '') : null);
+    const [isAuthenticated, setIsAuthenticated] = useState<boolean>(user ? !isExpired(user) : false);
     const checkIfAuthenticated = (): boolean => {
         const activeUser = user;
 

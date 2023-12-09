@@ -15,7 +15,7 @@ export default function FormAction(props: IProps): JSX.Element {
     const [isClicked, setIsClicked] = useState<boolean>(false);
     const handleRouteChange = useNavigate();
 
-    const isValid: boolean = props.isValid && !isClicked;
+    const isValid = !isClicked;
     const label: string = props.type === 'signup' ? 'Log in' : 'Sign up';
     const buttonClass: string = isValid ? 'Action-button Text-shadow' : 'Text-shadow Disabled-button';
 
@@ -35,10 +35,10 @@ export default function FormAction(props: IProps): JSX.Element {
     };
 
     useEffect(() => {
-        if (props.hasError) {
+        if (props.hasError || !props.isValid) {
             setIsClicked(false);
         }
-    }, [props.hasError]);
+    }, [props.hasError, props.isValid]);
 
 
     return (
@@ -49,7 +49,7 @@ export default function FormAction(props: IProps): JSX.Element {
                 className={buttonClass}
                 onTouchStart={() => setIsClicked(!isClicked)}
             >
-                {isClicked ? <Loading label='Processing...' /> : props.label || 'Submit'}
+                {isClicked && !props.hasError ? <Loading label='Processing...' /> : props.label || 'Submit'}
 
             </button>
 
