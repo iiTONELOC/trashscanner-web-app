@@ -12,6 +12,19 @@ mutation createUser($username: String!, $email: String!, $password: String!) {
   }
 }`;
 
+export const CREATE_NEW_USER_WEB_AUTHN = gql`
+mutation createUserWebAuthn($username: String!, $email: String!) {
+  addUserWebAuthn(username: $username, email: $email) {
+    token
+    user {
+      _id
+      email
+      username
+    }
+  }
+}
+`;
+
 export const LOGIN_USER = gql`
 mutation login($username: String!, $password: String!) {
   loginUser(username: $username, password: $password) {
