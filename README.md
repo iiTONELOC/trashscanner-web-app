@@ -10,6 +10,7 @@
 - [`Usage`](#usage)
   - [`PWA Installation`](./docs/installation/installation.md#pwa-installation-instructions)
   - [`Using the App on a Desktop Device`](./docs/upload-picture-desktop/upload-desktop-readme.md#how-to-use-the-app-on-a-desktop-device)
+- [`Device & App Demo`](#device--app-demo)
 - [`How to Contribute`](#how-to-contribute)
 - [`Contact`](#contact)
 - [`License`](#license)
@@ -62,6 +63,10 @@ I want to be able to indicate an item isn't needed without removing it from the 
 ### Application Usage Instructions
 
 [`Using the app on a computer`](./docs/upload-picture-desktop/upload-desktop-readme.md#how-to-use-the-app-on-a-desktop-device)
+
+## Device & App Demo
+
+[![Demo](./assets/images/demopreview-min.png)](https://drive.google.com/file/d/1ziXeSa1Nub1O0t2iqD4VylADp-xsuz8o/view?usp=sharing)
 
 ## How to Contribute
 
