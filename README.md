@@ -17,7 +17,7 @@
 
 ## Description
 
-**Trash Scanner**&#8482;, the _Device_, provides users an inexpensive way to track the items they throw away so that they can be repurchased with ease. This was a request from a family member and the user story for the scanner is as follows:
+[**Trash Scanner**&#8482;, the _Device_](https://github.com/iiTONELOC/trashscan-device), provides users an inexpensive way to track the items they throw away so that they can be repurchased with ease. This was a request from a family member and the user story for the scanner is as follows:
 
 ```txt
 I want a device near my trash can
@@ -29,7 +29,9 @@ I want to be able to access the list of discarded items on my phone or computer
 So that I can view them later for purchasing.
 ```
 
-**Trash Scanner**&#8482;, the _App_, is a progressive web application that provides the UI for the remaining user requirements. Ideally, **Trash Scanner**&#8482;, the _App_, should be used with **Trash Scanner**&#8482;, the _Device_. But the app has been expanded for general-purpose use and provides a bar code scanner via your device's camera as a back-up.
+**Trash Scanner**&#8482;, the _App_, is a progressive web application that provides the UI for the remaining user requirements. Ideally, **Trash Scanner**&#8482;, the _App_, should be used with [**Trash Scanner**&#8482;, the _Device_](https://github.com/iiTONELOC/trashscan-device). But the app has been expanded for general-purpose use and provides a bar code scanner via your device's camera as a back-up.
+
+The app and device are powered by a GraphQL API, called [The-Landfill](https://github.com/iiTONELOC/the-landfill), which is hosted on [Heroku](https://heroku.com) and is accessible at `https://the-landfill.herokuapp.com`, but only provides services to authorized users.
 
 In the preliminary stages, **Trash Scanner**&#8482;, the _App_ has been implemented around the following user story and needs:
 
